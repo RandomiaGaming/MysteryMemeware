@@ -1,0 +1,13 @@
+﻿using System.Reflection;
+[assembly: AssemblyCompany("RandomiaGaming")]
+[assembly: AssemblyConfiguration("Release")]
+[assembly: AssemblyCopyright("Copyright © FinlayTheBerry 2022")]
+[assembly: AssemblyDefaultAlias("Mystery Memeware - 3.0")]
+[assembly: AssemblyDescription("Memeware that plays the song \"It's a mystery\" forever. To uninstall hold escape for 10 seconds.")]
+[assembly: AssemblyFileVersion("3.0")]
+[assembly: AssemblyFlags(AssemblyNameFlags.None)]
+[assembly: AssemblyInformationalVersion("Memeware that plays the song \"It's a mystery\" forever. To uninstall hold escape for 10 seconds.")]
+[assembly: AssemblyProduct("Mystery Memeware - 3.0")]
+[assembly: AssemblyTitle("Mystery Memeware - 3.0")]
+[assembly: AssemblyTrademark("Trademark ™ FinlayTheBerry 2022")]
+[assembly: AssemblyVersion("3.0")]
