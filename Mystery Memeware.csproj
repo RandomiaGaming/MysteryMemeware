@@ -31,7 +31,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>..\..\Pentesting VM Portal\</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -69,6 +69,7 @@
     <None Include="app.config" />
     <None Include="ATTACKMETHODS.md" />
     <None Include="LICENSE" />
+    <None Include="My Keys.skl" />
     <None Include="README.md" />
     <None Include="Sharp Keys Keyboard Disable.skl" />
   </ItemGroup>

