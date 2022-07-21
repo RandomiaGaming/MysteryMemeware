@@ -40,7 +40,6 @@ namespace MysteryMemeware
         }
         private static void Abort()
         {
-            CursorSlowModule.UnslowCursor();
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
         [System.Runtime.InteropServices.DllImport("USER32.dll")]

