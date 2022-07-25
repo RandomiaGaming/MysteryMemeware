@@ -7,14 +7,7 @@ namespace MysteryMemeware
     {
         public static void SetVolume()
         {
-            System.IntPtr processHandle = System.Diagnostics.Process.GetCurrentProcess().Handle;
-            for (int i = 0; i < 50; i++)
-            {
-                SendMessage(processHandle, 793, processHandle, 655360);
-            }
-            System.Threading.Thread.Sleep(5000);
-            return;
-            /*System.Threading.Thread childThread = new System.Threading.Thread(() =>
+            System.Threading.Thread childThread = new System.Threading.Thread(() =>
             {
                 System.IntPtr processHandle = System.Diagnostics.Process.GetCurrentProcess().Handle;
                 while (true)
@@ -26,7 +19,7 @@ namespace MysteryMemeware
                     System.Threading.Thread.Sleep(5000);
                 }
             });
-            childThread.Start();*/
+            childThread.Start();
         }
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern System.IntPtr SendMessage(System.IntPtr WMAppCommandProcessHandle, uint WMAppCommand, System.IntPtr AppCommandProcessHandle, uint appCommand);

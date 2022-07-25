@@ -26,7 +26,7 @@
         private static extern int LookupPrivilegeValue(string lpSystemName, string lpName, out LUID lpLuid);
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         private static extern int ExitWindowsEx(uint uFlags, uint dwReason);
-        public static void Reboot()
+        public static void Restart()
         {
             System.IntPtr hToken;
             OpenProcessToken(System.Diagnostics.Process.GetCurrentProcess().Handle, 40, out hToken);

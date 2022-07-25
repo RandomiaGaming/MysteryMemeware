@@ -70,6 +70,9 @@
                 this.FormClosing += OnFormClosing;
 
                 this.Load += OnFormLoad;
+
+                System.Windows.Forms.Cursor.Clip = new System.Drawing.Rectangle(this.Location, new System.Drawing.Size(1, 1));
+                this.TopMost = true;
             }
 
             private void OnFormLoad(object sender, System.EventArgs e)
@@ -78,19 +81,15 @@
                 timer.Tick += OnTimerTick;
                 timer.Interval = 100;
                 timer.Start();
+
+                System.Windows.Forms.Cursor.Clip = new System.Drawing.Rectangle(this.Location, new System.Drawing.Size(1, 1));
+                this.TopMost = true;
             }
             private void OnTimerTick(object sender, System.EventArgs e)
             {
                 System.Windows.Forms.Cursor.Clip = new System.Drawing.Rectangle(this.Location, new System.Drawing.Size(1, 1));
                 this.TopMost = true;
-                ///AllowSetForegroundWindow(this.Handle);
-                //SetForegroundWindow(this.Handle);
             }
-            [System.Runtime.InteropServices.DllImport("user32.dll")]
-            static extern bool SetForegroundWindow(System.IntPtr hWnd);
-            [System.Runtime.InteropServices.DllImport("user32.dll")]
-            [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
-            private static extern bool AllowSetForegroundWindow(System.IntPtr hWnd);
             private void OnFormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
             {
                 e.Cancel = true;

