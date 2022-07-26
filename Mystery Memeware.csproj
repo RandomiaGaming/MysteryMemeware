@@ -85,17 +85,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Installer.cs" />
     <Compile Include="MouseLockModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TaskMGRModule.cs" />
-    <Compile Include="DisplayCoverModule.cs" />
     <Compile Include="VolumeModule.cs" />
     <Compile Include="WinLogOffModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Music.wav" />
-    <EmbeddedResource Include="CoverImage.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -116,6 +113,9 @@
     <None Include="DebugWarning.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CoverImage.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets')" />
