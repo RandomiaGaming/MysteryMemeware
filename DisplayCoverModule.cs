@@ -79,7 +79,7 @@
             {
                 System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
                 timer.Tick += OnTimerTick;
-                timer.Interval = 100;
+                timer.Interval = 1000;
                 timer.Start();
 
                 System.Windows.Forms.Cursor.Clip = new System.Drawing.Rectangle(this.Location, new System.Drawing.Size(1, 1));

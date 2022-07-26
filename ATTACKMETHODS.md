@@ -1,10 +1,6 @@
-# MysteryMemeware
-Will you ever be able to use your pc again? It's a mystery!
+# MysteryMemeware - Attack Methods
+IMPORTANT NOTICE: The following is for educational purposes only and may or may not be a complete list of all changes made to your system as a result of utalizing code or executable software contained in this repository. The following is not a legal document and is designed only to assist users in making informed decisions about weather or not to utalize code or executable software contained in this repository. By utilizing in any fashion the code or executable software in the repository you the user assume any and all risk and are responsible for any and all damage done to systems your own or otherwise as a result of execution.
 
-This software is maleware and was created for entertainment and educational purposes only. You the user assume all personal responsiblitiy for damage done to your computer as a result of executing this software as detailed in the license. Use at your own risk! Do not execute this software on computers which belong to persons besides yourself.
+This program has three main states. If the program does not have administrator access and is not installed then it will use social engineering and dialog popups to convince the user to grant administrator acces. Once adminstrator access is granted then this program will attempt to install itselt onto the users PC by following the steps outlined in the installation section. After installation the users computer will restart and the instructions from the run section will be executed. To prevent this software from running on your computer you can set a flag in your registries to cause the software to automatically terminate.
 
-This software does not use the internet. This software will not attempt to spread to other computers. This software will not access, modify, or delete your personal data. This software does not log your data or spy on you. This software will change things in the Windows and System32 folders on your computer. This software will make channges to your settings as well as terminate other open processes on your computer. For more information on how this software effects your PC see the execution outline.
-
-
-
-To close and uninstall this software hold escape for 5 seconds. This process will attempt to restore your computer to the state it was in before execution of this software.
+More information coming soon...
