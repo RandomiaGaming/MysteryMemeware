@@ -1,4 +1,4 @@
-﻿//#Approve File 08/01/2022 2:03pm.
+﻿//#Approve File 08/03/2022 11:35am.
 using System;
 using Microsoft.Win32;
 namespace MysteryMemeware
@@ -6,19 +6,19 @@ namespace MysteryMemeware
     public static class RegistryHelper
     {
         public const char PathSeparatorChar = '\\';
-        public static string PathSeparatorString => new string(new char[1] { PathSeparatorChar });
-        public static string[] RootKeyNames => new string[] { "Computer" };
-        public static string[] ClassesRootKeyNames => new string[] { "HKEY_CLASSES_ROOT", "CLASSES_ROOT", "HKEYCLASSESROOT", "CLASSESROOT" };
-        public static string[] CurrentUserKeyNames => new string[] { "HKEY_CURRENT_USER", "CLASSES_ROOT", "HKEYCURRENTUSER", "CURRENTUSER" };
-        public static string[] LocalMachineKeyNames => new string[] { "HKEY_LOCAL_MACHINE", "LOCAL_MACHINE", "HKEYLOCALMACHINE", "LOCALMACHINE" };
-        public static string[] UsersKeyNames => new string[] { "HKEY_USERS", "USERS", "HKEYUSERS" };
-        public static string[] CurrentConfigKeyNames => new string[] { "HKEY_CURRENT_CONFIG", "CURRENT_CONFIG", "HKEYCURRENTCONFIG", "CURRENTCONFIG" };
-        public static string[] Root32KeyNames => new string[] { "Computer_32", "Computer32" };
-        public static string[] ClassesRoot32KeyNames => new string[] { "HKEY_CLASSES_ROOT_32", "CLASSES_ROOT_32", "HKEYCLASSESROOT_32", "CLASSESROOT_32", "HKEY_CLASSES_ROOT32", "CLASSES_ROOT32", "HKEYCLASSESROOT32", "CLASSESROOT32" };
-        public static string[] CurrentUser32KeyNames => new string[] { "HKEY_CURRENT_USER_32", "CLASSES_ROOT_32", "HKEYCURRENTUSER_32", "CURRENTUSER_32", "HKEY_CURRENT_USER32", "CLASSES_ROOT32", "HKEYCURRENTUSER32", "CURRENTUSER32" };
-        public static string[] LocalMachine32KeyNames => new string[] { "HKEY_LOCAL_MACHINE_32", "LOCAL_MACHINE_32", "HKEYLOCALMACHINE_32", "LOCALMACHINE_32", "HKEY_LOCAL_MACHINE32", "LOCAL_MACHINE32", "HKEYLOCALMACHINE32", "LOCALMACHINE32" };
-        public static string[] Users32KeyNames => new string[] { "HKEY_USERS_32", "USERS_32", "HKEYUSERS_32", "HKEY_USERS32", "USERS32", "HKEYUSERS32" };
-        public static string[] CurrentConfig32KeyNames => new string[] { "HKEY_CURRENT_CONFIG_32", "CURRENT_CONFIG_32", "HKEYCURRENTCONFIG_32", "CURRENTCONFIG_32", "HKEY_CURRENT_CONFIG32", "CURRENT_CONFIG32", "HKEYCURRENTCONFIG32", "CURRENTCONFIG32" };
+        public static readonly string PathSeparatorString = new string(new char[1] { PathSeparatorChar });
+        public static readonly string[] RootKeyNames = new string[1] { "Computer" };
+        public static readonly string[] ClassesRootKeyNames = new string[4] { "HKEY_CLASSES_ROOT", "CLASSES_ROOT", "HKEYCLASSESROOT", "CLASSESROOT" };
+        public static readonly string[] CurrentUserKeyNames = new string[4] { "HKEY_CURRENT_USER", "CLASSES_ROOT", "HKEYCURRENTUSER", "CURRENTUSER" };
+        public static readonly string[] LocalMachineKeyNames = new string[4] { "HKEY_LOCAL_MACHINE", "LOCAL_MACHINE", "HKEYLOCALMACHINE", "LOCALMACHINE" };
+        public static readonly string[] UsersKeyNames = new string[3] { "HKEY_USERS", "USERS", "HKEYUSERS" };
+        public static readonly string[] CurrentConfigKeyNames = new string[4] { "HKEY_CURRENT_CONFIG", "CURRENT_CONFIG", "HKEYCURRENTCONFIG", "CURRENTCONFIG" };
+        public static readonly string[] Root32KeyNames = new string[2] { "Computer_32", "Computer32" };
+        public static readonly string[] ClassesRoot32KeyNames = new string[8] { "HKEY_CLASSES_ROOT_32", "CLASSES_ROOT_32", "HKEYCLASSESROOT_32", "CLASSESROOT_32", "HKEY_CLASSES_ROOT32", "CLASSES_ROOT32", "HKEYCLASSESROOT32", "CLASSESROOT32" };
+        public static readonly string[] CurrentUser32KeyNames = new string[8] { "HKEY_CURRENT_USER_32", "CLASSES_ROOT_32", "HKEYCURRENTUSER_32", "CURRENTUSER_32", "HKEY_CURRENT_USER32", "CLASSES_ROOT32", "HKEYCURRENTUSER32", "CURRENTUSER32" };
+        public static readonly string[] LocalMachine32KeyNames = new string[8] { "HKEY_LOCAL_MACHINE_32", "LOCAL_MACHINE_32", "HKEYLOCALMACHINE_32", "LOCALMACHINE_32", "HKEY_LOCAL_MACHINE32", "LOCAL_MACHINE32", "HKEYLOCALMACHINE32", "LOCALMACHINE32" };
+        public static readonly string[] Users32KeyNames = new string[6] { "HKEY_USERS_32", "USERS_32", "HKEYUSERS_32", "HKEY_USERS32", "USERS32", "HKEYUSERS32" };
+        public static readonly string[] CurrentConfig32KeyNames = new string[8] { "HKEY_CURRENT_CONFIG_32", "CURRENT_CONFIG_32", "HKEYCURRENTCONFIG_32", "CURRENTCONFIG_32", "HKEY_CURRENT_CONFIG32", "CURRENT_CONFIG32", "HKEYCURRENTCONFIG32", "CURRENTCONFIG32" };
         public static object GetRegistryValue(string registryPath)
         {
             return GetRegistryValue(ParseRegistryValuePath(registryPath));
@@ -244,7 +244,17 @@ namespace MysteryMemeware
         }
         public static string FormatRegistryPath(string registryPath)
         {
-            registryPath = TrimTrailingSeparators(registryPath);
+            if (registryPath is not null && registryPath is not "")
+            {
+                if (!StringHelper.EndsWithCaseless(registryPath, PathSeparatorString + PathSeparatorString) && StringHelper.EndsWithCaseless(registryPath, PathSeparatorString))
+                {
+                    registryPath = registryPath.Substring(0, registryPath.Length - 1);
+                }
+                if (!StringHelper.StartsWithCaseless(registryPath, PathSeparatorString + PathSeparatorString) && StringHelper.StartsWithCaseless(registryPath, PathSeparatorString))
+                {
+                    registryPath = registryPath.Substring(1, registryPath.Length - 1);
+                }
+            }
             string firstKeyName = StringHelper.SelectBeforeCaseless(registryPath, PathSeparatorString);
             if (StringHelper.MatchesArrayCaseless(firstKeyName, RootKeyNames))
             {
@@ -258,30 +268,6 @@ namespace MysteryMemeware
                 {
                     registryPath = secondKeyName + "_32" + registryPath.Substring(secondKeyName.Length, registryPath.Length - secondKeyName.Length);
                 }
-            }
-            return registryPath;
-        }
-        public static string TrimTrailingSeparators(string registryPath)
-        {
-            if (registryPath is null || registryPath is "")
-            {
-                return registryPath;
-            }
-            if (StringHelper.EndsWithCaseless(registryPath, PathSeparatorString + PathSeparatorString))
-            {
-                return registryPath;
-            }
-            if (StringHelper.StartsWithCaseless(registryPath, PathSeparatorString + PathSeparatorString))
-            {
-                return registryPath;
-            }
-            if (StringHelper.EndsWithCaseless(registryPath, PathSeparatorString))
-            {
-                registryPath = registryPath.Substring(0, registryPath.Length - 1);
-            }
-            if (StringHelper.StartsWithCaseless(registryPath, PathSeparatorString))
-            {
-                registryPath = registryPath.Substring(1, registryPath.Length - 1);
             }
             return registryPath;
         }

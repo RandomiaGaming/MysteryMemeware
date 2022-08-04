@@ -1,4 +1,4 @@
-﻿//#Approve File 08/01/2022 2:04pm. 
+﻿//#Approve File 08/03/2022 11:35am.
 namespace MysteryMemeware
 {
     public static class StringHelper
@@ -74,22 +74,22 @@ namespace MysteryMemeware
             }
             return false;
         }
-        public static bool StartsWithArrayCaseless(string a, string[] b)
+        public static bool EndsWithArray(string a, string[] b)
         {
             foreach (string bElement in b)
             {
-                if (StartsWithCaseless(a, bElement))
+                if (EndsWithSafe(a, bElement))
                 {
                     return true;
                 }
             }
             return false;
         }
-        public static bool EndsWithArray(string a, string[] b)
+        public static bool StartsWithArrayCaseless(string a, string[] b)
         {
             foreach (string bElement in b)
             {
-                if (EndsWithSafe(a, bElement))
+                if (StartsWithCaseless(a, bElement))
                 {
                     return true;
                 }

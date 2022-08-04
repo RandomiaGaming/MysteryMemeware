@@ -69,11 +69,15 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UserHelper.cs" />
+    <Compile Include="PathHelper.cs" />
     <Compile Include="ProcessHelper.cs" />
     <Compile Include="Debugging\Debug.cs" />
     <Compile Include="VolumeHelper.cs" />

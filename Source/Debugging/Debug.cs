@@ -1,4 +1,4 @@
-﻿//#Approve File 7/31/2022 7:34pm
+﻿//#Approve File 08/03/2022 11:35am.
 using System;
 using Microsoft.Win32;
 namespace MysteryMemeware
@@ -6,48 +6,6 @@ namespace MysteryMemeware
     public static class Debug
     {
         public const string debugRegistryPath = "SOFTWARE\\MysteryDebugInfo";
-        public static void ClearLog()
-        {
-            try
-            {
-                RegistryKey currentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
-                try
-                {
-                    RegistryKey mysteryMemewareDebug = currentUser.CreateSubKey(debugRegistryPath, true);
-                    try
-                    {
-                        string[] entries = mysteryMemewareDebug.GetValueNames();
-                        foreach (string entry in entries)
-                        {
-                            try
-                            {
-                                mysteryMemewareDebug.DeleteValue(entry);
-                            }
-                            catch
-                            {
-
-                            }
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                    mysteryMemewareDebug.Close();
-                    mysteryMemewareDebug.Dispose();
-                }
-                catch
-                {
-
-                }
-                currentUser.Close();
-                currentUser.Dispose();
-            }
-            catch
-            {
-
-            }
-        }
         public static void LogException(Exception ex)
         {
             try
