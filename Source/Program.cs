@@ -12,7 +12,7 @@ namespace MysteryMemeware
         public static readonly string[] trueStrings = new string[] { "true", "yes", "1", "y", "t" };
         public static void Main()
         {
-            var t = UserHelper.GetLocalDomain();
+            var t = UserHelper.GetCurrentUser().Domain;
             return;
             try
             {
@@ -56,7 +56,7 @@ namespace MysteryMemeware
         {
             try
             {
-                object isInstalledObject = RegistryHelper.GetRegistryValue(IsInstalledRegistryPath);
+                object isInstalledObject = RegistryHelper.GetRegistryValue(new RegistryValueRefrence(IsInstalledRegistryPath));
                 if (isInstalledObject is null)
                 {
                     return false;
@@ -87,14 +87,14 @@ namespace MysteryMemeware
         }
         public static void ElevateSelf()
         {
-            object adminPasswordObject = RegistryHelper.GetRegistryValue(AdminPasswordRegistryPath);
+            object adminPasswordObject = RegistryHelper.GetRegistryValue(new RegistryValueRefrence(AdminPasswordRegistryPath));
             if (adminPasswordObject is null || adminPasswordObject.GetType() != typeof(string))
             {
                 throw new Exception("Failed to load admin password.");
             }
             string adminPassword = (string)adminPasswordObject;
             string currentExePath = PathHelper.GetCurrentExePath();
-            ProcessHelper.RunAs($"\"{currentExePath}\"", "Administrator", adminPassword, ProcessHelper.WindowMode.Default, Path.GetDirectoryName(currentExePath));
+            ProcessHelper.StartAs(new TerminalCommand($"\"{currentExePath}\""), new UserRefrence("Administrator"), adminPassword, WindowMode.Default, Path.GetDirectoryName(currentExePath));
         }
         public static void BegForAdmin()
         {
@@ -107,7 +107,7 @@ namespace MysteryMemeware
                 return;
             }
             string currentExeLocation = PathHelper.GetCurrentExePath();
-            ProcessHelper.Run($"{currentExeLocation}", ProcessHelper.WindowMode.Default, ProcessHelper.AdminMode.AlwaysAdmin, Path.GetDirectoryName(currentExeLocation));
+            ProcessHelper.Start(new TerminalCommand($"{currentExeLocation}"), WindowMode.Default, true, Path.GetDirectoryName(currentExeLocation));
         }
         public static void Install()
         {

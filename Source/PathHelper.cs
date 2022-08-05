@@ -42,7 +42,7 @@ namespace MysteryMemeware
             }
             try
             {
-                object systemRootObject = RegistryHelper.GetRegistryValue("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRoot");
+                object systemRootObject = RegistryHelper.GetRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRoot"));
                 if (systemRootObject is not null && systemRootObject.GetType() == typeof(string))
                 {
                     return (string)systemRootObject;

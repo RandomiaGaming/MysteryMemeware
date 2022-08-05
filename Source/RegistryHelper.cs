@@ -121,7 +121,7 @@ namespace MysteryMemeware
                 }
                 try
                 {
-                    subKey.SetValue(registryValue.ValueName, value, registryValueKind);
+                    subKey.SetValue(registryValue.ValueName, null);
                 }
                 finally
                 {
@@ -146,6 +146,7 @@ namespace MysteryMemeware
 
                 }
             }
+            return true;
         }
         public static RegistryValueKind GetObjectRegistryKind(object data)
         {
@@ -261,7 +262,7 @@ namespace MysteryMemeware
         {
             if(path is null)
             {
-                throw new Exception
+                throw new Exception("path cannot be null.");
             }
             Path = RegistryHelper.FormatRegistryPath(path);
             BaseKeyName = StringHelper.SelectBeforeCaseless(Path, RegistryHelper.PathSeparatorString);
