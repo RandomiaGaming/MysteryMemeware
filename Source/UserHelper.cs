@@ -1,71 +1,45 @@
-﻿using System;
+﻿//#Approve File 2022/08/04/PM/3/49
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Management;
-
 namespace MysteryMemeware
 {
     public static class UserHelper
     {
         public const char SAMSeporatorChar = '\\';
-        public static readonly string SAMSeporatorString = new string(new char[1] { SAMSeporatorChar });
+        public static readonly string SAMSeporatorString = SAMSeporatorChar.ToString();
         public const char UPNSeporatorChar = '@';
-        public static readonly string UPNSeporatorString = new string(new char[1] { UPNSeporatorChar });
-        public static string GetLocalDomain()
-        {
-            string localDomain = Environment.UserDomainName;
-            if (localDomain is null || localDomain is "")
-            {
-                throw new Exception("Could not get local domain name.");
-            }
-            return localDomain;
-        }
-        public static string GetCurrentUsername()
-        {
-            return GetCurrentUsernameSAM();
-        }
-        public static string[] GetLocalUsernames()
-        {
-            return GetLocalUsernamesSAM();
-        }
-        public static string GetCurrentUsernameUPN()
-        {
-            return GetCurrentUsernameSAM();
-        }
-        public static string[] GetLocalUsernamesUPN()
-        {
-            return GetLocalUsernamesSAM();
-        }
-        public static string GetCurrentUsernameSAM()
+        public static readonly string UPNSeporatorString = UPNSeporatorChar.ToString();
+        public static UserRefrence GetCurrentUser()
         {
             try
             {
-                return System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                return new UserRefrence(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
             }
             catch
             {
 
             }
-
             try
             {
-                return $"{Environment.UserDomainName}\\{Environment.UserName}";
+                return new UserRefrence(Environment.UserName, Environment.UserDomainName);
             }
             catch
             {
 
             }
-
             throw new Exception("Could not get current username.");
         }
-        public static string[] GetLocalUsernamesSAM()
+        public static UserRefrence[] GetLocalUsers()
         {
-            List<string> usernames = new List<string>();
-
+            List<UserRefrence> output = new();
+            List<string> usernames = new();
+            string localDomain = GetCurrentUser().Domain;
             try
             {
-                SelectQuery query = new SelectQuery("Win32_UserAccount", $"domain=\"{Environment.MachineName}\"");
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+                SelectQuery query = new("Win32_UserAccount", $"domain=\"{localDomain}\"");
+                ManagementObjectSearcher searcher = new(query);
                 try
                 {
                     foreach (ManagementObject managementObject in searcher.Get())
@@ -73,10 +47,10 @@ namespace MysteryMemeware
                         try
                         {
                             string username = (string)(managementObject["Name"]);
-                            string fullUsername = $"{Environment.MachineName}\\{username}";
-                            if (fullUsername is not null && fullUsername is not "" && !StringHelper.MatchesArrayCaseless(fullUsername, usernames.ToArray()))
+                            if (username is not null && username is not "" && !StringHelper.MatchesArrayCaseless(username, usernames.ToArray()))
                             {
-                                usernames.Add(fullUsername);
+                                output.Add(new UserRefrence(username, localDomain));
+                                usernames.Add(username);
                             }
                         }
                         catch
@@ -110,10 +84,9 @@ namespace MysteryMemeware
             {
 
             }
-
             try
             {
-                var computerEntry = new DirectoryEntry($"WinNT://{Environment.MachineName},computer");
+                var computerEntry = new DirectoryEntry($"WinNT://{localDomain},computer");
                 try
                 {
                     foreach (DirectoryEntry childEntry in computerEntry.Children)
@@ -123,10 +96,10 @@ namespace MysteryMemeware
                             if (childEntry.SchemaClassName == "User")
                             {
                                 string username = childEntry.Name;
-                                string fullUsername = $"{Environment.MachineName}\\{username}";
-                                if (fullUsername is not null && fullUsername is not "" && !StringHelper.MatchesArrayCaseless(fullUsername, usernames.ToArray()))
+                                if (username is not null && username is not "" && !StringHelper.MatchesArrayCaseless(username, usernames.ToArray()))
                                 {
-                                    usernames.Add(fullUsername);
+                                    output.Add(new UserRefrence(username, localDomain));
+                                    usernames.Add(username);
                                 }
                             }
                         }
@@ -161,145 +134,204 @@ namespace MysteryMemeware
             {
 
             }
-
-            return usernames.ToArray();
+            return output.ToArray();
         }
-        public static void CreateUser(string username, string password)
+        public static void CreateUser(UserRefrence user)
         {
-            CreateUser(username);
-            ChangeUserPassword(username, password);
-        }
-        public static void CreateUser(string username)
-        {
-            RunNetCommand($"user /add \"{username}\"");
-        }
-        public static void ChangeUserPassword(string username, string password)
-        {
-            RunNetCommand($"user \"{username}\" \"{password}\"");
-        }
-        public enum UserType { DefaultUser, Administrator }
-        public static void ChangeUserType(string username, UserType userType)
-        {
-            if (userType is UserType.Administrator)
+            if (user.OnDefaultDomain)
             {
-                RunNetCommand($"localgroup \"Administrators\" /add \"{username}\"");
+                RunNetCommand($"user /add \"{user.Name}\"", true);
             }
             else
             {
-                RunNetCommand($"localgroup \"Administrators\" /delete \"{username}\"");
+                RunNetCommand($"user /add \"{user.Name}\" /domain \"{user.Domain}\"", true);
+            }
+        }
+        public static void CreateUser(UserRefrence user, string password)
+        {
+            if (user.OnDefaultDomain)
+            {
+                RunNetCommand($"user /add \"{user.Name}\" \"{password}\"", true);
+            }
+            else
+            {
+                RunNetCommand($"user /add \"{user.Name}\" \"{password}\" /domain \"{user.Domain}\"", true);
+            }
+        }
+        public static void ChangeUserPassword(UserRefrence user, string password)
+        {
+            if (user.OnDefaultDomain)
+            {
+                RunNetCommand($"user \"{user.Name}\" \"{password}\"", true);
+            }
+            else
+            {
+                RunNetCommand($"user \"{user.Name}\" \"{password}\" /domain \"{user.Domain}\"", true);
+            }
+        }
+        public static void SetAdminStatus(UserRefrence user, bool isAdmin)
+        {
+            if (isAdmin)
+            {
+                if (user.OnDefaultDomain)
+                {
+                    RunNetCommand($"localgroup Administrators /add \"{user.Name}\"", false);
+                }
+                else
+                {
+                    RunNetCommand($"localgroup Administrators /add \"{user.Name}\" /domain \"{user.Domain}\"", false);
+                }
+            }
+            else
+            {
+                if (user.OnDefaultDomain)
+                {
+                    RunNetCommand($"localgroup Administrators /remove \"{user.Name}\"", false);
+                }
+                else
+                {
+                    RunNetCommand($"localgroup Administrators /remove \"{user.Name}\" /domain \"{user.Domain}\"", false);
+                }
             }
         }
         public static void SetUserActiveState(UserRefrence user, bool activeState)
         {
             if (activeState)
             {
-                RunNetCommand($"user \"{user.Username}\" /active:yes");
+                if (user.OnDefaultDomain)
+                {
+                    RunNetCommand($"user \"{user.Name}\" /active:yes", true);
+                }
+                else
+                {
+                    RunNetCommand($"user \"{user.Name}\" /active:yes /domain \"{user.Domain}\"", true);
+                }
             }
             else
             {
-                RunNetCommand($"user \"{user.Username}\" /domain:\"{user.Domain}\" /active:no");
+                if (user.OnDefaultDomain)
+                {
+                    RunNetCommand($"user \"{user.Name}\" /active:no", true);
+                }
+                else
+                {
+                    RunNetCommand($"user \"{user.Name}\" /active:no /domain \"{user.Domain}\"", true);
+                }
             }
         }
         public static bool UserExists(UserRefrence user)
         {
-            if (string.IsNullOrEmpty(user.Domain))
+            if (user.OnDefaultDomain)
             {
-                return RunNetCommand($"user \"{user.Username}\"");
+               return RunNetCommand($"user \"{user.Name}\"", false);
             }
             else
             {
-                return RunNetCommand($"user \"{user.Username}\"");
+               return RunNetCommand($"user \"{user.Name}\" /domain \"{user.Domain}\"", false);
             }
         }
-        public static bool RunNetCommand(string command)
+        public static bool RunNetCommand(string arguments, bool throwOnNonZeroExitCode = true)
         {
-            if (ProcessHelper.CurrentProcessIsAdmin() is false)
+            if (ProcessHelper.IsAdmin() is false)
             {
                 throw new Exception("Net commands require administrator.");
             }
-            return ProcessHelper.AwaitSuccess(ProcessHelper.Run($"\"{PathHelper.GetSystem32Path()}\\net.exe\" {command}", ProcessHelper.WindowMode.Hidden, ProcessHelper.AdminMode.AlwaysAdmin), new TimeSpan(0, 0, 30), ProcessHelper.TimeoutAction.KillChildAndThrowException, true);
+            string system32 = PathHelper.GetSystem32Path();
+            return ProcessHelper.AwaitSuccess(ProcessHelper.Start(new TerminalCommand($"{system32}\\net.exe", arguments), WindowMode.Hidden, true, system32), 300000000, TimeoutAction.KillAndThrow, throwOnNonZeroExitCode);
         }
-        public static UserRefrence FormatUsername(string username, UsernameFormat format)
+    }
+    public sealed class UserRefrence
+    {
+        public readonly string Name = "";
+        public readonly string Domain = null;
+        public readonly bool OnDefaultDomain = true;
+        public readonly string UPN = "";
+        public readonly string SAM = "";
+        public UserRefrence(string accountPath)
         {
-            if (username is null || username is "")
+            if (accountPath is null)
             {
-                return new UserRefrence("", "");
+                Name = "";
+                Domain = null;
+                OnDefaultDomain = true;
+                UPN = "";
+                SAM = "";
+                return;
             }
-
-            if (format is UsernameFormat.SAM)
+            bool upn = accountPath.Contains(UserHelper.UPNSeporatorString);
+            bool sam = accountPath.Contains(UserHelper.SAMSeporatorString);
+            if (upn && sam)
             {
-
-                return new UserRefrence("", "");
+                throw new Exception("Invalid username");
             }
-
-            throw new Exception("YEET");
-        }
-        public static string UPNToSAM(string username)
-        {
-            return GetSAM(FormatUsername(username, UsernameFormat.UPN));
-        }
-        public static string SAMToUPN(string username)
-        {
-            return GetUPN(FormatUsername(username, UsernameFormat.SAM));
-        }
-        public static string GetSAM(UserRefrence username)
-        {
-            return $"{username.Domain}\\{username.Username}";
-        }
-        public static string GetUPN(UserRefrence username)
-        {
-            if (username.Domain is null || username.Domain is "")
+            else if (upn && !sam)
             {
-                return username.Username;
-            }
-            return $"{username.Username}@{username.Domain}";
-        }
-        public enum UsernameFormat { Unknown, SAM, UPN }
-        public sealed class UserRefrence
-        {
-            public string Username = "";
-            public string Domain = null;
-            public bool OnDefaultDomain => Domain is null || Domain is "";
-            public string FormattedSAM => FormatSAM();
-            private string FormatSAM()
-            {
-                if (OnDefaultDomain)
+                string[] split = accountPath.Split(UserHelper.UPNSeporatorChar);
+                if (split.Length != 2)
                 {
-                    return $"{Username}";
+                    throw new Exception("Invalid username");
                 }
-                return $"{Domain}{SAMSeporatorString}{Username}";
+                Name = split[0];
+                Domain = split[1];
+                OnDefaultDomain = false;
+                UPN = $"{Name}{UserHelper.UPNSeporatorString}{Domain}";
+                SAM = $"{Domain}{UserHelper.SAMSeporatorString}{Name}";
+                return;
             }
-            public string FormattedUPN => FormatUPN();
-            private string FormatUPN()
+            else if (sam && !upn)
             {
-                if (OnDefaultDomain)
+                string[] split = accountPath.Split(UserHelper.SAMSeporatorChar);
+                if (split.Length != 2)
                 {
-                    return $"{Username}";
+                    throw new Exception("Invalid username");
                 }
-                return $"{Username}{UPNSeporatorString}{Domain}";
+                Name = split[1];
+                Domain = split[0];
+                OnDefaultDomain = false;
+                UPN = $"{Name}{UserHelper.UPNSeporatorString}{Domain}";
+                SAM = $"{Domain}{UserHelper.SAMSeporatorString}{Name}";
+                return;
             }
-            public UserRefrence(string username)
+            else
             {
-                if (username is null || username is "")
-                {
-                    throw new Exception("Username cannot be null or empty.");
-                }
-                Username = username;
+                Name = accountPath;
+                Domain = null;
+                OnDefaultDomain = true;
+                UPN = accountPath;
+                SAM = accountPath;
+                return;
+            }
+        }
+        public UserRefrence(string name, string domain)
+        {
+            if (name is null)
+            {
+                Name = "";
+            }
+            else
+            {
+                Name = name;
+            }
+            if (domain is "")
+            {
                 Domain = null;
             }
-            public UserRefrence(string username, string domain)
+            else
             {
-                if (username is null || username is "")
-                {
-                    throw new Exception("Username cannot be null or empty.");
-                }
-                Username = username;
-                if (domain is "")
-                {
-                    domain = null;
-                }
                 Domain = domain;
             }
+            OnDefaultDomain = Domain is null;
+            if (OnDefaultDomain)
+            {
+                UPN = Name;
+                SAM = Name;
+            }
+            else
+            {
+                UPN = $"{Name}{UserHelper.UPNSeporatorString}{Domain}";
+                SAM = $"{Domain}{UserHelper.SAMSeporatorString}{Name}";
+            }
+            return;
         }
     }
 }

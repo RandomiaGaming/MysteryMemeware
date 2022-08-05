@@ -1,26 +1,26 @@
-﻿//#Approve File 08/03/2022 11:35am.
+﻿//#Approve File 2022/08/04/PM/3/48
 using System;
 using System.Diagnostics;
 using System.IO;
-
+using System.Security.Principal;
 namespace MysteryMemeware
 {
+    public enum WindowMode { Default, Hidden, Minimized, Maximized }
+    public enum TimeoutAction { Return, Throw, Kill, KillAndThrow }
     public static class ProcessHelper
     {
-        public enum AdminMode { SameAsParent, AlwaysAdmin }
-        public enum WindowMode { Default, Hidden, Minimized, Maximized }
-        public static bool CurrentProcessIsAdmin()
+        public static bool IsAdmin()
         {
             try
             {
-                System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-                System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
-                bool isAdmin = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+                WindowsIdentity identity = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new(identity);
+                bool isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
                 try
                 {
                     identity.Dispose();
                 }
-                catch (Exception ex)
+                catch
                 {
 
                 }
@@ -31,46 +31,35 @@ namespace MysteryMemeware
                 return false;
             }
         }
-        public static Process RunAs(string command, string username, string password)
+        public static Process StartAs(TerminalCommand command, UserRefrence user, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
-            return RunAs(new TerminalCommand(command), username, password);
-        }
-        public static Process RunAs(string command, string username, string password, WindowMode windowMode)
-        {
-            return RunAs(new TerminalCommand(command), username, password, windowMode);
-        }
-        public static Process RunAs(string command, string username, string password, WindowMode windowMode, string workingDirectory)
-        {
-            return RunAs(new TerminalCommand(command), username, password, windowMode, workingDirectory);
-        }
-        public static Process RunAs(TerminalCommand command, string username, string password)
-        {
-            return RunAs(command, username, password, WindowMode.Default);
-        }
-        public static Process RunAs(TerminalCommand command, string username, string password, WindowMode windowMode)
-        {
-            return RunAs(command, username, password, windowMode, null);
-        }
-        public static Process RunAs(TerminalCommand command, string username, string password, WindowMode windowMode, string workingDirectory)
-        {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo();
-            processStartInfo.Arguments = command.Arguments;
-            processStartInfo.CreateNoWindow = windowMode is WindowMode.Hidden;
-            processStartInfo.Domain = null;
-            processStartInfo.ErrorDialog = false;
-            processStartInfo.ErrorDialogParentHandle = IntPtr.Zero;
-            processStartInfo.FileName = command.FileName;
-            processStartInfo.LoadUserProfile = true;
-            processStartInfo.Password = null;
-            processStartInfo.PasswordInClearText = password;
-            processStartInfo.RedirectStandardError = false;
-            processStartInfo.RedirectStandardInput = false;
-            processStartInfo.RedirectStandardOutput = false;
-            processStartInfo.StandardErrorEncoding = null;
-            processStartInfo.StandardOutputEncoding = null;
-            processStartInfo.UserName = username;
-            processStartInfo.UseShellExecute = false;
-            processStartInfo.Verb = null;
+            ProcessStartInfo processStartInfo = new()
+            {
+                Arguments = command.Arguments,
+                CreateNoWindow = windowMode is WindowMode.Hidden,
+                ErrorDialog = false,
+                ErrorDialogParentHandle = IntPtr.Zero,
+                FileName = command.FileName,
+                LoadUserProfile = true,
+                Password = null,
+                PasswordInClearText = password,
+                RedirectStandardError = false,
+                RedirectStandardInput = false,
+                RedirectStandardOutput = false,
+                StandardErrorEncoding = null,
+                StandardOutputEncoding = null,
+                UseShellExecute = false,
+                Verb = null
+            };
+            if (user.OnDefaultDomain)
+            {
+                processStartInfo.Domain = null;
+            }
+            else
+            {
+                processStartInfo.Domain = user.Domain;
+            }
+            processStartInfo.UserName = user.Name;
             if (windowMode is WindowMode.Hidden)
             {
                 processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -104,62 +93,28 @@ namespace MysteryMemeware
             }
             return Process.Start(processStartInfo);
         }
-        public static Process Run(string command)
+        public static Process Start(TerminalCommand command, WindowMode windowMode = WindowMode.Default, bool elevate = false, string workingDirectory = null)
         {
-            return Run(new TerminalCommand(command));
-        }
-        public static Process Run(string command, WindowMode windowMode)
-        {
-            return Run(new TerminalCommand(command), windowMode);
-        }
-        public static Process Run(string command, AdminMode adminMode)
-        {
-            return Run(new TerminalCommand(command), adminMode);
-        }
-        public static Process Run(string command, WindowMode windowMode, AdminMode adminMode)
-        {
-            return Run(new TerminalCommand(command), windowMode, adminMode);
-        }
-        public static Process Run(string command, WindowMode windowMode, AdminMode adminMode, string workingDirectory)
-        {
-            return Run(new TerminalCommand(command), windowMode, adminMode, workingDirectory);
-        }
-        public static Process Run(TerminalCommand command)
-        {
-            return Run(command, WindowMode.Default);
-        }
-        public static Process Run(TerminalCommand command, WindowMode windowMode)
-        {
-            return Run(command, windowMode, AdminMode.SameAsParent);
-        }
-        public static Process Run(TerminalCommand command, AdminMode adminMode)
-        {
-            return Run(command, WindowMode.Default, adminMode);
-        }
-        public static Process Run(TerminalCommand command, WindowMode windowMode, AdminMode adminMode)
-        {
-            return Run(command, windowMode, adminMode, null);
-        }
-        public static Process Run(TerminalCommand command, WindowMode windowMode, AdminMode adminMode, string workingDirectory)
-        {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo();
-            processStartInfo.Arguments = command.Arguments;
-            processStartInfo.CreateNoWindow = windowMode is WindowMode.Hidden;
-            processStartInfo.Domain = null;
-            processStartInfo.ErrorDialog = false;
-            processStartInfo.ErrorDialogParentHandle = IntPtr.Zero;
-            processStartInfo.FileName = command.FileName;
-            processStartInfo.LoadUserProfile = false;
-            processStartInfo.Password = null;
-            processStartInfo.PasswordInClearText = null;
-            processStartInfo.RedirectStandardError = false;
-            processStartInfo.RedirectStandardInput = false;
-            processStartInfo.RedirectStandardOutput = false;
-            processStartInfo.StandardErrorEncoding = null;
-            processStartInfo.StandardOutputEncoding = null;
-            processStartInfo.UserName = null;
-            processStartInfo.UseShellExecute = true;
-            if (adminMode is AdminMode.AlwaysAdmin || (adminMode is AdminMode.SameAsParent && CurrentProcessIsAdmin()))
+            ProcessStartInfo processStartInfo = new()
+            {
+                Arguments = command.Arguments,
+                CreateNoWindow = windowMode is WindowMode.Hidden,
+                Domain = null,
+                ErrorDialog = false,
+                ErrorDialogParentHandle = IntPtr.Zero,
+                FileName = command.FileName,
+                LoadUserProfile = false,
+                Password = null,
+                PasswordInClearText = null,
+                RedirectStandardError = false,
+                RedirectStandardInput = false,
+                RedirectStandardOutput = false,
+                StandardErrorEncoding = null,
+                StandardOutputEncoding = null,
+                UserName = null,
+                UseShellExecute = true
+            };
+            if (elevate)
             {
                 processStartInfo.Verb = "runas";
             }
@@ -200,23 +155,16 @@ namespace MysteryMemeware
             }
             return Process.Start(processStartInfo);
         }
-        public enum TimeoutAction { StopWaiting, ThrowException, KillChild, KillChildAndThrowException }
-        public static bool AwaitSuccess(Process process)
-        {
-            return AwaitSuccess(process, false);
-        }
-        public static bool AwaitSuccess(Process process, bool throwOnNonzeroExitCode)
+        public static bool AwaitSuccess(Process process, bool throwOnNonzeroExitCode = false)
         {
             while (!process.HasExited)
             {
-
             }
-
             if (process.ExitCode is not 0)
             {
                 if (throwOnNonzeroExitCode)
                 {
-                    throw new Exception($"Child process has terminated with a response code of {process.ExitCode}.");
+                    throw new Exception($"Process has terminated with a exit code of {process.ExitCode}.");
                 }
                 else
                 {
@@ -228,41 +176,27 @@ namespace MysteryMemeware
                 return true;
             }
         }
-        public static bool AwaitSuccess(Process process, TimeSpan timeout)
+        public static bool AwaitSuccess(Process process, long timeoutTicks = 300000000, TimeoutAction timeoutAction = TimeoutAction.Return, bool throwOnNonzeroExitCode = false)
         {
-            return AwaitSuccess(process, timeout, TimeoutAction.StopWaiting);
-        }
-        public static bool AwaitSuccess(Process process, TimeSpan timeout, TimeoutAction timeoutAction)
-        {
-            return AwaitSuccess(process, timeout, timeoutAction, false);
-        }
-        public static bool AwaitSuccess(Process process, TimeSpan timeout, bool throwOnNonzeroExitCode)
-        {
-            return AwaitSuccess(process, timeout, TimeoutAction.StopWaiting, throwOnNonzeroExitCode);
-        }
-        public static bool AwaitSuccess(Process process, TimeSpan timeout, TimeoutAction timeoutAction, bool throwOnNonzeroExitCode)
-        {
-            if (timeout.Ticks < 0)
+            if (timeoutTicks < 0)
             {
-                throw new Exception("timeout cannot be a negative amount of time.");
+                throw new Exception("timeoutTicks must be greater than or equal to 0.");
             }
-            if (timeout.Ticks == 0)
+            if (timeoutTicks == 0)
             {
                 return AwaitSuccess(process, throwOnNonzeroExitCode);
             }
-
-            Stopwatch timeoutStopwatch = new Stopwatch();
+            Stopwatch timeoutStopwatch = new();
             timeoutStopwatch.Restart();
-
             while (!process.HasExited)
             {
-                if (timeoutStopwatch.ElapsedTicks >= timeout.Ticks)
+                if (timeoutStopwatch.ElapsedTicks >= timeoutTicks)
                 {
-                    if (timeoutAction is TimeoutAction.StopWaiting)
+                    if (timeoutAction is TimeoutAction.Return)
                     {
                         return false;
                     }
-                    if (timeoutAction is TimeoutAction.KillChild)
+                    if (timeoutAction is TimeoutAction.Kill)
                     {
                         try
                         {
@@ -270,13 +204,13 @@ namespace MysteryMemeware
                         }
                         catch
                         {
-                            throw new Exception("Process timeout expired and child process could not be killed while waiting for process to exit.");
+                            throw new Exception("Process timed out and process could not be killed.");
                         }
                         return false;
                     }
-                    if (timeoutAction is TimeoutAction.ThrowException || timeoutAction is TimeoutAction.KillChildAndThrowException)
+                    if (timeoutAction is TimeoutAction.Throw || timeoutAction is TimeoutAction.KillAndThrow)
                     {
-                        if (timeoutAction is TimeoutAction.KillChildAndThrowException)
+                        if (timeoutAction is TimeoutAction.KillAndThrow)
                         {
                             try
                             {
@@ -284,19 +218,18 @@ namespace MysteryMemeware
                             }
                             catch
                             {
-                                throw new Exception("Process timeout expired and child process could not be killed while waiting for process to exit.");
+                                throw new Exception("Process timed out and process could not be killed.");
                             }
                         }
-                        throw new Exception("Process timeout expired while waiting for process to exit.");
+                        throw new Exception("Process timed out.");
                     }
                 }
             }
-
             if (process.ExitCode is not 0)
             {
                 if (throwOnNonzeroExitCode)
                 {
-                    throw new Exception($"Child process has terminated with a response code of {process.ExitCode}.");
+                    throw new Exception($"Process has terminated with a exit code of {process.ExitCode}.");
                 }
                 else
                 {
@@ -308,141 +241,149 @@ namespace MysteryMemeware
                 return true;
             }
         }
-        public struct TerminalCommand
+    }
+    public sealed class TerminalCommand
+    {
+        public readonly string FileName = "";
+        public readonly string Arguments = "";
+        public readonly string Command = "";
+        public TerminalCommand(string command)
         {
-            public readonly string FileName = "";
-            public readonly string Arguments = "";
-            public readonly string Command = "";
-            public TerminalCommand(string command)
+            if (command is null || command is "")
             {
-                if (command is null || command is "")
+                FileName = "";
+                Arguments = "";
+                Command = "";
+                return;
+            }
+            while (command.Length > 0 && command[0] == ' ')
+            {
+                command = command.Substring(1, command.Length - 1);
+            }
+            while (command.Length > 0 && command[command.Length - 1] == ' ')
+            {
+                command = command.Substring(0, command.Length - 1);
+            }
+            if (command.Length == 0)
+            {
+                FileName = "";
+                Arguments = "";
+                Command = "";
+                return;
+            }
+            int splitIndex = 0;
+            if (command[0] == '"')
+            {
+                command = command.Substring(1, command.Length - 1);
+                while (splitIndex < command.Length)
                 {
-                    FileName = "";
-                    Arguments = "";
-                    Command = "";
-                    return;
-                }
-                while (command.Length > 0 && command[0] == ' ')
-                {
-                    command = command.Substring(1, command.Length - 1);
-                }
-                while (command.Length > 0 && command[command.Length - 1] == ' ')
-                {
-                    command = command.Substring(0, command.Length - 1);
-                }
-                if (command.Length == 0)
-                {
-                    FileName = "";
-                    Arguments = "";
-                    Command = "";
-                    return;
-                }
-                int splitIndex = 0;
-                if (command[0] == '"')
-                {
-                    command = command.Substring(1, command.Length - 1);
-                    while (splitIndex < command.Length)
+                    if (command[splitIndex] == '"')
                     {
-                        if (command[splitIndex] == '"')
-                        {
-                            goto QuoteFound;
-                        }
-                        else
-                        {
-                            splitIndex++;
-                        }
+                        goto QuoteFound;
                     }
-                    throw new Exception("Invalid command due to unbalanced quotes.");
+                    else
+                    {
+                        splitIndex++;
+                    }
+                }
+                throw new Exception("Invalid command due to unbalanced quotes.");
+            }
+            else
+            {
+                while (splitIndex < command.Length)
+                {
+                    if (command[splitIndex] == '"')
+                    {
+                        throw new Exception("Invalid command due to unexpected quote.");
+                    }
+                    else if (command[splitIndex] == ' ')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        splitIndex++;
+                    }
+                }
+            }
+        QuoteFound:
+            string fileName = command.Substring(0, splitIndex);
+            string arguments = command.Substring(splitIndex + 1, command.Length - splitIndex - 1);
+            while (arguments.Length > 0 && arguments[0] == ' ')
+            {
+                arguments = arguments.Substring(1, arguments.Length - 1);
+            }
+            FileName = fileName;
+            Arguments = arguments;
+            if (fileName.Contains(" "))
+            {
+                if (arguments is "")
+                {
+                    Command = $"\"{fileName}\"";
                 }
                 else
                 {
-                    while (splitIndex < command.Length)
-                    {
-                        if (command[splitIndex] == '"')
-                        {
-                            throw new Exception("Invalid command due to unexpected quote.");
-                        }
-                        else if (command[splitIndex] == ' ')
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            splitIndex++;
-                        }
-                    }
+                    Command = $"\"{fileName}\" {arguments}";
                 }
-            QuoteFound:
-                string fileName = command.Substring(0, splitIndex);
-                string arguments = command.Substring(splitIndex + 1, command.Length - splitIndex - 1);
+            }
+            else
+            {
+                if (arguments is "")
+                {
+                    Command = $"{fileName}";
+                }
+                else
+                {
+                    Command = $"{fileName} {arguments}";
+                }
+            }
+        }
+        public TerminalCommand(string fileName, string arguments)
+        {
+            if (fileName is null)
+            {
+                FileName = "";
+            }
+            else
+            {
+                FileName = fileName;
+            }
+            if (arguments is null)
+            {
+                Arguments = "";
+            }
+            else
+            {
                 while (arguments.Length > 0 && arguments[0] == ' ')
                 {
                     arguments = arguments.Substring(1, arguments.Length - 1);
                 }
-                FileName = fileName;
-                Arguments = arguments;
-                if (fileName.Contains(" "))
+                while (arguments.Length > 0 && arguments[arguments.Length - 1] == ' ')
                 {
-                    if (arguments is "")
-                    {
-                        Command = $"\"{fileName}\"";
-                    }
-                    else
-                    {
-                        Command = $"\"{fileName}\" {arguments}";
-                    }
+                    arguments = arguments.Substring(0, arguments.Length - 1);
+                }
+                Arguments = arguments;
+            }
+            if (fileName.Contains(" "))
+            {
+                if (arguments is "")
+                {
+                    Command = $"\"{fileName}\"";
                 }
                 else
                 {
-                    if (arguments is "")
-                    {
-                        Command = $"{fileName}";
-                    }
-                    else
-                    {
-                        Command = $"{fileName} {arguments}";
-                    }
+                    Command = $"\"{fileName}\" {arguments}";
                 }
             }
-            public TerminalCommand(string fileName, string arguments)
+            else
             {
-                if (fileName is null)
+                if (arguments is "")
                 {
-                    FileName = "";
+                    Command = $"{fileName}";
                 }
                 else
                 {
-                    FileName = fileName;
-                }
-                if (arguments is null)
-                {
-                    Arguments = "";
-                }
-                else
-                {
-                    Arguments = arguments;
-                }
-                if (fileName.Contains(" "))
-                {
-                    if (arguments is "")
-                    {
-                        Command = $"\"{fileName}\"";
-                    }
-                    else
-                    {
-                        Command = $"\"{fileName}\" {arguments}";
-                    }
-                }
-                else
-                {
-                    if (arguments is "")
-                    {
-                        Command = $"{fileName}";
-                    }
-                    else
-                    {
-                        Command = $"{fileName} {arguments}";
-                    }
+                    Command = $"{fileName} {arguments}";
                 }
             }
         }
