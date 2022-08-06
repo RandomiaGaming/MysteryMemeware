@@ -1,4 +1,4 @@
-﻿//#Approve File 08/03/2022 11:35am.
+﻿//#approve 08/05/2022 12:52pm
 using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
@@ -8,8 +8,7 @@ namespace MysteryMemeware
     {
         public static float GetVolume()
         {
-            float v;
-            Marshal.ThrowExceptionForHR(Vol().GetMasterVolumeLevelScalar(out v));
+            Marshal.ThrowExceptionForHR(Vol().GetMasterVolumeLevelScalar(out float v));
             return v;
         }
         public static void SetVolume(float volumeLevel)
@@ -22,8 +21,8 @@ namespace MysteryMemeware
         }
         public static bool GetMute()
         {
-            bool mute;
-            Marshal.ThrowExceptionForHR(Vol().GetMute(out mute)); return mute;
+            Marshal.ThrowExceptionForHR(Vol().GetMute(out bool mute)); 
+            return mute;
         }
         public static void SetMute(bool muteState)
         {
@@ -89,11 +88,9 @@ namespace MysteryMemeware
         private static IAudioEndpointVolume Vol()
         {
             var enumerator = new MMDeviceEnumeratorComObject() as IMMDeviceEnumerator;
-            IMMDevice dev = null;
-            Marshal.ThrowExceptionForHR(enumerator.GetDefaultAudioEndpoint(0, 1, out dev));
-            IAudioEndpointVolume epv = null;
+            Marshal.ThrowExceptionForHR(enumerator.GetDefaultAudioEndpoint(0, 1, out IMMDevice dev));
             var epvid = typeof(IAudioEndpointVolume).GUID;
-            Marshal.ThrowExceptionForHR(dev.Activate(ref epvid, 23, 0, out epv));
+            Marshal.ThrowExceptionForHR(dev.Activate(ref epvid, 23, 0, out IAudioEndpointVolume epv));
             return epv;
         }
         [DllImport("user32.dll")]

@@ -1,4 +1,4 @@
-﻿//#Approve File 2022/08/04/PM/3/49
+﻿//#approve 08/05/2022 12:38pm
 using System;
 using Microsoft.Win32;
 namespace MysteryMemeware
@@ -19,134 +19,227 @@ namespace MysteryMemeware
         public static readonly string[] LocalMachine32KeyNames = new string[8] { "HKEY_LOCAL_MACHINE_32", "LOCAL_MACHINE_32", "HKEYLOCALMACHINE_32", "LOCALMACHINE_32", "HKEY_LOCAL_MACHINE32", "LOCAL_MACHINE32", "HKEYLOCALMACHINE32", "LOCALMACHINE32" };
         public static readonly string[] Users32KeyNames = new string[6] { "HKEY_USERS_32", "USERS_32", "HKEYUSERS_32", "HKEY_USERS32", "USERS32", "HKEYUSERS32" };
         public static readonly string[] CurrentConfig32KeyNames = new string[8] { "HKEY_CURRENT_CONFIG_32", "CURRENT_CONFIG_32", "HKEYCURRENTCONFIG_32", "CURRENTCONFIG_32", "HKEY_CURRENT_CONFIG32", "CURRENT_CONFIG32", "HKEYCURRENTCONFIG32", "CURRENTCONFIG32" };
+        public static bool RegistryValueExists(RegistryValueRefrence registryValue)
+        {
+            try
+            {
+                GetRegistryValue(registryValue);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public static object GetRegistryValue(RegistryValueRefrence registryValue)
         {
             object output = null;
-            RegistryKey baseKey = OpenBaseKey(registryValue.BaseKeyName);
+            RegistryKey registryKey = OpenRegistryKey(registryValue.ParentKeyRefrence, false);
             try
             {
-                RegistryKey subKey = baseKey.OpenSubKey(registryValue.SubKeyPath, false);
-                if (subKey is null)
+                object value = registryKey.GetValue(registryValue.ValueName);
+                if (value is null)
                 {
-                    throw new Exception($"Subkey with name \"{registryValue.SubKeyPath}\" could not be found or is inaccessable.");
+                    throw new Exception("registryValue does not exist or could not be accessed.");
                 }
-                try
-                {
-                    output = subKey.GetValue(registryValue.ValueName);
-                }
-                finally
-                {
-                    try
-                    {
-                        subKey.Dispose();
-                    }
-                    catch
-                    {
-
-                    }
-                }
+                output = value;
             }
             finally
             {
-                try
-                {
-                    baseKey.Dispose();
-                }
-                catch
-                {
-
-                }
+                SafelyReleaseKey(registryKey);
             }
             return output;
         }
         public static void SetRegistryValue(RegistryValueRefrence registryValue, object value, RegistryValueKind registryValueKind = RegistryValueKind.Unknown)
         {
-            if(registryValue is null)
-            {
-                throw new Exception("registryValue cannot be null.");
-            }
-            if(registryValueKind is RegistryValueKind.Unknown)
-            {
-                registryValueKind = GetObjectRegistryKind(value);
-            }
-            RegistryKey baseKey = OpenBaseKey(registryValue.BaseKeyName);
+            RegistryKey registryKey = OpenRegistryKey(registryValue.ParentKeyRefrence, true);
             try
             {
-                RegistryKey subKey = baseKey.CreateSubKey(registryValue.SubKeyPath, true);
-                if (subKey is null)
+                if (registryValueKind is RegistryValueKind.Unknown)
                 {
-                    throw new Exception($"Subkey with name \"{registryValue.SubKeyPath}\" could not be created and is inaccessable.");
+                    registryKey.SetValue(registryValue.ValueName, value, GetObjectRegistryKind(value));
                 }
-                try
+                else
                 {
-                    subKey.SetValue(registryValue.ValueName, value, registryValueKind);
-                }
-                finally
-                {
-                    try
-                    {
-                        subKey.Dispose();
-                    }
-                    catch
-                    {
-
-                    }
+                    registryKey.SetValue(registryValue.ValueName, value, registryValueKind);
                 }
             }
             finally
             {
-                try
-                {
-                    baseKey.Dispose();
-                }
-                catch
-                {
-
-                }
+                SafelyReleaseKey(registryKey);
             }
         }
-        public static bool RegistryValueExists(RegistryValueRefrence registryValue)
+        public static void CreateRegistryValue(RegistryValueRefrence registryValue, object value, RegistryValueKind registryValueKind = RegistryValueKind.Unknown)
         {
-            if(registryValue is null)
+            RegistryKey registryKey = CreateRegistryKey(registryValue.ParentKeyRefrence, true);
+            try
+            {
+                if (registryValueKind is RegistryValueKind.Unknown)
+                {
+                    registryKey.SetValue(registryValue.ValueName, value, GetObjectRegistryKind(value));
+                }
+                else
+                {
+                    registryKey.SetValue(registryValue.ValueName, value, registryValueKind);
+                }
+            }
+            finally
+            {
+                SafelyReleaseKey(registryKey);
+            }
+        }
+        public static bool RegistryKeyExists(RegistryKeyRefrence registryKey)
+        {
+            try
+            {
+                SafelyReleaseKey(OpenRegistryKey(registryKey, false));
+                return true;
+            }
+            catch
             {
                 return false;
             }
-            RegistryKey baseKey = OpenBaseKey(registryValue.BaseKeyName);
+        }
+        public static RegistryKey OpenRegistryKey(RegistryKeyRefrence registryKey, bool writable = false)
+        {
+            if (registryKey is null)
+            {
+                throw new Exception("registryKey cannot be null.");
+            }
+            RegistryKey output = null;
+            RegistryKey baseKey = OpenBaseKey(registryKey.BaseKeyName);
             try
             {
-                RegistryKey subKey = baseKey.CreateSubKey(registryValue.SubKeyPath, true);
+                RegistryKey subKey = baseKey.OpenSubKey(registryKey.SubKeyPath, writable);
                 if (subKey is null)
                 {
-                    throw new Exception($"Subkey with name \"{registryValue.SubKeyPath}\" could not be created and is inaccessable.");
+                    throw new Exception("subKey does not exist or could not be accessed.");
                 }
-                try
-                {
-                    subKey.SetValue(registryValue.ValueName, null);
-                }
-                finally
-                {
-                    try
-                    {
-                        subKey.Dispose();
-                    }
-                    catch
-                    {
-
-                    }
-                }
+                output = subKey;
             }
             finally
             {
-                try
+                SafelyReleaseKey(baseKey);
+            }
+            return output;
+        }
+        public static RegistryKey CreateRegistryKey(RegistryKeyRefrence registryKey, bool writable = true)
+        {
+            if (registryKey is null)
+            {
+                throw new Exception("registryKey cannot be null.");
+            }
+            RegistryKey output = null;
+            RegistryKey baseKey = OpenBaseKey(registryKey.BaseKeyName);
+            try
+            {
+                RegistryKey subKey = baseKey.CreateSubKey(registryKey.SubKeyPath, writable);
+                if (subKey is null)
                 {
-                    baseKey.Dispose();
+                    throw new Exception("subKey could not be created or could not be accessed.");
                 }
-                catch
+                output = subKey;
+            }
+            finally
+            {
+                SafelyReleaseKey(baseKey);
+            }
+            return output;
+        }
+        public static bool BaseKeyExists(string baseKeyName)
+        {
+            try
+            {
+                SafelyReleaseKey(OpenBaseKey(baseKeyName));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public static RegistryKey OpenBaseKey(string baseKeyName)
+        {
+            try
+            {
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, ClassesRootKeyNames))
                 {
+                    return RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry64);
+                }
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, CurrentUserKeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
+                }
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, LocalMachineKeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+                }
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, UsersKeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.Users, RegistryView.Registry64);
+                }
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, CurrentConfigKeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.CurrentConfig, RegistryView.Registry64);
+                }
 
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, ClassesRoot32KeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry32);
+                }
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, CurrentUser32KeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32);
+                }
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, LocalMachine32KeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+                }
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, Users32KeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.Users, RegistryView.Registry32);
+                }
+                if (StringHelper.MatchesArrayCaseless(baseKeyName, CurrentConfig32KeyNames))
+                {
+                    return RegistryKey.OpenBaseKey(RegistryHive.CurrentConfig, RegistryView.Registry32);
                 }
             }
-            return true;
+            catch
+            {
+                throw new Exception("Base key with given name could not be accessed.");
+            }
+            throw new Exception("Base key with given name does not exist.");
+        }
+        public static void SafelyReleaseKey(RegistryKey registryKey)
+        {
+            if (registryKey is null)
+            {
+                return;
+            }
+            try
+            {
+                registryKey.Flush();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                registryKey.Close();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                registryKey.Dispose();
+            }
+            catch
+            {
+
+            }
         }
         public static RegistryValueKind GetObjectRegistryKind(object data)
         {
@@ -175,66 +268,21 @@ namespace MysteryMemeware
             {
                 return RegistryValueKind.MultiString;
             }
-            return RegistryValueKind.Unknown;
-        }
-        public static RegistryKey OpenBaseKey(string baseKeyName)
-        {
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, ClassesRootKeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry64);
-            }
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, CurrentUserKeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
-            }
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, LocalMachineKeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-            }
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, UsersKeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.Users, RegistryView.Registry64);
-            }
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, CurrentConfigKeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.CurrentConfig, RegistryView.Registry64);
-            }
-
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, ClassesRoot32KeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry32);
-            }
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, CurrentUser32KeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32);
-            }
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, LocalMachine32KeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-            }
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, Users32KeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.Users, RegistryView.Registry32);
-            }
-            if (StringHelper.MatchesArrayCaseless(baseKeyName, CurrentConfig32KeyNames))
-            {
-                return RegistryKey.OpenBaseKey(RegistryHive.CurrentConfig, RegistryView.Registry32);
-            }
-
-            throw new Exception($"No base key exists with name {baseKeyName}.");
+            return RegistryValueKind.None;
         }
         public static string FormatRegistryPath(string registryPath)
         {
-            if (registryPath is not null && registryPath is not "")
+            if (registryPath is null || registryPath is "")
             {
-                if (!StringHelper.EndsWithCaseless(registryPath, PathSeparatorString + PathSeparatorString) && StringHelper.EndsWithCaseless(registryPath, PathSeparatorString))
-                {
-                    registryPath = registryPath.Substring(0, registryPath.Length - 1);
-                }
-                if (!StringHelper.StartsWithCaseless(registryPath, PathSeparatorString + PathSeparatorString) && StringHelper.StartsWithCaseless(registryPath, PathSeparatorString))
-                {
-                    registryPath = registryPath.Substring(1, registryPath.Length - 1);
-                }
+                return "";
+            }
+            if (!StringHelper.EndsWithCaseless(registryPath, PathSeparatorString + PathSeparatorString) && StringHelper.EndsWithCaseless(registryPath, PathSeparatorString))
+            {
+                registryPath = registryPath.Substring(0, registryPath.Length - 1);
+            }
+            if (!StringHelper.StartsWithCaseless(registryPath, PathSeparatorString + PathSeparatorString) && StringHelper.StartsWithCaseless(registryPath, PathSeparatorString))
+            {
+                registryPath = registryPath.Substring(1, registryPath.Length - 1);
             }
             string firstKeyName = StringHelper.SelectBeforeCaseless(registryPath, PathSeparatorString);
             if (StringHelper.MatchesArrayCaseless(firstKeyName, RootKeyNames))
@@ -251,65 +299,6 @@ namespace MysteryMemeware
                 }
             }
             return registryPath;
-        }
-    }
-    public sealed class RegistryKeyRefrence
-    {
-        public readonly string BaseKeyName = "";
-        public readonly string SubKeyPath = "";
-        public readonly string Path = "";
-        public RegistryKeyRefrence(string path)
-        {
-            if(path is null)
-            {
-                throw new Exception("path cannot be null.");
-            }
-            Path = RegistryHelper.FormatRegistryPath(path);
-            BaseKeyName = StringHelper.SelectBeforeCaseless(Path, RegistryHelper.PathSeparatorString);
-            if (Path is null || Path is "" || BaseKeyName is null || BaseKeyName is "")
-            {
-                throw new Exception("path is invalid.");
-            }
-            string SubKeyPath = Path.Substring(BaseKeyName.Length + 1, Path.Length - BaseKeyName.Length - 1);
-            if (SubKeyPath is "")
-            {
-                throw new Exception("path is invalid.");
-            }
-        }
-        public RegistryKeyRefrence(string baseKeyName, string subKeyPath)
-        {
-            BaseKeyName = baseKeyName;
-            SubKeyPath = subKeyPath;
-            Path = $"{baseKeyName}{RegistryHelper.PathSeparatorString}{subKeyPath}";
-        }
-    }
-    public sealed class RegistryValueRefrence
-    {
-        public readonly string BaseKeyName = "";
-        public readonly string SubKeyPath = "";
-        public readonly string ValueName = "";
-        public readonly string Path = "";
-        public RegistryValueRefrence(string path)
-        {
-            Path = RegistryHelper.FormatRegistryPath(path);
-            BaseKeyName = StringHelper.SelectBeforeCaseless(Path, RegistryHelper.PathSeparatorString);
-            ValueName = StringHelper.SelectAfterCaseless(Path, RegistryHelper.PathSeparatorString);
-            if (Path is null || Path is "" || BaseKeyName is null || BaseKeyName is "" || ValueName is null || ValueName is "")
-            {
-                throw new Exception("Provided registryPath was invalid.");
-            }
-            SubKeyPath = Path.Substring(BaseKeyName.Length + 1, Path.Length - BaseKeyName.Length - ValueName.Length - 2);
-            if (SubKeyPath is "")
-            {
-                throw new Exception("Provided registryPath was invalid.");
-            }
-        }
-        public RegistryValueRefrence(string baseKeyName, string subKeyPath, string valueName)
-        {
-            BaseKeyName = baseKeyName;
-            SubKeyPath = subKeyPath;
-            ValueName = valueName;
-            Path = $"{baseKeyName}{RegistryHelper.PathSeparatorString}{subKeyPath}{RegistryHelper.PathSeparatorString}{valueName}";
         }
     }
 }
