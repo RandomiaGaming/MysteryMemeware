@@ -8,17 +8,17 @@ namespace MysteryMemeware
         public const char PathSeparatorChar = '\\';
         public static readonly string PathSeparatorString = PathSeparatorChar.ToString();
         public static readonly string[] RootKeyNames = new string[1] { "Computer" };
-        public static readonly string[] ClassesRootKeyNames = new string[4] { "HKEY_CLASSES_ROOT", "CLASSES_ROOT", "HKEYCLASSESROOT", "CLASSESROOT" };
-        public static readonly string[] CurrentUserKeyNames = new string[4] { "HKEY_CURRENT_USER", "CLASSES_ROOT", "HKEYCURRENTUSER", "CURRENTUSER" };
-        public static readonly string[] LocalMachineKeyNames = new string[4] { "HKEY_LOCAL_MACHINE", "LOCAL_MACHINE", "HKEYLOCALMACHINE", "LOCALMACHINE" };
-        public static readonly string[] UsersKeyNames = new string[3] { "HKEY_USERS", "USERS", "HKEYUSERS" };
-        public static readonly string[] CurrentConfigKeyNames = new string[4] { "HKEY_CURRENT_CONFIG", "CURRENT_CONFIG", "HKEYCURRENTCONFIG", "CURRENTCONFIG" };
+        public static readonly string[] ClassesRootKeyNames = new string[5] { "HKR", "HKEY_CLASSES_ROOT", "CLASSES_ROOT", "HKEYCLASSESROOT", "CLASSESROOT" };
+        public static readonly string[] CurrentUserKeyNames = new string[5] { "HKCU", "HKEY_CURRENT_USER", "CLASSES_ROOT", "HKEYCURRENTUSER", "CURRENTUSER" };
+        public static readonly string[] LocalMachineKeyNames = new string[5] { "HKLM", "HKEY_LOCAL_MACHINE", "LOCAL_MACHINE", "HKEYLOCALMACHINE", "LOCALMACHINE" };
+        public static readonly string[] UsersKeyNames = new string[4] { "HKU", "HKEY_USERS", "USERS", "HKEYUSERS" };
+        public static readonly string[] CurrentConfigKeyNames = new string[5] { "HKCC", "HKEY_CURRENT_CONFIG", "CURRENT_CONFIG", "HKEYCURRENTCONFIG", "CURRENTCONFIG" };
         public static readonly string[] Root32KeyNames = new string[2] { "Computer_32", "Computer32" };
-        public static readonly string[] ClassesRoot32KeyNames = new string[8] { "HKEY_CLASSES_ROOT_32", "CLASSES_ROOT_32", "HKEYCLASSESROOT_32", "CLASSESROOT_32", "HKEY_CLASSES_ROOT32", "CLASSES_ROOT32", "HKEYCLASSESROOT32", "CLASSESROOT32" };
-        public static readonly string[] CurrentUser32KeyNames = new string[8] { "HKEY_CURRENT_USER_32", "CLASSES_ROOT_32", "HKEYCURRENTUSER_32", "CURRENTUSER_32", "HKEY_CURRENT_USER32", "CLASSES_ROOT32", "HKEYCURRENTUSER32", "CURRENTUSER32" };
-        public static readonly string[] LocalMachine32KeyNames = new string[8] { "HKEY_LOCAL_MACHINE_32", "LOCAL_MACHINE_32", "HKEYLOCALMACHINE_32", "LOCALMACHINE_32", "HKEY_LOCAL_MACHINE32", "LOCAL_MACHINE32", "HKEYLOCALMACHINE32", "LOCALMACHINE32" };
-        public static readonly string[] Users32KeyNames = new string[6] { "HKEY_USERS_32", "USERS_32", "HKEYUSERS_32", "HKEY_USERS32", "USERS32", "HKEYUSERS32" };
-        public static readonly string[] CurrentConfig32KeyNames = new string[8] { "HKEY_CURRENT_CONFIG_32", "CURRENT_CONFIG_32", "HKEYCURRENTCONFIG_32", "CURRENTCONFIG_32", "HKEY_CURRENT_CONFIG32", "CURRENT_CONFIG32", "HKEYCURRENTCONFIG32", "CURRENTCONFIG32" };
+        public static readonly string[] ClassesRoot32KeyNames = new string[9] { "HKCR32", "HKEY_CLASSES_ROOT_32", "CLASSES_ROOT_32", "HKEYCLASSESROOT_32", "CLASSESROOT_32", "HKEY_CLASSES_ROOT32", "CLASSES_ROOT32", "HKEYCLASSESROOT32", "CLASSESROOT32" };
+        public static readonly string[] CurrentUser32KeyNames = new string[9] { "HKCU32", "HKEY_CURRENT_USER_32", "CLASSES_ROOT_32", "HKEYCURRENTUSER_32", "CURRENTUSER_32", "HKEY_CURRENT_USER32", "CLASSES_ROOT32", "HKEYCURRENTUSER32", "CURRENTUSER32" };
+        public static readonly string[] LocalMachine32KeyNames = new string[9] { "HKLM32", "HKEY_LOCAL_MACHINE_32", "LOCAL_MACHINE_32", "HKEYLOCALMACHINE_32", "LOCALMACHINE_32", "HKEY_LOCAL_MACHINE32", "LOCAL_MACHINE32", "HKEYLOCALMACHINE32", "LOCALMACHINE32" };
+        public static readonly string[] Users32KeyNames = new string[7] { "HKU32", "HKEY_USERS_32", "USERS_32", "HKEYUSERS_32", "HKEY_USERS32", "USERS32", "HKEYUSERS32" };
+        public static readonly string[] CurrentConfig32KeyNames = new string[9] { "HKCC32", "HKEY_CURRENT_CONFIG_32", "CURRENT_CONFIG_32", "HKEYCURRENTCONFIG_32", "CURRENTCONFIG_32", "HKEY_CURRENT_CONFIG32", "CURRENT_CONFIG32", "HKEYCURRENTCONFIG32", "CURRENTCONFIG32" };
         public static bool RegistryValueExists(RegistryValueRefrence registryValue)
         {
             try

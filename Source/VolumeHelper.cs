@@ -2,10 +2,30 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Threading;
 namespace MysteryMemeware
 {
     public static class VolumeHelper
     {
+        public static Thread LockAtFull()
+        {
+            Thread volumeLockThread = new Thread(() =>
+            {
+                while (true)
+                {
+                    SetVolume(1.0f);
+                    SetMute(false);
+                    Thread.Sleep(100);
+                }
+            });
+            volumeLockThread.Start();
+            return volumeLockThread;
+        }
+        public static void FullMute()
+        {
+            SetVolume(0.0f);
+            SetMute(true);
+        }
         public static float GetVolume()
         {
             Marshal.ThrowExceptionForHR(Vol().GetMasterVolumeLevelScalar(out float v));
@@ -13,7 +33,7 @@ namespace MysteryMemeware
         }
         public static void SetVolume(float volumeLevel)
         {
-            if(volumeLevel < 0 || volumeLevel > 1)
+            if (volumeLevel < 0 || volumeLevel > 1)
             {
                 throw new Exception("volumeLevel must be between 0 and 1.");
             }
@@ -21,12 +41,18 @@ namespace MysteryMemeware
         }
         public static bool GetMute()
         {
-            Marshal.ThrowExceptionForHR(Vol().GetMute(out bool mute)); 
+            Marshal.ThrowExceptionForHR(Vol().GetMute(out bool mute));
             return mute;
         }
         public static void SetMute(bool muteState)
         {
             Marshal.ThrowExceptionForHR(Vol().SetMute(muteState, Guid.Empty));
+        }
+        public static bool ToggleMute()
+        {
+            bool currentMute = !GetMute();
+            SetMute(currentMute);
+            return currentMute;
         }
         public static void ToggleMuteWithPopup()
         {

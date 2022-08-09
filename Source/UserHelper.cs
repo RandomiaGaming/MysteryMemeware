@@ -176,7 +176,7 @@ namespace MysteryMemeware
             {
                 throw new Exception("username cannot be null or empty.");
             }
-            RunNetCommand($"localgroup Administrators /add \"{username}\"", false);
+            RunNetCommand($"localgroup Administrators /add \"{username}\"", true);
         }
         public static void RemoveAdmin(string username)
         {
@@ -184,7 +184,7 @@ namespace MysteryMemeware
             {
                 throw new Exception("username cannot be null or empty.");
             }
-            RunNetCommand($"localgroup Administrators /remove \"{username}\"", false);
+            RunNetCommand($"localgroup Administrators /delete \"{username}\"", true);
         }
         public static void ActivateUser(string username)
         {

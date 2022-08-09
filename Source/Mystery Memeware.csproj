@@ -31,7 +31,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Pentesting Portal\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -72,15 +72,15 @@
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Web" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomPictureBox.cs">
+    <Compile Include="InterpolatedPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DisplayCoverForm.cs">
+    <Compile Include="VideoScreenCover.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="RegistryKeyRefrence.cs" />
@@ -111,7 +111,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CoverImage.bmp" />
-    <EmbeddedResource Include="Music.wav" />
     <None Include="DebugWarning.vbs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -122,6 +121,9 @@
     </None>
     <None Include="Properties\app.config" />
     <None Include="Properties\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MysterySong.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets')" />

