@@ -70,6 +70,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
@@ -78,23 +79,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Helpers\BSODHelper.cs" />
+    <Compile Include="Helpers\ThreadingHelper.cs" />
+    <Compile Include="Helpers\UACHelper.cs" />
     <Compile Include="InterpolatedPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="KnownScancode.cs" />
+    <Compile Include="Helpers\CPUHelper.cs" />
     <Compile Include="ScanCodeMapHelper.cs" />
+    <Compile Include="PhaseOne.cs" />
     <Compile Include="VideoScreenCover.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TerminalCommand.cs" />
     <Compile Include="UserHelper.cs" />
-    <Compile Include="ProcessHelper.cs" />
+    <Compile Include="Helpers\ProcessHelper.cs" />
     <Compile Include="UserRefrence.cs" />
-    <Compile Include="VolumeHelper.cs" />
+    <Compile Include="Helpers\VolumeHelper.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="StringHelper.cs" />
-    <Compile Include="RegistryHelper.cs" />
-    <Compile Include="TimeoutAction.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="WindowMode.cs" />
   </ItemGroup>
   <ItemGroup>

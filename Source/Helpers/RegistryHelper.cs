@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Win32;
-namespace MysteryMemeware
+namespace MysteryMemeware.Helpers
 {
     public static class RegistryHelper
     {
@@ -257,6 +257,7 @@ namespace MysteryMemeware
         {
             return ReplaceKey(registryKeyPath, true);
         }
+
         public static RegistryKey ReplaceKeyRead(RegistryValuePath registryValuePath)
         {
             return ReplaceKeyRead(new RegistryKeyPath(registryValuePath));
@@ -269,6 +270,7 @@ namespace MysteryMemeware
         {
             return ReplaceKey(registryKeyPath, false);
         }
+
         public static RegistryKey ReplaceKey(RegistryValuePath registryValuePath, bool writeable)
         {
             return ReplaceKey(new RegistryKeyPath(registryValuePath), writeable);
@@ -316,6 +318,7 @@ namespace MysteryMemeware
         {
             return OpenOrCreateKey(registryKeyPath, true);
         }
+
         public static RegistryKey OpenOrCreateKeyRead(RegistryValuePath registryValuePath)
         {
             return OpenOrCreateKeyRead(new RegistryKeyPath(registryValuePath));
@@ -328,6 +331,7 @@ namespace MysteryMemeware
         {
             return OpenOrCreateKey(registryKeyPath, false);
         }
+
         public static RegistryKey OpenOrCreateKey(RegistryValuePath registryValuePath, bool writeable)
         {
             return OpenOrCreateKey(new RegistryKeyPath(registryValuePath), writeable);
@@ -371,6 +375,7 @@ namespace MysteryMemeware
         {
             return CreateKey(registryKeyPath, true);
         }
+
         public static RegistryKey CreateKeyRead(RegistryValuePath registryValuePath)
         {
             return CreateKeyRead(new RegistryKeyPath(registryValuePath));
@@ -383,6 +388,7 @@ namespace MysteryMemeware
         {
             return CreateKey(registryKeyPath, false);
         }
+
         public static RegistryKey CreateKey(RegistryValuePath registryValuePath, bool writeable)
         {
             return CreateKey(new RegistryKeyPath(registryValuePath), writeable);
@@ -451,6 +457,7 @@ namespace MysteryMemeware
         {
             return OpenKey(registryKeyPath, true);
         }
+
         public static RegistryKey OpenKeyRead(RegistryValuePath registryValuePath)
         {
             return OpenKeyRead(new RegistryKeyPath(registryValuePath));
@@ -463,6 +470,7 @@ namespace MysteryMemeware
         {
             return OpenKey(registryKeyPath, false);
         }
+
         public static RegistryKey OpenKey(RegistryValuePath registryValuePath, bool writeable)
         {
             return OpenKey(new RegistryKeyPath(registryValuePath), writeable);
@@ -638,405 +646,365 @@ namespace MysteryMemeware
                 return RegistryType.CHOOSE_AUTOMATICALLY;
             }
         }
-
-        public enum RegistryType : byte
-        {
-            BINARY = 0,
-            DWORD = 1,
-            QWORD = 2,
-            SZ = 3,
-            MULTI_SZ = 4,
-            EXPAND_SZ = 5,
-            CHOOSE_AUTOMATICALLY = 6,
-            NONE = 7
-        }
         #endregion
-        #region Registry Paths
-        public sealed class RegistryValuePath
+    }
+    public sealed class RegistryValuePath
+    {
+        #region Public Variables
+        public readonly string RegistryPath = "Computer\\HKey_Local_Machine\\Software\\TestProgram\\InstallLocation";
+        public readonly string[] Identifiers = new string[0];
+        public readonly RegistryRoot RegistryRoot = RegistryRoot.COMPUTER;
+        public readonly RegistryBase RegistryBase = RegistryBase.HKEY_LOCAL_MACHINE;
+        public readonly string[] SubKeyNames = new string[2] { "Software", "TestProgram" };
+        public readonly string SubKeyPath = "Software\\TestProgram";
+        public readonly string ValueName = "InstallLocation";
+        #endregion
+        #region Public Constructors
+        public RegistryValuePath(RegistryKeyPath registryKeyPath, string valueName)
         {
-            #region Public Variables
-            public readonly string RegistryPath = "Computer\\HKey_Local_Machine\\Software\\TestProgram\\InstallLocation";
-            public readonly string[] Identifiers = new string[0];
-            public readonly RegistryRoot RegistryRoot = RegistryRoot.COMPUTER;
-            public readonly RegistryBase RegistryBase = RegistryBase.HKEY_LOCAL_MACHINE;
-            public readonly string[] SubKeyNames = new string[2] { "Software", "TestProgram" };
-            public readonly string SubKeyPath = "Software\\TestProgram";
-            public readonly string ValueName = "InstallLocation";
-            #endregion
-            #region Public Constructors
-            public RegistryValuePath(RegistryKeyPath registryKeyPath, string valueName)
+            if (registryKeyPath is null)
             {
-                if (registryKeyPath is null)
-                {
-                    throw new Exception("registryKeyPath cannot be null.");
-                }
-
-                if (valueName is null)
-                {
-                    throw new Exception("valueName cannot be null.");
-                }
-
-                if (valueName is "")
-                {
-                    throw new Exception("valueName cannot be empty.");
-                }
-
-                if (AllowAltSeparator)
-                {
-                    valueName = valueName.Replace(AltSeparatorChar, SeparatorChar);
-                }
-
-                if (StringContains(valueName, SeparatorChar))
-                {
-                    throw new Exception("valueName cannot contain seporator characters.");
-                }
-
-                RegistryPath = registryKeyPath.RegistryPath + SeparatorString + valueName;
-
-                Identifiers = new string[registryKeyPath.Identifiers.Length + 1];
-                Array.Copy(registryKeyPath.Identifiers, 0, Identifiers, 0, registryKeyPath.Identifiers.Length);
-                Identifiers[Identifiers.Length - 1] = valueName;
-
-                RegistryRoot = registryKeyPath.RegistryRoot;
-
-                RegistryBase = registryKeyPath.RegistryBase;
-
-                SubKeyNames = registryKeyPath.SubKeyNames;
-
-                SubKeyPath = registryKeyPath.SubKeyPath;
+                throw new Exception("registryKeyPath cannot be null.");
             }
-            public RegistryValuePath(string registryPath)
+
+            if (valueName is null)
             {
-                if (registryPath is null)
+                throw new Exception("valueName cannot be null.");
+            }
+
+            if (valueName is "")
+            {
+                throw new Exception("valueName cannot be empty.");
+            }
+
+            if (RegistryHelper.AllowAltSeparator)
+            {
+                valueName = valueName.Replace(RegistryHelper.AltSeparatorChar, RegistryHelper.SeparatorChar);
+            }
+
+            if (StringHelper.StringContainsChar(valueName, RegistryHelper.SeparatorChar))
+            {
+                throw new Exception("valueName cannot contain seporator characters.");
+            }
+
+            RegistryPath = registryKeyPath.RegistryPath + RegistryHelper.SeparatorString + valueName;
+
+            Identifiers = new string[registryKeyPath.Identifiers.Length + 1];
+            Array.Copy(registryKeyPath.Identifiers, 0, Identifiers, 0, registryKeyPath.Identifiers.Length);
+            Identifiers[Identifiers.Length - 1] = valueName;
+
+            RegistryRoot = registryKeyPath.RegistryRoot;
+
+            RegistryBase = registryKeyPath.RegistryBase;
+
+            SubKeyNames = registryKeyPath.SubKeyNames;
+
+            SubKeyPath = registryKeyPath.SubKeyPath;
+        }
+        public RegistryValuePath(string registryPath)
+        {
+            if (registryPath is null)
+            {
+                throw new Exception("registryPath cannot be null.");
+            }
+            if (RegistryHelper.AllowAltSeparator)
+            {
+                registryPath = registryPath.Replace(RegistryHelper.AltSeparatorString, RegistryHelper.SeparatorString);
+            }
+            if (!(registryPath.Length is 0) && registryPath[0] is RegistryHelper.SeparatorChar)
+            {
+                registryPath = registryPath.Substring(1, registryPath.Length - 1);
+            }
+            if (!(registryPath.Length is 0) && registryPath[registryPath.Length - 1] is RegistryHelper.SeparatorChar)
+            {
+                registryPath = registryPath.Substring(0, registryPath.Length - 1);
+            }
+            RegistryPath = registryPath;
+
+
+
+            Identifiers = registryPath.Split(RegistryHelper.SeparatorChar);
+            foreach (string identifier in Identifiers)
+            {
+                if (identifier is "")
                 {
-                    throw new Exception("registryPath cannot be null.");
+                    throw new Exception("registryPath cannot contain empty identifiers.");
                 }
-                if (AllowAltSeparator)
-                {
-                    registryPath = registryPath.Replace(AltSeparatorString, SeparatorString);
-                }
-                if (!(registryPath.Length is 0) && registryPath[0] is SeparatorChar)
-                {
-                    registryPath = registryPath.Substring(1, registryPath.Length - 1);
-                }
-                if (!(registryPath.Length is 0) && registryPath[registryPath.Length] is SeparatorChar)
-                {
-                    registryPath = registryPath.Substring(0, registryPath.Length - 1);
-                }
-                RegistryPath = registryPath;
+            }
 
 
 
-                Identifiers = registryPath.Split(SeparatorChar);
-                foreach (string identifier in Identifiers)
-                {
-                    if (identifier is "")
-                    {
-                        throw new Exception("registryPath cannot contain empty identifiers.");
-                    }
-                }
-
-
-
-                if (Identifiers.Length is 0)
+            if (Identifiers.Length is 0)
+            {
+                RegistryRoot = RegistryRoot.COMPUTER;
+                Identifiers = new string[1] { RegistryHelper.ComputerName };
+            }
+            else
+            {
+                string registryRootToUpper = Identifiers[0].ToUpper();
+                if (StringHelper.MatchesArray(registryRootToUpper, RegistryHelper.ComputerNames))
                 {
                     RegistryRoot = RegistryRoot.COMPUTER;
-                    Identifiers = new string[1] { ComputerName };
+                }
+                else if (StringHelper.MatchesArray(registryRootToUpper, RegistryHelper.Computer32Names))
+                {
+                    RegistryRoot = RegistryRoot.COMPUTER_32;
+                }
+                else if (StringHelper.MatchesArray(registryRootToUpper, RegistryHelper.Computer64Names))
+                {
+                    RegistryRoot = RegistryRoot.COMPUTER_64;
                 }
                 else
-                {
-                    string registryRootToUpper = Identifiers[0].ToUpper();
-                    if (StringWithinArray(registryRootToUpper, ComputerNames))
-                    {
-                        RegistryRoot = RegistryRoot.COMPUTER;
-                    }
-                    else if (StringWithinArray(registryRootToUpper, Computer32Names))
-                    {
-                        RegistryRoot = RegistryRoot.COMPUTER_32;
-                    }
-                    else if (StringWithinArray(registryRootToUpper, Computer64Names))
-                    {
-                        RegistryRoot = RegistryRoot.COMPUTER_64;
-                    }
-                    else
-                    {
-                        RegistryRoot = RegistryRoot.COMPUTER;
-                        string[] newIdentifiers = new string[Identifiers.Length + 1];
-                        Array.Copy(Identifiers, 0, newIdentifiers, 1, Identifiers.Length);
-                        newIdentifiers[0] = ComputerName;
-                        Identifiers = newIdentifiers;
-                    }
-                }
-
-
-
-                if (Identifiers.Length < 2)
-                {
-                    throw new Exception("registryPath must specify a base name.");
-                }
-                string registryBaseToUpper = Identifiers[1].ToUpper();
-                if (StringWithinArray(registryBaseToUpper, HKEYClassesRootNames))
-                {
-                    RegistryBase = RegistryBase.HKEY_CLASSES_ROOT;
-                }
-                else if (StringWithinArray(registryBaseToUpper, HKEYCurrentUserNames))
-                {
-                    RegistryBase = RegistryBase.HKEY_CURRENT_USER;
-                }
-                else if (StringWithinArray(registryBaseToUpper, HKEYLocalMachineNames))
-                {
-                    RegistryBase = RegistryBase.HKEY_LOCAL_MACHINE;
-                }
-                else if (StringWithinArray(registryBaseToUpper, HKEYUsersNames))
-                {
-                    RegistryBase = RegistryBase.HKEY_USERS;
-                }
-                else if (StringWithinArray(registryBaseToUpper, HKEYCurrentConfigNames))
-                {
-                    RegistryBase = RegistryBase.HKEY_CURRENT_CONFIG;
-                }
-                else
-                {
-                    throw new Exception("registryPath specifies a base key name which does not exist.");
-                }
-
-
-
-                if (Identifiers.Length < 3)
-                {
-                    throw new Exception("registryPath must specify a value name.");
-                }
-                else if (Identifiers.Length is 3)
-                {
-                    throw new Exception("registryPath must specify at least one sub key name.");
-                }
-                SubKeyNames = new string[Identifiers.Length - 3];
-                Array.Copy(Identifiers, 2, SubKeyNames, 0, SubKeyNames.Length);
-
-
-
-                SubKeyPath = "";
-                for (int i = 0; i < SubKeyNames.Length; i++)
-                {
-                    if (i is 0)
-                    {
-                        SubKeyPath += SubKeyNames[i];
-                    }
-                    else
-                    {
-                        SubKeyPath += SeparatorString + SubKeyNames[i];
-                    }
-                }
-
-
-
-                ValueName = Identifiers[Identifiers.Length - 1];
-            }
-            #endregion
-        }
-
-        public sealed class RegistryKeyPath
-        {
-            #region Public Variables
-            public readonly string RegistryPath = "Computer\\HKey_Local_Machine\\Software\\TestProgram";
-            public readonly string[] Identifiers = new string[0];
-            public readonly RegistryRoot RegistryRoot = RegistryRoot.COMPUTER;
-            public readonly RegistryBase RegistryBase = RegistryBase.HKEY_LOCAL_MACHINE;
-            public readonly string[] SubKeyNames = new string[2] { "Software", "TestProgram" };
-            public readonly string SubKeyPath = "Software\\TestProgram";
-            #endregion
-            #region Public Constructors
-            public RegistryKeyPath(RegistryValuePath registryValuePath)
-            {
-                if (registryValuePath is null)
-                {
-                    throw new Exception("registryValuePath cannot be null.");
-                }
-
-                RegistryPath = registryValuePath.RegistryPath.Substring(0, registryValuePath.RegistryPath.Length - (registryValuePath.ValueName.Length + 1));
-
-                Identifiers = new string[registryValuePath.Identifiers.Length - 1];
-                Array.Copy(registryValuePath.Identifiers, 0, Identifiers, 0, Identifiers.Length);
-
-                RegistryRoot = registryValuePath.RegistryRoot;
-
-                RegistryBase = registryValuePath.RegistryBase;
-
-                SubKeyNames = registryValuePath.SubKeyNames;
-
-                SubKeyPath = registryValuePath.SubKeyPath;
-            }
-            public RegistryKeyPath(string registryPath)
-            {
-                if (registryPath is null)
-                {
-                    throw new Exception("registryPath cannot be null.");
-                }
-                if (AllowAltSeparator)
-                {
-                    registryPath = registryPath.Replace(AltSeparatorString, SeparatorString);
-                }
-                if (!(registryPath.Length is 0) && registryPath[0] is SeparatorChar)
-                {
-                    registryPath = registryPath.Substring(1, registryPath.Length - 1);
-                }
-                if (!(registryPath.Length is 0) && registryPath[registryPath.Length] is SeparatorChar)
-                {
-                    registryPath = registryPath.Substring(0, registryPath.Length - 1);
-                }
-                RegistryPath = registryPath;
-
-
-
-                Identifiers = registryPath.Split(SeparatorChar);
-                foreach (string identifier in Identifiers)
-                {
-                    if (identifier is "")
-                    {
-                        throw new Exception("registryPath cannot contain empty identifiers.");
-                    }
-                }
-
-
-
-                if (Identifiers.Length is 0)
                 {
                     RegistryRoot = RegistryRoot.COMPUTER;
-                    Identifiers = new string[1] { ComputerName };
+                    string[] newIdentifiers = new string[Identifiers.Length + 1];
+                    Array.Copy(Identifiers, 0, newIdentifiers, 1, Identifiers.Length);
+                    newIdentifiers[0] = RegistryHelper.ComputerName;
+                    Identifiers = newIdentifiers;
+                }
+            }
+
+
+
+            if (Identifiers.Length < 2)
+            {
+                throw new Exception("registryPath must specify a base name.");
+            }
+            string registryBaseToUpper = Identifiers[1].ToUpper();
+            if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYClassesRootNames))
+            {
+                RegistryBase = RegistryBase.HKEY_CLASSES_ROOT;
+            }
+            else if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYCurrentUserNames))
+            {
+                RegistryBase = RegistryBase.HKEY_CURRENT_USER;
+            }
+            else if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYLocalMachineNames))
+            {
+                RegistryBase = RegistryBase.HKEY_LOCAL_MACHINE;
+            }
+            else if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYUsersNames))
+            {
+                RegistryBase = RegistryBase.HKEY_USERS;
+            }
+            else if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYCurrentConfigNames))
+            {
+                RegistryBase = RegistryBase.HKEY_CURRENT_CONFIG;
+            }
+            else
+            {
+                throw new Exception("registryPath specifies a base key name which does not exist.");
+            }
+
+
+
+            if (Identifiers.Length < 3)
+            {
+                throw new Exception("registryPath must specify a value name.");
+            }
+            else if (Identifiers.Length is 3)
+            {
+                throw new Exception("registryPath must specify at least one sub key name.");
+            }
+            SubKeyNames = new string[Identifiers.Length - 3];
+            Array.Copy(Identifiers, 2, SubKeyNames, 0, SubKeyNames.Length);
+
+
+
+            SubKeyPath = "";
+            for (int i = 0; i < SubKeyNames.Length; i++)
+            {
+                if (i is 0)
+                {
+                    SubKeyPath += SubKeyNames[i];
                 }
                 else
                 {
-                    string registryRootToUpper = Identifiers[0].ToUpper();
-                    if (StringWithinArray(registryRootToUpper, ComputerNames))
-                    {
-                        RegistryRoot = RegistryRoot.COMPUTER;
-                    }
-                    else if (StringWithinArray(registryRootToUpper, Computer32Names))
-                    {
-                        RegistryRoot = RegistryRoot.COMPUTER_32;
-                    }
-                    else if (StringWithinArray(registryRootToUpper, Computer64Names))
-                    {
-                        RegistryRoot = RegistryRoot.COMPUTER_64;
-                    }
-                    else
-                    {
-                        RegistryRoot = RegistryRoot.COMPUTER;
-                        string[] newIdentifiers = new string[Identifiers.Length + 1];
-                        Array.Copy(Identifiers, 0, newIdentifiers, 1, Identifiers.Length);
-                        newIdentifiers[0] = ComputerName;
-                        Identifiers = newIdentifiers;
-                    }
+                    SubKeyPath += RegistryHelper.SeparatorString + SubKeyNames[i];
                 }
+            }
 
 
 
-                if (Identifiers.Length < 2)
+            ValueName = Identifiers[Identifiers.Length - 1];
+        }
+        #endregion
+    }
+    public sealed class RegistryKeyPath
+    {
+        #region Public Variables
+        public readonly string RegistryPath = "Computer\\HKey_Local_Machine\\Software\\TestProgram";
+        public readonly string[] Identifiers = new string[0];
+        public readonly RegistryRoot RegistryRoot = RegistryRoot.COMPUTER;
+        public readonly RegistryBase RegistryBase = RegistryBase.HKEY_LOCAL_MACHINE;
+        public readonly string[] SubKeyNames = new string[2] { "Software", "TestProgram" };
+        public readonly string SubKeyPath = "Software\\TestProgram";
+        #endregion
+        #region Public Constructors
+        public RegistryKeyPath(RegistryValuePath registryValuePath)
+        {
+            if (registryValuePath is null)
+            {
+                throw new Exception("registryValuePath cannot be null.");
+            }
+
+            RegistryPath = registryValuePath.RegistryPath.Substring(0, registryValuePath.RegistryPath.Length - (registryValuePath.ValueName.Length + 1));
+
+            Identifiers = new string[registryValuePath.Identifiers.Length - 1];
+            Array.Copy(registryValuePath.Identifiers, 0, Identifiers, 0, Identifiers.Length);
+
+            RegistryRoot = registryValuePath.RegistryRoot;
+
+            RegistryBase = registryValuePath.RegistryBase;
+
+            SubKeyNames = registryValuePath.SubKeyNames;
+
+            SubKeyPath = registryValuePath.SubKeyPath;
+        }
+        public RegistryKeyPath(string registryPath)
+        {
+            if (registryPath is null)
+            {
+                throw new Exception("registryPath cannot be null.");
+            }
+            if (RegistryHelper.AllowAltSeparator)
+            {
+                registryPath = registryPath.Replace(RegistryHelper.AltSeparatorString, RegistryHelper.SeparatorString);
+            }
+            if (!(registryPath.Length is 0) && registryPath[0] is RegistryHelper.SeparatorChar)
+            {
+                registryPath = registryPath.Substring(1, registryPath.Length - 1);
+            }
+            if (!(registryPath.Length is 0) && registryPath[registryPath.Length - 1] is RegistryHelper.SeparatorChar)
+            {
+                registryPath = registryPath.Substring(0, registryPath.Length - 1);
+            }
+            RegistryPath = registryPath;
+
+
+
+            Identifiers = registryPath.Split(RegistryHelper.SeparatorChar);
+            foreach (string identifier in Identifiers)
+            {
+                if (identifier is "")
                 {
-                    throw new Exception("registryPath must specify a base name.");
+                    throw new Exception("registryPath cannot contain empty identifiers.");
                 }
-                string registryBaseToUpper = Identifiers[1].ToUpper();
-                if (StringWithinArray(registryBaseToUpper, HKEYClassesRootNames))
+            }
+
+
+
+            if (Identifiers.Length is 0)
+            {
+                RegistryRoot = RegistryRoot.COMPUTER;
+                Identifiers = new string[1] { RegistryHelper.ComputerName };
+            }
+            else
+            {
+                string registryRootToUpper = Identifiers[0].ToUpper();
+                if (StringHelper.MatchesArray(registryRootToUpper, RegistryHelper.ComputerNames))
                 {
-                    RegistryBase = RegistryBase.HKEY_CLASSES_ROOT;
+                    RegistryRoot = RegistryRoot.COMPUTER;
                 }
-                else if (StringWithinArray(registryBaseToUpper, HKEYCurrentUserNames))
+                else if (StringHelper.MatchesArray(registryRootToUpper, RegistryHelper.Computer32Names))
                 {
-                    RegistryBase = RegistryBase.HKEY_CURRENT_USER;
+                    RegistryRoot = RegistryRoot.COMPUTER_32;
                 }
-                else if (StringWithinArray(registryBaseToUpper, HKEYLocalMachineNames))
+                else if (StringHelper.MatchesArray(registryRootToUpper, RegistryHelper.Computer64Names))
                 {
-                    RegistryBase = RegistryBase.HKEY_LOCAL_MACHINE;
-                }
-                else if (StringWithinArray(registryBaseToUpper, HKEYUsersNames))
-                {
-                    RegistryBase = RegistryBase.HKEY_USERS;
-                }
-                else if (StringWithinArray(registryBaseToUpper, HKEYCurrentConfigNames))
-                {
-                    RegistryBase = RegistryBase.HKEY_CURRENT_CONFIG;
+                    RegistryRoot = RegistryRoot.COMPUTER_64;
                 }
                 else
                 {
-                    throw new Exception("registryPath specifies a base key name which does not exist.");
-                }
-
-
-
-                if (Identifiers.Length < 3)
-                {
-                    throw new Exception("registryPath must specify at least one sub key name.");
-                }
-                SubKeyNames = new string[Identifiers.Length - 2];
-                Array.Copy(Identifiers, 2, SubKeyNames, 0, SubKeyNames.Length);
-
-
-
-                SubKeyPath = "";
-                for (int i = 0; i < SubKeyNames.Length; i++)
-                {
-                    if (i is 0)
-                    {
-                        SubKeyPath += SubKeyNames[i];
-                    }
-                    else
-                    {
-                        SubKeyPath += SeparatorString + SubKeyNames[i];
-                    }
+                    RegistryRoot = RegistryRoot.COMPUTER;
+                    string[] newIdentifiers = new string[Identifiers.Length + 1];
+                    Array.Copy(Identifiers, 0, newIdentifiers, 1, Identifiers.Length);
+                    newIdentifiers[0] = RegistryHelper.ComputerName;
+                    Identifiers = newIdentifiers;
                 }
             }
-            #endregion
-        }
 
-        public enum RegistryBase : byte
-        {
-            HKEY_CLASSES_ROOT = 0,
-            HKEY_CURRENT_USER = 1,
-            HKEY_LOCAL_MACHINE = 2,
-            HKEY_USERS = 3,
-            HKEY_CURRENT_CONFIG = 4,
-        }
 
-        public enum RegistryRoot : byte
-        {
-            COMPUTER = 0,
-            COMPUTER_32 = 1,
-            COMPUTER_64 = 2
+
+            if (Identifiers.Length < 2)
+            {
+                throw new Exception("registryPath must specify a base name.");
+            }
+            string registryBaseToUpper = Identifiers[1].ToUpper();
+            if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYClassesRootNames))
+            {
+                RegistryBase = RegistryBase.HKEY_CLASSES_ROOT;
+            }
+            else if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYCurrentUserNames))
+            {
+                RegistryBase = RegistryBase.HKEY_CURRENT_USER;
+            }
+            else if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYLocalMachineNames))
+            {
+                RegistryBase = RegistryBase.HKEY_LOCAL_MACHINE;
+            }
+            else if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYUsersNames))
+            {
+                RegistryBase = RegistryBase.HKEY_USERS;
+            }
+            else if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYCurrentConfigNames))
+            {
+                RegistryBase = RegistryBase.HKEY_CURRENT_CONFIG;
+            }
+            else
+            {
+                throw new Exception("registryPath specifies a base key name which does not exist.");
+            }
+
+
+
+            if (Identifiers.Length < 3)
+            {
+                throw new Exception("registryPath must specify at least one sub key name.");
+            }
+            SubKeyNames = new string[Identifiers.Length - 2];
+            Array.Copy(Identifiers, 2, SubKeyNames, 0, SubKeyNames.Length);
+
+
+
+            SubKeyPath = "";
+            for (int i = 0; i < SubKeyNames.Length; i++)
+            {
+                if (i is 0)
+                {
+                    SubKeyPath += SubKeyNames[i];
+                }
+                else
+                {
+                    SubKeyPath += RegistryHelper.SeparatorString + SubKeyNames[i];
+                }
+            }
         }
         #endregion
-        #region String Helpers
-        public static bool StringWithinArray(string target, string[] array)
-        {
-            if (array is null)
-            {
-                throw new Exception("array cannot be null.");
-            }
-            int localArrayLength = array.Length;
-            for (int i = 0; i < localArrayLength; i++)
-            {
-                if (target == array[i])
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static bool StringContains(string target, char character)
-        {
-            if (target is null || target is "")
-            {
-                return false;
-            }
-            for (int i = 0; i < target.Length; i++)
-            {
-                if (target[i] == character)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        #endregion
+    }
+    public enum RegistryType : byte
+    {
+        BINARY = 0,
+        DWORD = 1,
+        QWORD = 2,
+        SZ = 3,
+        MULTI_SZ = 4,
+        EXPAND_SZ = 5,
+        CHOOSE_AUTOMATICALLY = 6,
+        NONE = 7
+    }
+    public enum RegistryBase : byte
+    {
+        HKEY_CLASSES_ROOT = 0,
+        HKEY_CURRENT_USER = 1,
+        HKEY_LOCAL_MACHINE = 2,
+        HKEY_USERS = 3,
+        HKEY_CURRENT_CONFIG = 4,
+    }
+    public enum RegistryRoot : byte
+    {
+        COMPUTER = 0,
+        COMPUTER_32 = 1,
+        COMPUTER_64 = 2
     }
 }

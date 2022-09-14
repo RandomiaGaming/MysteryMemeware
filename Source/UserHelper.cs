@@ -1,9 +1,8 @@
-﻿//#approve 08/05/2022 1:24pm
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Management;
-namespace MysteryMemeware
+namespace MysteryMemeware.Helpers
 {
     public static class UserHelper
     {
@@ -12,9 +11,9 @@ namespace MysteryMemeware
         private static readonly Random RNG = new Random((int)DateTime.Now.Ticks);
         public const string PasswordCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         public const char SAMSeporatorChar = '\\';
-        public static readonly string SAMSeporatorString = SAMSeporatorChar.ToString();
+        public static readonly string SAMSeporatorString = "\\";
         public const char UPNSeporatorChar = '@';
-        public static readonly string UPNSeporatorString = UPNSeporatorChar.ToString();
+        public static readonly string UPNSeporatorString = "@";
         public static string GeneratePassword(int length = 14)
         {
             if (length < 0)
@@ -202,21 +201,37 @@ namespace MysteryMemeware
             }
             RunNetCommand($"user \"{username}\" /active:no", true);
         }
+        public static void EnableUser(string username)
+        {
+            if (username is null || username is "")
+            {
+                throw new Exception("username cannot be null or empty.");
+            }
+            RunNetCommand($"user \"{username}\" /enable:yes", true);
+        }
         public static bool UserExists(string username)
         {
             if (username is null || username is "")
             {
                 throw new Exception("username cannot be null or empty.");
             }
-            return RunNetCommand($"user \"{username}\"", false);
+            try
+            {
+                RunNetCommand($"user \"{username}\"", true);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
-        public static bool RunNetCommand(string arguments, bool throwOnNonZeroExitCode = true)
+        public static void RunNetCommand(string command, bool throwOnNonZeroExitCode = true)
         {
-            if (ProcessHelper.IsAdmin() is false)
+            if (UACHelper.CurrentProcessIsAdmin is false)
             {
                 throw new Exception("Net commands require administrator.");
             }
-            return ProcessHelper.AwaitSuccess(ProcessHelper.Start(new TerminalCommand(Program.System32Folder + "\\net.exe", arguments), WindowMode.Hidden, true, Program.System32Folder), 300000000, TimeoutAction.KillAndThrow, throwOnNonZeroExitCode);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(new TerminalCommand(Program.System32Folder + "\\net.exe", command), WindowMode.Hidden, true, Program.System32Folder), new TimeSpan(300000000), TimeoutAction.KillAndThrow, throwOnNonZeroExitCode);
         }
     }
 }

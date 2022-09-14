@@ -1,8 +1,23 @@
-﻿//#approve 08/05/2022 12:53pm
-namespace MysteryMemeware
+﻿using System;
+namespace MysteryMemeware.Helpers
 {
     public static class StringHelper
     {
+        public static bool StringContainsChar(string target, char character)
+        {
+            if (target is null || target is "")
+            {
+                return false;
+            }
+            for (int i = 0; i < target.Length; i++)
+            {
+                if (target[i] == character)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public static string ReplaceCaseless(string a, string b, string c)
         {
             if (a is null)
@@ -19,7 +34,7 @@ namespace MysteryMemeware
             }
             if (ContainsCaseless(c, b))
             {
-                throw new System.Exception("c cannot contain b.");
+                throw new Exception("c cannot contain b.");
             }
             for (int i = 0; i < a.Length - b.Length + 1; i++)
             {

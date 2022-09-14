@@ -1,5 +1,6 @@
 ﻿//#approve 08/05/2022 12:51pm
 using System;
+using MysteryMemeware.Helpers;
 namespace MysteryMemeware
 {
     public sealed class UsernameDomainPair

