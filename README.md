@@ -1,7 +1,7 @@
+# This software is malware and was created for educational and research purposes only.
+
 # MysteryMemeware
 Will you ever be able to use your pc again? It's a mystery!
-
-# This software is malware and was created for educational and research purposes only.
 
 Installing this software on computers that do not belong to you is a felony in violation of the computer fraud and absue act and can result in fines or even jail time.
 
