@@ -1,3 +1,4 @@
+# Uninstall Instructions
 So you ignored all the warnings and installed MysteryMemeware on your computer and now you are hopelessly stuck listening to the same song and staring at the same jpeg of a ghost until the end of time. Well here are a few solutions that might work, however, you are still legally responsible for any and all damages to your system and atempting to follow the instructions below is not a guarantee of success. Any and all damage is your responsibility and the following serves only as a guied to experienced users to attempt to recover their data.
 
 # Method 1
