@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MysteryInstaller", "MysteryInstaller\MysteryInstaller.csproj", "{E39889AE-0DFD-4153-8719-0D0B71338C15}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6C8D0129-71A1-40C2-A94E-DBA0B8887F34} = {6C8D0129-71A1-40C2-A94E-DBA0B8887F34}
+		{DCBD8756-B335-4A3E-9EDF-BFF6553DA661} = {DCBD8756-B335-4A3E-9EDF-BFF6553DA661}
+		{E19D048F-9339-4BCA-BD03-928584A03341} = {E19D048F-9339-4BCA-BD03-928584A03341}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MysteryMemeware", "MysteryMemeware\MysteryMemeware.csproj", "{DCBD8756-B335-4A3E-9EDF-BFF6553DA661}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6C8D0129-71A1-40C2-A94E-DBA0B8887F34} = {6C8D0129-71A1-40C2-A94E-DBA0B8887F34}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MysteryUninstaller", "MysteryUninstaller\MysteryUninstaller.csproj", "{E19D048F-9339-4BCA-BD03-928584A03341}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6C8D0129-71A1-40C2-A94E-DBA0B8887F34} = {6C8D0129-71A1-40C2-A94E-DBA0B8887F34}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MysteryHelpers", "MysteryHelpers\MysteryHelpers.csproj", "{6C8D0129-71A1-40C2-A94E-DBA0B8887F34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E39889AE-0DFD-4153-8719-0D0B71338C15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E39889AE-0DFD-4153-8719-0D0B71338C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E39889AE-0DFD-4153-8719-0D0B71338C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E39889AE-0DFD-4153-8719-0D0B71338C15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCBD8756-B335-4A3E-9EDF-BFF6553DA661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCBD8756-B335-4A3E-9EDF-BFF6553DA661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCBD8756-B335-4A3E-9EDF-BFF6553DA661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCBD8756-B335-4A3E-9EDF-BFF6553DA661}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E19D048F-9339-4BCA-BD03-928584A03341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19D048F-9339-4BCA-BD03-928584A03341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19D048F-9339-4BCA-BD03-928584A03341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19D048F-9339-4BCA-BD03-928584A03341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C8D0129-71A1-40C2-A94E-DBA0B8887F34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C8D0129-71A1-40C2-A94E-DBA0B8887F34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C8D0129-71A1-40C2-A94E-DBA0B8887F34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C8D0129-71A1-40C2-A94E-DBA0B8887F34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0710693-4B82-43B3-B7C0-1B566988519A}
+	EndGlobalSection
+EndGlobal
