@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-namespace MysteryMemeware.Helpers
+﻿namespace MysteryMemeware
 {
     public static class ThreadingHelper
     {
@@ -22,15 +20,15 @@ namespace MysteryMemeware.Helpers
         #region Lambdas
         public delegate void Lambda();
         public delegate void LambdaCompletedEvent(int completedLambdaCount, int totalLambdaCount);
-        public delegate void LambdaFailedEvent(Exception exception, int completedLambdaCount, int totalLambdaCount);
+        public delegate void LambdaFailedEvent(System.Exception exception, int completedLambdaCount, int totalLambdaCount);
         //Note: The thread is already started before returning.
-        public static Thread RunLambda(Lambda lambda)
+        public static System.Threading.Thread RunLambda(Lambda lambda)
         {
             if (lambda is null)
             {
-                throw new Exception("lambda cannot be null.");
+                throw new System.Exception("lambda cannot be null.");
             }
-            Thread worker = new Thread(() =>
+            System.Threading.Thread worker = new System.Threading.Thread(() =>
             {
                 lambda.Invoke();
             });
@@ -42,15 +40,15 @@ namespace MysteryMemeware.Helpers
         {
             if (lambdas is null)
             {
-                throw new Exception("lambdas cannot be null.");
+                throw new System.Exception("lambdas cannot be null.");
             }
             else if (workerCount <= 0)
             {
-                throw new Exception("workerCount must be greater than 0 or equal to -1.");
+                throw new System.Exception("workerCount must be greater than 0 or equal to -1.");
             }
             else if (sleepTime < 0)
             {
-                throw new Exception("sleepTime must be greater than or equal to 0.");
+                throw new System.Exception("sleepTime must be greater than or equal to 0.");
             }
             else if (lambdas.Length is 0)
             {
@@ -78,11 +76,11 @@ namespace MysteryMemeware.Helpers
             {
                 if (lambda is null)
                 {
-                    throw new Exception("lambdaGroup cannot contain null.");
+                    throw new System.Exception("lambdaGroup cannot contain null.");
                 }
             }
             object queLock = new object();
-            Thread[] workers = new Thread[workerCount];
+            System.Threading.Thread[] workers = new System.Threading.Thread[workerCount];
             int nextLambdaIndex = 0;
             int completedLambdaCount = 0;
             Lambda mainThreadLambda;
@@ -91,7 +89,7 @@ namespace MysteryMemeware.Helpers
                 for (int workerIndex = 0; workerIndex < workerCount; workerIndex++)
                 {
                     Lambda workerThreadLambda = lambdas[workerIndex];
-                    Thread workerThread = new Thread(() =>
+                    System.Threading.Thread workerThread = new System.Threading.Thread(() =>
                     {
                         if (completedEvent is null)
                         {
@@ -144,7 +142,7 @@ namespace MysteryMemeware.Helpers
                                             }
                                         }
                                     }
-                                    catch (Exception exception)
+                                    catch (System.Exception exception)
                                     {
                                         lock (queLock)
                                         {
@@ -214,7 +212,7 @@ namespace MysteryMemeware.Helpers
                                         }
                                     }
                                 }
-                                catch (Exception exception)
+                                catch (System.Exception exception)
                                 {
                                     lock (queLock)
                                     {
@@ -291,7 +289,7 @@ namespace MysteryMemeware.Helpers
                                 }
                             }
                         }
-                        catch (Exception exception)
+                        catch (System.Exception exception)
                         {
                             lock (queLock)
                             {
@@ -361,7 +359,7 @@ namespace MysteryMemeware.Helpers
                             }
                         }
                     }
-                    catch (Exception exception)
+                    catch (System.Exception exception)
                     {
                         lock (queLock)
                         {
@@ -391,7 +389,7 @@ namespace MysteryMemeware.Helpers
             {
                 while (completedLambdaCount != totalLambdaCount)
                 {
-                    Thread.Sleep(sleepTime);
+                    System.Threading.Thread.Sleep(sleepTime);
                 }
             }
         }
@@ -399,15 +397,15 @@ namespace MysteryMemeware.Helpers
         #region Param Lambdas
         public delegate void ParamLambda<T>(T parameter);
         public delegate void ParamLambdaCompletedEvent<T>(T parameter, int completedParameterCount, int totalParameterCount);
-        public delegate void ParamLambdaFailedEvent<T>(T parameter, Exception exception, int completedParameterCount, int totalParameterCount);
+        public delegate void ParamLambdaFailedEvent<T>(T parameter, System.Exception exception, int completedParameterCount, int totalParameterCount);
         //Note: The thread is already started before returning.
-        public static Thread RunParamLambda<T>(ParamLambda<T> paramLambda, T parameter)
+        public static System.Threading.Thread RunParamLambda<T>(ParamLambda<T> paramLambda, T parameter)
         {
             if (paramLambda is null)
             {
-                throw new Exception("paramLambda cannot be null.");
+                throw new System.Exception("paramLambda cannot be null.");
             }
-            Thread worker = new Thread(() =>
+            System.Threading.Thread worker = new System.Threading.Thread(() =>
             {
                 paramLambda.Invoke(parameter);
             });
@@ -419,19 +417,19 @@ namespace MysteryMemeware.Helpers
         {
             if (paramLambda is null)
             {
-                throw new Exception("paramLambda cannot be null.");
+                throw new System.Exception("paramLambda cannot be null.");
             }
             else if (parameters is null)
             {
-                throw new Exception("parameters cannot be null.");
+                throw new System.Exception("parameters cannot be null.");
             }
             else if (workerCount < -1 || workerCount is 0)
             {
-                throw new Exception("workerCount must be greater than 0 or equal to -1.");
+                throw new System.Exception("workerCount must be greater than 0 or equal to -1.");
             }
             else if (sleepTime < 0)
             {
-                throw new Exception("sleepTime must be greater than or equal to 0.");
+                throw new System.Exception("sleepTime must be greater than or equal to 0.");
             }
             else if (parameters.Length is 0)
             {
@@ -456,7 +454,7 @@ namespace MysteryMemeware.Helpers
             }
             parameters = (T[])parameters.Clone();
             object queLock = new object();
-            Thread[] workerThreads = new Thread[workerCount];
+            System.Threading.Thread[] workerThreads = new System.Threading.Thread[workerCount];
             int nextParameterIndex = 0;
             int completedParameterCount = 0;
             T mainThreadParameter;
@@ -465,7 +463,7 @@ namespace MysteryMemeware.Helpers
                 for (int workerIndex = 0; workerIndex < workerCount; workerIndex++)
                 {
                     T workerThreadParameter = parameters[workerIndex];
-                    Thread workerThread = new Thread(() =>
+                    System.Threading.Thread workerThread = new System.Threading.Thread(() =>
                     {
                         if (completedEvent is null)
                         {
@@ -518,7 +516,7 @@ namespace MysteryMemeware.Helpers
                                             }
                                         }
                                     }
-                                    catch (Exception exception)
+                                    catch (System.Exception exception)
                                     {
                                         lock (queLock)
                                         {
@@ -588,7 +586,7 @@ namespace MysteryMemeware.Helpers
                                         }
                                     }
                                 }
-                                catch (Exception exception)
+                                catch (System.Exception exception)
                                 {
                                     lock (queLock)
                                     {
@@ -666,7 +664,7 @@ namespace MysteryMemeware.Helpers
                                 }
                             }
                         }
-                        catch (Exception exception)
+                        catch (System.Exception exception)
                         {
                             lock (queLock)
                             {
@@ -736,7 +734,7 @@ namespace MysteryMemeware.Helpers
                             }
                         }
                     }
-                    catch (Exception exception)
+                    catch (System.Exception exception)
                     {
                         lock (queLock)
                         {
@@ -766,7 +764,7 @@ namespace MysteryMemeware.Helpers
             {
                 while (completedParameterCount != totalParameterCount)
                 {
-                    Thread.Sleep(sleepTime);
+                    System.Threading.Thread.Sleep(sleepTime);
                 }
             }
         }

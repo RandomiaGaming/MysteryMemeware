@@ -1,1 +1,0 @@
-%SystemRoot%\explorer.exe /e,"C:\Program Files (x86)\Microsoft\EdgeUpdate"

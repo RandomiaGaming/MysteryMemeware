@@ -45,7 +45,7 @@ namespace MysteryMemeware
             {
                 throw new Exception("user cannot be null.");
             }
-            ProcessStartInfo processStartInfo = new()
+            ProcessStartInfo processStartInfo = new ProcessStartInfo()
             {
                 Arguments = command.Arguments,
                 CreateNoWindow = windowMode is WindowMode.Hidden,
@@ -120,7 +120,7 @@ namespace MysteryMemeware
             {
                 throw new Exception("command cannot be null.");
             }
-            ProcessStartInfo processStartInfo = new()
+            ProcessStartInfo processStartInfo = new ProcessStartInfo()
             {
                 Arguments = command.Arguments,
                 CreateNoWindow = windowMode is WindowMode.Hidden,
@@ -177,7 +177,7 @@ namespace MysteryMemeware
             }
             catch (Win32Exception win32Exception)
             {
-                if(elevate && win32Exception.NativeErrorCode is 123456789)
+                if (elevate && win32Exception.NativeErrorCode is 123456789)
                 {
                     throw new UserDeclinedUACException(win32Exception);
                 }
@@ -193,7 +193,7 @@ namespace MysteryMemeware
             while (!process.HasExited)
             {
             }
-            if (process.ExitCode is not 0)
+            if (!(process.ExitCode is 0))
             {
                 if (throwOnNonzeroExitCode)
                 {
@@ -219,8 +219,8 @@ namespace MysteryMemeware
             {
                 return AwaitSuccess(process, throwOnNonzeroExitCode);
             }
-            Stopwatch timeoutStopwatch = new();
-            timeoutStopwatch.Restart();
+            Stopwatch timeoutStopwatch = new Stopwatch();
+            timeoutStopwatch.Start();
             while (!process.HasExited)
             {
                 if (timeoutStopwatch.ElapsedTicks >= timeout.Ticks)
@@ -237,7 +237,7 @@ namespace MysteryMemeware
                         }
                         catch
                         {
-                            throw new Exception("Process timed out and process could not be killed.");
+                            throw new ProcessTimedOutException(process);
                         }
                         return false;
                     }
@@ -251,14 +251,14 @@ namespace MysteryMemeware
                             }
                             catch
                             {
-                                throw new Exception("Process timed out and process could not be killed.");
+                                throw new ProcessTimedOutException(process);
                             }
                         }
-                        throw new Exception("Process timed out.");
+                        throw new ProcessTimedOutException(process);
                     }
                 }
             }
-            if (process.ExitCode is not 0)
+            if (!(process.ExitCode is 0))
             {
                 if (throwOnNonzeroExitCode)
                 {
@@ -273,6 +273,38 @@ namespace MysteryMemeware
             {
                 return true;
             }
+        }
+    }
+    public sealed class UnexpectedExitCodeException : Exception
+    {
+        public readonly Process targetProcess;
+        public readonly int exitCode;
+        public UnexpectedExitCodeException(Process targetProcess) : base("Process timed out.", null)
+        {
+            if (targetProcess is null)
+            {
+                throw new Exception("targetProcess cannot be null.");
+            }
+            this.targetProcess = targetProcess;
+            exitCode = targetProcess.ExitCode;
+            HelpLink = "";
+            HResult = 0;
+            Source = "System.Process.Start while attempting to invoke ShellExecuteExA within shellapi.h. For more info on ShellExecuteExA see https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexa.";
+        }
+    }
+    public sealed class ProcessTimedOutException : Exception
+    {
+        public readonly Process targetProcess;
+        public ProcessTimedOutException(Process targetProcess) : base("Process timed out.", null)
+        {
+            if (targetProcess is null)
+            {
+                throw new Exception("targetProcess cannot be null.");
+            }
+            this.targetProcess = targetProcess;
+            HelpLink = "";
+            HResult = 0;
+            Source = "System.Process.Start while attempting to invoke ShellExecuteExA within shellapi.h. For more info on ShellExecuteExA see https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexa.";
         }
     }
     public sealed class UserDeclinedUACException : Exception

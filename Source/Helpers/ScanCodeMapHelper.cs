@@ -10,4 +10,7 @@ namespace MysteryMemeware
     {
 
     }
+    internal class KnownScancode
+    {
+    }
 }

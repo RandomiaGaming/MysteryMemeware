@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace MysteryMemeware.Helpers
+﻿namespace MysteryMemeware
 {
     public static class UACHelper
     {
@@ -17,11 +8,11 @@ namespace MysteryMemeware.Helpers
             bool output = false;
             try
             {
-                WindowsIdentity identity = WindowsIdentity.GetCurrent();
+                System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
                 try
                 {
-                    WindowsPrincipal principal = new WindowsPrincipal(identity);
-                    output = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                    System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
+                    output = principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
                 }
                 finally
                 {
@@ -47,11 +38,18 @@ namespace MysteryMemeware.Helpers
             bool output = false;
             try
             {
-                WindowsIdentity identity = WindowsIdentity.GetCurrent();
+                System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
                 try
                 {
-                    WindowsPrincipal principal = new WindowsPrincipal(identity);
-                    output = !(principal.Claims.FirstOrDefault(c => c.Value == "S-1-5-32-544") is null);
+                    System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
+                    foreach (System.Security.Claims.Claim claim in principal.Claims)
+                    {
+                        if (claim.Value is "S-1-5-32-544")
+                        {
+                            output = true;
+                            break;
+                        }
+                    }
                 }
                 finally
                 {
@@ -70,18 +68,6 @@ namespace MysteryMemeware.Helpers
                 output = false;
             }
             return output;
-        }
-        public static bool ElevateWithPopup()
-        {
-            try
-            {
-                ProcessHelper.Start(Program.CurrentExePath, WindowMode.Default, true, Environment.CurrentDirectory);
-                return true;
-            }
-            catch (UserDeclinedUACException)
-            {
-                return false;
-            }
         }
     }
 }

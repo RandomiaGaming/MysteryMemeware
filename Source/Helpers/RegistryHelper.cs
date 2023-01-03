@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Win32;
-namespace MysteryMemeware.Helpers
+namespace MysteryMemeware
 {
     public static class RegistryHelper
     {

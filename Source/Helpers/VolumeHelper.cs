@@ -1,44 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using System.Threading;
-namespace MysteryMemeware.Helpers
+namespace MysteryMemeware
 {
     public static class VolumeHelper
     {
-        public static Thread LockAtFull(int sleepTime = 500)
-        {
-            if(sleepTime < 0)
-            {
-                throw new Exception("sleepTime must be greater than or equal to 0.");
-            }
-            Thread output;
-            if (sleepTime is 0)
-            {
-                output = new Thread(() =>
-                {
-                    while (true)
-                    {
-                        SetVolume(1.0f);
-                        SetMute(false);
-                    }
-                });
-            }
-            else
-            {
-                output = new Thread(() =>
-                {
-                    while (true)
-                    {
-                        SetVolume(1.0f);
-                        SetMute(false);
-                        Thread.Sleep(sleepTime);
-                    }
-                });
-            }
-            output.Start();
-            return output;
-        }
         public static float GetVolume()
         {
             Marshal.ThrowExceptionForHR(Vol().GetMasterVolumeLevelScalar(out float v));
@@ -94,30 +60,30 @@ namespace MysteryMemeware.Helpers
         [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IAudioEndpointVolume
         {
-            public int f();
-            public int g();
-            public int h();
-            public int i();
-            public int SetMasterVolumeLevelScalar(float fLevel, Guid pguidEventContext);
-            public int j();
-            public int GetMasterVolumeLevelScalar(out float pfLevel);
-            public int k();
-            public int l();
-            public int m();
-            public int n();
-            public int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, Guid pguidEventContext);
-            public int GetMute(out bool pbMute);
+            int f();
+            int g();
+            int h();
+            int i();
+            int SetMasterVolumeLevelScalar(float fLevel, Guid pguidEventContext);
+            int j();
+            int GetMasterVolumeLevelScalar(out float pfLevel);
+            int k();
+            int l();
+            int m();
+            int n();
+            int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, Guid pguidEventContext);
+            int GetMute(out bool pbMute);
         }
         [Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDevice
         {
-            public int Activate(ref Guid id, int clsCtx, int activationParams, out IAudioEndpointVolume aev);
+            int Activate(ref Guid id, int clsCtx, int activationParams, out IAudioEndpointVolume aev);
         }
         [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDeviceEnumerator
         {
-            public int f();
-            public int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice endpoint);
+            int f();
+            int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice endpoint);
         }
         [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
         private class MMDeviceEnumeratorComObject

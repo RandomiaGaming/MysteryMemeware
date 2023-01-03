@@ -4,9 +4,9 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{8841B1D0-0B70-458D-960D-F8D6511ACE90}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>MysteryMemeware</RootNamespace>
-    <AssemblyName>CosmicCatsInstaller</AssemblyName>
+    <AssemblyName>MysteryMemeware</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -66,8 +66,28 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>..\..\..\Pentesting Portal\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <ErrorReport>none</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
@@ -78,28 +98,33 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\MysteryInstaller\MysteryInstaller.cs" />
+    <Compile Include="Modules\MysteryMemeware\MysteryMemeware.cs" />
+    <Compile Include="Modules\MysteryUninstaller\MysteryUninstaller.cs" />
+    <Compile Include="Helpers\ArrayHelper.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Helpers\PathHelper.cs" />
+    <Compile Include="Helpers\RandomnessHelper.cs" />
+    <Compile Include="Helpers\ScanCodeMapHelper.cs" />
+    <Compile Include="Helpers\SHA256Helper.cs" />
+    <Compile Include="Helpers\ShreddingHelper.cs" />
+    <Compile Include="Helpers\StringEncodingHelper.cs" />
+    <Compile Include="Helpers\Win32InputHelper.cs" />
+    <Compile Include="Modules\CosmicCatsDecoy\OldProgram.cs" />
+    <Compile Include="Modules\CosmicCatsDecoy\CosmicCatsDecoy.cs" />
     <Compile Include="Helpers\BSODHelper.cs" />
+    <Compile Include="Helpers\CPUHelper.cs" />
+    <Compile Include="Helpers\ProcessHelper.cs" />
+    <Compile Include="Helpers\RegistryHelper.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\ThreadingHelper.cs" />
     <Compile Include="Helpers\UACHelper.cs" />
-    <Compile Include="InterpolatedPictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="KnownScancode.cs" />
-    <Compile Include="Helpers\CPUHelper.cs" />
-    <Compile Include="ScanCodeMapHelper.cs" />
-    <Compile Include="PhaseOne.cs" />
-    <Compile Include="VideoScreenCover.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserHelper.cs" />
-    <Compile Include="Helpers\ProcessHelper.cs" />
-    <Compile Include="UserRefrence.cs" />
     <Compile Include="Helpers\VolumeHelper.cs" />
+    <Compile Include="Helpers\Win32HandleHelper.cs" />
+    <Compile Include="Helpers\UserHelper.cs" />
+    <Compile Include="Helpers\UserRefrence.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Helpers\RegistryHelper.cs" />
-    <Compile Include="WindowMode.cs" />
+    <Compile Include="Helpers\WindowMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -114,18 +139,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CoverImage.bmp" />
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <None Include="DebugWarning.vbs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="MysterySong.wav" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\BackgroundSong.wav" />
+    <Content Include="Assets\CoverImage.bmp" />
+    <Content Include="Assets\CoverImageWithFailSafe.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('..\packages\MonoGame.Framework.DesktopGL.3.8.0.1641\build\MonoGame.Framework.DesktopGL.targets')" />

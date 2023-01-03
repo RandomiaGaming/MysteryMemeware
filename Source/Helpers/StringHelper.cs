@@ -1,17 +1,16 @@
-﻿using System;
-namespace MysteryMemeware.Helpers
+﻿namespace MysteryMemeware
 {
     public static class StringHelper
     {
-        public static bool StringContainsChar(string target, char character)
+        public static bool StringContainsChar(string a, char b)
         {
-            if (target is null || target is "")
+            if (a is null)
             {
-                return false;
+                throw new System.Exception("a cannot be null.");
             }
-            for (int i = 0; i < target.Length; i++)
+            for (int i = 0; i < a.Length; i++)
             {
-                if (target[i] == character)
+                if (a[i] == b)
                 {
                     return true;
                 }
@@ -22,19 +21,19 @@ namespace MysteryMemeware.Helpers
         {
             if (a is null)
             {
-                return "";
+                throw new System.Exception("a cannot be null.");
             }
             if (b is null || b is "")
             {
-                return a;
+                throw new System.Exception("b cannot be null or empty.");
             }
             if (c is null)
             {
-                c = "";
+                throw new System.Exception("c cannot be null.");
             }
             if (ContainsCaseless(c, b))
             {
-                throw new Exception("c cannot contain b.");
+                throw new System.Exception("c cannot contain b.");
             }
             for (int i = 0; i < a.Length - b.Length + 1; i++)
             {
@@ -50,13 +49,13 @@ namespace MysteryMemeware.Helpers
         }
         public static bool ContainsCaseless(string a, string b)
         {
-            if (a is null && b is null)
+            if (a is null)
             {
-                return true;
+                throw new System.Exception("a cannot be null.");
             }
-            else if (a is null || b is null)
+            if(b is null)
             {
-                return false;
+                throw new System.Exception("b cannot be null.");
             }
             if (b.Length > a.Length)
             {
@@ -64,38 +63,38 @@ namespace MysteryMemeware.Helpers
             }
             for (int i = 0; i < a.Length - b.Length; i++)
             {
-                if (MatchesCaseless(SafeSubstring(a, i, i + b.Length - 1), b))
+                if (MatchesCaseless(a.Substring(i, b.Length), b))
                 {
                     return true;
                 }
             }
             return false;
         }
-        public static string SafeSubstring(string a, int startIndex, int endIndex)
+        public static string SafeSubstring(string a, int start, int end)
         {
-            if(startIndex == endIndex)
+            if (a is null)
+            {
+                throw new System.Exception("a cannot be null.");
+            }
+            if (start > end)
+            {
+                int temp = start;
+                start = end;
+                end = temp;
+            }
+            if (start < 0)
+            {
+                start = 0;
+            }
+            if (end >= a.Length)
+            {
+                end = a.Length - 1;
+            }
+            if(start > end)
             {
                 return "";
             }
-            if (startIndex > endIndex)
-            {
-                int temp = startIndex;
-                startIndex = endIndex;
-                endIndex = temp;
-            }
-            if (startIndex < 0)
-            {
-                startIndex = 0;
-            }
-            if (endIndex >= a.Length)
-            {
-                endIndex = a.Length - 1;
-            }
-            if (a is null || a is "")
-            {
-                return "";
-            }
-            return a.Substring(startIndex, endIndex - startIndex + 1);
+            return a.Substring(start, end - start + 1);
         }
         public static string SelectAfterCaseless(string a, string b)
         {

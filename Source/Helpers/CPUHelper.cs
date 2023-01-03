@@ -1,81 +1,50 @@
-﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Security.Principal;
-namespace MysteryMemeware.Helpers
+﻿namespace MysteryMemeware
 {
     public static class CPUHelper
     {
-        #region Private Constants
-        public static readonly int LogicalProcessorCount = Environment.ProcessorCount;
-        public static readonly IntPtr AffinityAll = GetAffinityAll();
-        private static IntPtr GetAffinityAll()
+        public static readonly int LogicalProcessorCount = System.Environment.ProcessorCount;
+        public static readonly System.IntPtr AffinityAll = GetAffinityAll();
+        private static System.IntPtr GetAffinityAll()
         {
-            BitArray affinityBits = new BitArray(IntPtr.Size * 8);
+            System.Collections.BitArray affinityBits = new System.Collections.BitArray(System.IntPtr.Size * 8);
 
             for (int i = 0; i < LogicalProcessorCount; i++)
             {
                 affinityBits[i] = true;
             }
 
-            byte[] affinityBytes = new byte[IntPtr.Size];
+            byte[] affinityBytes = new byte[System.IntPtr.Size];
 
             affinityBits.CopyTo(affinityBytes, 0);
 
-            if (Environment.Is64BitProcess)
+            if (System.Environment.Is64BitProcess)
             {
-                long affinityLong = BitConverter.ToInt64(affinityBytes, 0);
+                long affinityLong = System.BitConverter.ToInt64(affinityBytes, 0);
 
-                return (IntPtr)affinityLong;
+                return (System.IntPtr)affinityLong;
             }
             else
             {
-                int affinityInt = BitConverter.ToInt32(affinityBytes, 0);
+                int affinityInt = System.BitConverter.ToInt32(affinityBytes, 0);
 
-                return (IntPtr)affinityInt;
+                return (System.IntPtr)affinityInt;
             }
         }
-        public static bool CurrentProcessIsAdmin = GetCurrentProcessIsAdmin();
-        private static bool GetCurrentProcessIsAdmin()
-        {
-            try
-            {
-                WindowsIdentity identity = WindowsIdentity.GetCurrent();
-                WindowsPrincipal principal = new WindowsPrincipal(identity);
-                bool isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
-                try
-                {
-                    identity.Dispose();
-                }
-                catch
-                {
-
-                }
-                return isAdmin;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-        #endregion
-        #region CPU Priority And Affinity
-        //Affinity
         public static bool[] GetAffinity()
         {
-            IntPtr affinityPointer = ProcessHelper.CurrentProcess.ProcessorAffinity;
+            System.IntPtr affinityPointer = ProcessHelper.CurrentProcess.ProcessorAffinity;
             byte[] affinityBytes;
-            if (Environment.Is64BitProcess)
+            if (System.Environment.Is64BitProcess)
             {
-                affinityBytes = BitConverter.GetBytes((ulong)affinityPointer);
+                affinityBytes = System.BitConverter.GetBytes((ulong)affinityPointer);
             }
             else
             {
-                affinityBytes = BitConverter.GetBytes((uint)affinityPointer);
+                affinityBytes = System.BitConverter.GetBytes((uint)affinityPointer);
             }
             int affinitySize = LogicalProcessorCount;
             bool[] affinity = new bool[affinitySize];
-            BitArray bitArray = new BitArray(affinityBytes);
+            System.Collections.BitArray bitArray = new System.Collections.BitArray(affinityBytes);
             for (int bitIndex = 0; bitIndex < affinitySize; bitIndex++)
             {
                 affinity[bitIndex] = bitArray[bitIndex];
@@ -86,15 +55,15 @@ namespace MysteryMemeware.Helpers
         {
             if (affinity is null)
             {
-                throw new Exception("affinity cannot be null.");
+                throw new System.Exception("affinity cannot be null.");
             }
             if (affinity.Length is 0)
             {
-                throw new Exception("affinity cannot be empty.");
+                throw new System.Exception("affinity cannot be empty.");
             }
             if (affinity.Length != LogicalProcessorCount)
             {
-                throw new Exception("affinity length must be equal to GetLogicalProcessorCount.");
+                throw new System.Exception("affinity length must be equal to LogicalProcessorCount.");
             }
             bool containsTrue = false;
             foreach (bool affinityCPUValue in affinity)
@@ -107,27 +76,26 @@ namespace MysteryMemeware.Helpers
             }
             if (!containsTrue)
             {
-                throw new Exception("Affinity must allow usage of at least one logical processor.");
+                throw new System.Exception("Affinity must allow use of at least one logical processor.");
             }
-            BitArray affinityBits = new BitArray(affinity);
-            byte[] affinityBytes = new byte[IntPtr.Size];
+            System.Collections.BitArray affinityBits = new System.Collections.BitArray(affinity);
+            byte[] affinityBytes = new byte[System.IntPtr.Size];
             affinityBits.CopyTo(affinityBytes, 0);
-            if (Environment.Is64BitProcess)
+            if (System.Environment.Is64BitProcess)
             {
-                ulong affinityULong = BitConverter.ToUInt64(affinityBytes, 0);
-                ProcessHelper.CurrentProcess.ProcessorAffinity = (IntPtr)affinityULong;
+                ulong affinityULong = System.BitConverter.ToUInt64(affinityBytes, 0);
+                ProcessHelper.CurrentProcess.ProcessorAffinity = (System.IntPtr)affinityULong;
             }
             else
             {
-                uint affinityUInt = BitConverter.ToUInt32(affinityBytes, 0);
-                ProcessHelper.CurrentProcess.ProcessorAffinity = (IntPtr)affinityUInt;
+                uint affinityUInt = System.BitConverter.ToUInt32(affinityBytes, 0);
+                ProcessHelper.CurrentProcess.ProcessorAffinity = (System.IntPtr)affinityUInt;
             }
         }
         public static void SetAffinityHighest()
         {
             ProcessHelper.CurrentProcess.ProcessorAffinity = AffinityAll;
         }
-        //CPU Priority
         public enum Priority
         {
             OnlyWhenIdle,
@@ -142,36 +110,36 @@ namespace MysteryMemeware.Helpers
             if (priority is Priority.OnlyWhenIdle)
             {
                 ProcessHelper.CurrentProcess.PriorityBoostEnabled = false;
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.Idle;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.Idle;
             }
             else if (priority is Priority.BelowNormal)
             {
                 ProcessHelper.CurrentProcess.PriorityBoostEnabled = false;
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.BelowNormal;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
             }
             else if (priority is Priority.Normal)
             {
                 ProcessHelper.CurrentProcess.PriorityBoostEnabled = false;
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.Normal;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
             }
             else if (priority is Priority.AboveNormal)
             {
                 ProcessHelper.CurrentProcess.PriorityBoostEnabled = true;
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.AboveNormal;
             }
             else if (priority is Priority.High)
             {
                 ProcessHelper.CurrentProcess.PriorityBoostEnabled = true;
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.High;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
             }
             else if (priority is Priority.RealTime)
             {
-                if (!CurrentProcessIsAdmin)
+                if (!UACHelper.CurrentProcessIsAdmin)
                 {
-                    throw new Exception("Administrator access is required to run with realtime CPU priority.");
+                    throw new System.Exception("Administrator access is required to run with realtime CPU priority.");
                 }
                 ProcessHelper.CurrentProcess.PriorityBoostEnabled = true;
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.RealTime;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.RealTime;
             }
         }
         public static void SetPriority(Priority priority, bool boostWhenFocused)
@@ -179,59 +147,57 @@ namespace MysteryMemeware.Helpers
             ProcessHelper.CurrentProcess.PriorityBoostEnabled = boostWhenFocused;
             if (priority is Priority.OnlyWhenIdle)
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.Idle;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.Idle;
             }
             else if (priority is Priority.BelowNormal)
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.BelowNormal;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.BelowNormal;
             }
             else if (priority is Priority.Normal)
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.Normal;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.Normal;
             }
             else if (priority is Priority.AboveNormal)
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.AboveNormal;
             }
             else if (priority is Priority.High)
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.High;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
             }
             else if (priority is Priority.RealTime)
             {
-                if (!CurrentProcessIsAdmin)
+                if (!UACHelper.CurrentProcessIsAdmin)
                 {
-                    throw new Exception("Administrator access is required to run with realtime CPU priority.");
+                    throw new System.Exception("Administrator access is required to run with realtime CPU priority.");
                 }
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.RealTime;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.RealTime;
             }
         }
         public static void SetPriorityHighest()
         {
             ProcessHelper.CurrentProcess.PriorityBoostEnabled = true;
-            if (CurrentProcessIsAdmin)
+            if (UACHelper.CurrentProcessIsAdmin)
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.RealTime;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.RealTime;
             }
             else
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.High;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
             }
         }
-        //CPU Usage
-        public static void SetHighest()
+        public static void SetUseageHighest()
         {
             ProcessHelper.CurrentProcess.ProcessorAffinity = AffinityAll;
             ProcessHelper.CurrentProcess.PriorityBoostEnabled = true;
-            if (CurrentProcessIsAdmin)
+            if (UACHelper.CurrentProcessIsAdmin)
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.RealTime;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.RealTime;
             }
             else
             {
-                ProcessHelper.CurrentProcess.PriorityClass = ProcessPriorityClass.High;
+                ProcessHelper.CurrentProcess.PriorityClass = System.Diagnostics.ProcessPriorityClass.High;
             }
         }
-        #endregion
     }
 }
