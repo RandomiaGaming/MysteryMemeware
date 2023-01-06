@@ -1,31 +1,28 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class VolumeHelper
     {
         public static float GetVolume()
         {
-            Marshal.ThrowExceptionForHR(Vol().GetMasterVolumeLevelScalar(out float v));
+            System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(Vol().GetMasterVolumeLevelScalar(out float v));
             return v;
         }
         public static void SetVolume(float volumeLevel)
         {
             if (volumeLevel < 0 || volumeLevel > 1)
             {
-                throw new Exception("volumeLevel must be between 0 and 1.");
+                throw new System.Exception("volumeLevel must be between 0 and 1.");
             }
-            Marshal.ThrowExceptionForHR(Vol().SetMasterVolumeLevelScalar(volumeLevel, Guid.Empty));
+            System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(Vol().SetMasterVolumeLevelScalar(volumeLevel, System.Guid.Empty));
         }
         public static bool GetMute()
         {
-            Marshal.ThrowExceptionForHR(Vol().GetMute(out bool mute));
+            System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(Vol().GetMute(out bool mute));
             return mute;
         }
         public static void SetMute(bool muteState)
         {
-            Marshal.ThrowExceptionForHR(Vol().SetMute(muteState, Guid.Empty));
+            System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(Vol().SetMute(muteState, System.Guid.Empty));
         }
         public static bool ToggleMute()
         {
@@ -35,18 +32,18 @@ namespace MysteryMemeware
         }
         public static void ToggleMuteWithPopup()
         {
-            IntPtr processHandle = Process.GetCurrentProcess().Handle;
-            SendMessageW(processHandle, 793, processHandle, (IntPtr)524288);
+            System.IntPtr processHandle = ProcessHelper.CurrentProcess.Handle;
+            SendMessageW(processHandle, 793, processHandle, (System.IntPtr)524288);
         }
         public static void VolumeDownWithPopup()
         {
-            IntPtr processHandle = Process.GetCurrentProcess().Handle;
-            SendMessageW(processHandle, 793, processHandle, (IntPtr)589824);
+            System.IntPtr processHandle = ProcessHelper.CurrentProcess.Handle;
+            SendMessageW(processHandle, 793, processHandle, (System.IntPtr)589824);
         }
         public static void VolumeUpWithPopup()
         {
-            IntPtr processHandle = Process.GetCurrentProcess().Handle;
-            SendMessageW(processHandle, 793, processHandle, (IntPtr)655360);
+            System.IntPtr processHandle = ProcessHelper.CurrentProcess.Handle;
+            SendMessageW(processHandle, 793, processHandle, (System.IntPtr)655360);
         }
         public static void ShowVolumePopup()
         {
@@ -56,50 +53,49 @@ namespace MysteryMemeware
             SetVolume(volumeLevel);
             SetMute(muteState);
         }
-        #region Pinvoke Calls
-        [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        #region ComInterfaces
+        [System.Runtime.InteropServices.Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), System.Runtime.InteropServices.InterfaceType(System.Runtime.InteropServices.ComInterfaceType.InterfaceIsIUnknown)]
         private interface IAudioEndpointVolume
         {
             int f();
             int g();
             int h();
             int i();
-            int SetMasterVolumeLevelScalar(float fLevel, Guid pguidEventContext);
+            int SetMasterVolumeLevelScalar(float fLevel, System.Guid pguidEventContext);
             int j();
             int GetMasterVolumeLevelScalar(out float pfLevel);
             int k();
             int l();
             int m();
             int n();
-            int SetMute([MarshalAs(UnmanagedType.Bool)] bool bMute, Guid pguidEventContext);
+            int SetMute([System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)] bool bMute, System.Guid pguidEventContext);
             int GetMute(out bool pbMute);
         }
-        [Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [System.Runtime.InteropServices.Guid("D666063F-1587-4E43-81F1-B948E807363F"), System.Runtime.InteropServices.InterfaceType(System.Runtime.InteropServices.ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDevice
         {
-            int Activate(ref Guid id, int clsCtx, int activationParams, out IAudioEndpointVolume aev);
+            int Activate(ref System.Guid id, int clsCtx, int activationParams, out IAudioEndpointVolume aev);
         }
-        [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [System.Runtime.InteropServices.Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), System.Runtime.InteropServices.InterfaceType(System.Runtime.InteropServices.ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDeviceEnumerator
         {
             int f();
             int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice endpoint);
         }
-        [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
+        [System.Runtime.InteropServices.ComImport, System.Runtime.InteropServices.Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
         private class MMDeviceEnumeratorComObject
         {
-
         }
         private static IAudioEndpointVolume Vol()
         {
             var enumerator = new MMDeviceEnumeratorComObject() as IMMDeviceEnumerator;
-            Marshal.ThrowExceptionForHR(enumerator.GetDefaultAudioEndpoint(0, 1, out IMMDevice dev));
+            System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(enumerator.GetDefaultAudioEndpoint(0, 1, out IMMDevice dev));
             var epvid = typeof(IAudioEndpointVolume).GUID;
-            Marshal.ThrowExceptionForHR(dev.Activate(ref epvid, 23, 0, out IAudioEndpointVolume epv));
+            System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(dev.Activate(ref epvid, 23, 0, out IAudioEndpointVolume epv));
             return epv;
         }
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern System.IntPtr SendMessageW(System.IntPtr hWnd, int Msg, System.IntPtr wParam, System.IntPtr lParam);
         #endregion
     }
 }

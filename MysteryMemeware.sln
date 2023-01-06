@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MysteryUninstaller", "Myste
 		{6C8D0129-71A1-40C2-A94E-DBA0B8887F34} = {6C8D0129-71A1-40C2-A94E-DBA0B8887F34}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MysteryHelpers", "MysteryHelpers\MysteryHelpers.csproj", "{6C8D0129-71A1-40C2-A94E-DBA0B8887F34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MysteryHelper", "MysteryHelpers\MysteryHelper.csproj", "{6C8D0129-71A1-40C2-A94E-DBA0B8887F34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

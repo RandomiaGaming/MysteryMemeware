@@ -1,4 +1,4 @@
-﻿namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class RandomnessHelper
     {
@@ -84,6 +84,23 @@
             double ratio = RNG.NextDouble();
             double range = max - min;
             return min + (range * ratio);
+        }
+        public static string NextString(int length, string charset)
+        {
+            if (length < 0)
+            {
+                throw new System.Exception("length must be greater than 0.");
+            }
+            else if (charset is null || charset.Length is 0)
+            {
+                throw new System.Exception("charset cannot be null or empty.");
+            }
+            char[] outputArray = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                outputArray[i] = charset[RNG.Next(charset.Length)];
+            }
+            return new string(outputArray);
         }
     }
 }

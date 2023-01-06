@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.DirectoryServices;
-using System.Management;
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class UserHelper
     {
-        public static readonly string CurrentUsername = Environment.UserName;
-        public static readonly string CurrentDomain = Environment.UserDomainName;
-        private static readonly Random RNG = new Random((int)DateTime.Now.Ticks);
+        public static readonly string CurrentUsername = System.Environment.UserName;
+        public static readonly string CurrentDomain = System.Environment.UserDomainName;
         public const string PasswordCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         public const char SAMSeporatorChar = '\\';
         public static readonly string SAMSeporatorString = "\\";
@@ -18,25 +13,20 @@ namespace MysteryMemeware
         {
             if (length < 0)
             {
-                throw new Exception("Password length must be greater than or equal to 0.");
+                throw new System.Exception("Password length must be greater than or equal to 0.");
             }
-            char[] passwordChars = new char[length];
-            for (int i = 0; i < length; i++)
-            {
-                passwordChars[i] = PasswordCharset[RNG.Next(0, PasswordCharset.Length)];
-            }
-            return new string(passwordChars);
+            return RandomnessHelper.NextString(length, PasswordCharset);
         }
         public static string[] GetLocalUsernames()
         {
-            List<string> usernames = new List<string>();
+            System.Collections.Generic.List<string> usernames = new System.Collections.Generic.List<string>();
             try
             {
-                SelectQuery query = new SelectQuery("Win32_UserAccount", $"domain=\"{CurrentDomain}\"");
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+                System.Management.SelectQuery query = new System.Management.SelectQuery("Win32_UserAccount", $"domain=\"{CurrentDomain}\"");
+                System.Management.ManagementObjectSearcher searcher = new System.Management.ManagementObjectSearcher(query);
                 try
                 {
-                    foreach (ManagementObject managementObject in searcher.Get())
+                    foreach (System.Management.ManagementObject managementObject in searcher.Get())
                     {
                         try
                         {
@@ -48,7 +38,6 @@ namespace MysteryMemeware
                         }
                         catch
                         {
-
                         }
                         try
                         {
@@ -56,13 +45,11 @@ namespace MysteryMemeware
                         }
                         catch
                         {
-
                         }
                     }
                 }
                 catch
                 {
-
                 }
                 try
                 {
@@ -70,19 +57,17 @@ namespace MysteryMemeware
                 }
                 catch
                 {
-
                 }
             }
             catch
             {
-
             }
             try
             {
-                var computerEntry = new DirectoryEntry($"WinNT://{CurrentDomain},computer");
+                var computerEntry = new System.DirectoryServices.DirectoryEntry($"WinNT://{CurrentDomain},computer");
                 try
                 {
-                    foreach (DirectoryEntry childEntry in computerEntry.Children)
+                    foreach (System.DirectoryServices.DirectoryEntry childEntry in computerEntry.Children)
                     {
                         try
                         {
@@ -97,7 +82,6 @@ namespace MysteryMemeware
                         }
                         catch
                         {
-
                         }
                         try
                         {
@@ -105,13 +89,11 @@ namespace MysteryMemeware
                         }
                         catch
                         {
-
                         }
                     }
                 }
                 catch
                 {
-
                 }
                 try
                 {
@@ -119,12 +101,10 @@ namespace MysteryMemeware
                 }
                 catch
                 {
-
                 }
             }
             catch
             {
-
             }
             return usernames.ToArray();
         }
@@ -132,7 +112,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             RunNetCommand($"user /add \"{username}\"", true);
         }
@@ -145,7 +125,7 @@ namespace MysteryMemeware
             }
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             RunNetCommand($"user /add \"{username}\" \"{password}\"", true);
         }
@@ -153,7 +133,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             RunNetCommand($"user /delete \"{username}\"", true);
         }
@@ -161,7 +141,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             if (password is null || password is "")
             {
@@ -173,7 +153,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             RunNetCommand($"localgroup Administrators /add \"{username}\"", true);
         }
@@ -181,7 +161,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             RunNetCommand($"localgroup Administrators /delete \"{username}\"", true);
         }
@@ -189,7 +169,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             RunNetCommand($"user \"{username}\" /active:yes", true);
         }
@@ -197,7 +177,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             RunNetCommand($"user \"{username}\" /active:no", true);
         }
@@ -205,7 +185,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             RunNetCommand($"user \"{username}\" /enable:yes", true);
         }
@@ -213,7 +193,7 @@ namespace MysteryMemeware
         {
             if (username is null || username is "")
             {
-                throw new Exception("username cannot be null or empty.");
+                throw new System.Exception("username cannot be null or empty.");
             }
             try
             {
@@ -229,248 +209,9 @@ namespace MysteryMemeware
         {
             if (UACHelper.CurrentProcessIsAdmin is false)
             {
-                throw new Exception("Net commands require administrator.");
+                throw new System.Exception("Net commands require administrator.");
             }
-            ProcessHelper.AwaitSuccess(ProcessHelper.Start(new TerminalCommand(PathHelper.System32Folder + "\\net.exe", command), WindowMode.Hidden, true, PathHelper.System32Folder), new TimeSpan(300000000), TimeoutAction.KillAndThrow, throwOnNonZeroExitCode);
-        }
-
-    }
-}
-/*
-using System;
-using System.Collections.Generic;
-using System.DirectoryServices;
-using System.Management;
-namespace MysteryMemeware.Helpers
-{
-    public static class UserHelper
-    {
-        public static readonly string CurrentUsername = Environment.UserName;
-        public static readonly string CurrentDomain = Environment.UserDomainName;
-        private static readonly Random RNG = new Random((int)DateTime.Now.Ticks);
-        public const string PasswordCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        public const char SAMSeporatorChar = '\\';
-        public static readonly string SAMSeporatorString = "\\";
-        public const char UPNSeporatorChar = '@';
-        public static readonly string UPNSeporatorString = "@";
-        public static string GeneratePassword(int length = 14)
-        {
-            if (length < 0)
-            {
-                throw new Exception("Password length must be greater than or equal to 0.");
-            }
-            char[] passwordChars = new char[length];
-            for (int i = 0; i < length; i++)
-            {
-                passwordChars[i] = PasswordCharset[RNG.Next(0, PasswordCharset.Length)];
-            }
-            return new string(passwordChars);
-        }
-        public static string[] GetLocalUsernames()
-        {
-            List<string> usernames = new List<string>();
-            try
-            {
-                SelectQuery query = new SelectQuery("Win32_UserAccount", $"domain=\"{CurrentDomain}\"");
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
-                try
-                {
-                    foreach (ManagementObject managementObject in searcher.Get())
-                    {
-                        try
-                        {
-                            string username = (string)(managementObject["Name"]);
-                            if (!(username is null) && !(username is "") && !StringHelper.MatchesArrayCaseless(username, usernames.ToArray()))
-                            {
-                                usernames.Add(username);
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                        try
-                        {
-                            managementObject.Dispose();
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-                }
-                catch
-                {
-
-                }
-                try
-                {
-                    searcher.Dispose();
-                }
-                catch
-                {
-
-                }
-            }
-            catch
-            {
-
-            }
-            try
-            {
-                var computerEntry = new DirectoryEntry($"WinNT://{CurrentDomain},computer");
-                try
-                {
-                    foreach (DirectoryEntry childEntry in computerEntry.Children)
-                    {
-                        try
-                        {
-                            if (childEntry.SchemaClassName == "User")
-                            {
-                                string username = childEntry.Name;
-                                if (!(username is null) && !(username is "") && !StringHelper.MatchesArrayCaseless(username, usernames.ToArray()))
-                                {
-                                    usernames.Add(username);
-                                }
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                        try
-                        {
-                            childEntry.Dispose();
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-                }
-                catch
-                {
-
-                }
-                try
-                {
-                    computerEntry.Dispose();
-                }
-                catch
-                {
-
-                }
-            }
-            catch
-            {
-
-            }
-            return usernames.ToArray();
-        }
-        public static void AddUser(string username)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            RunNetCommand($"user /add \"{username}\"", true);
-        }
-        public static void AddUser(string username, string password)
-        {
-            if (password is null || password is "")
-            {
-                AddUser(username);
-                return;
-            }
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            RunNetCommand($"user /add \"{username}\" \"{password}\"", true);
-        }
-        public static void RemoveUser(string username)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            RunNetCommand($"user /delete \"{username}\"", true);
-        }
-        public static void ChangeUserPassword(string username, string password)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            if (password is null || password is "")
-            {
-                password = "";
-            }
-            RunNetCommand($"user \"{username}\" \"{password}\"", true);
-        }
-        public static void AddAdmin(string username)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            RunNetCommand($"localgroup Administrators /add \"{username}\"", true);
-        }
-        public static void RemoveAdmin(string username)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            RunNetCommand($"localgroup Administrators /delete \"{username}\"", true);
-        }
-        public static void ActivateUser(string username)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            RunNetCommand($"user \"{username}\" /active:yes", true);
-        }
-        public static void DeactivateUser(string username)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            RunNetCommand($"user \"{username}\" /active:no", true);
-        }
-        public static void EnableUser(string username)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            RunNetCommand($"user \"{username}\" /enable:yes", true);
-        }
-        public static bool UserExists(string username)
-        {
-            if (username is null || username is "")
-            {
-                throw new Exception("username cannot be null or empty.");
-            }
-            try
-            {
-                RunNetCommand($"user \"{username}\"", true);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-        public static void RunNetCommand(string command, bool throwOnNonZeroExitCode = true)
-        {
-            if (UACHelper.CurrentProcessIsAdmin is false)
-            {
-                throw new Exception("Net commands require administrator.");
-            }
-            ProcessHelper.AwaitSuccess(ProcessHelper.Start(new TerminalCommand(PathHelper.System32Folder + "\\net.exe", command), WindowMode.Hidden, true, PathHelper.System32Folder), new TimeSpan(300000000), TimeoutAction.KillAndThrow, throwOnNonZeroExitCode);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(new TerminalCommand(PathHelper.System32Folder + "\\net.exe", command), WindowMode.Hidden, true, PathHelper.System32Folder), new System.TimeSpan(300000000), TimeoutAction.KillAndThrow, throwOnNonZeroExitCode);
         }
     }
     public sealed class UsernameDomainPair
@@ -495,14 +236,14 @@ namespace MysteryMemeware.Helpers
             bool sam = userPath.Contains(UserHelper.SAMSeporatorString);
             if (upn && sam)
             {
-                throw new Exception("Invalid username");
+                throw new System.Exception("Invalid username");
             }
             else if (upn && !sam)
             {
                 string[] split = userPath.Split(UserHelper.UPNSeporatorChar);
                 if (split.Length != 2)
                 {
-                    throw new Exception("Invalid username");
+                    throw new System.Exception("Invalid username");
                 }
                 Name = split[0];
                 Domain = split[1];
@@ -516,7 +257,7 @@ namespace MysteryMemeware.Helpers
                 string[] split = userPath.Split(UserHelper.SAMSeporatorChar);
                 if (split.Length != 2)
                 {
-                    throw new Exception("Invalid username");
+                    throw new System.Exception("Invalid username");
                 }
                 Name = split[1];
                 Domain = split[0];
@@ -568,4 +309,3 @@ namespace MysteryMemeware.Helpers
         }
     }
 }
-*/

@@ -1,5 +1,11 @@
-﻿namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
+    public delegate void Lambda();
+    public delegate void LambdaCompletedEvent(int completedLambdaCount, int totalLambdaCount);
+    public delegate void LambdaFailedEvent(System.Exception exception, int completedLambdaCount, int totalLambdaCount);
+    public delegate void ParamLambda<T>(T parameter);
+    public delegate void ParamLambdaCompletedEvent<T>(T parameter, int completedParameterCount, int totalParameterCount);
+    public delegate void ParamLambdaFailedEvent<T>(T parameter, System.Exception exception, int completedParameterCount, int totalParameterCount);
     public static class ThreadingHelper
     {
         #region Worker Count
@@ -18,9 +24,6 @@
         }
         #endregion
         #region Lambdas
-        public delegate void Lambda();
-        public delegate void LambdaCompletedEvent(int completedLambdaCount, int totalLambdaCount);
-        public delegate void LambdaFailedEvent(System.Exception exception, int completedLambdaCount, int totalLambdaCount);
         //Note: The thread is already started before returning.
         public static System.Threading.Thread RunLambda(Lambda lambda)
         {
@@ -103,7 +106,6 @@
                                     }
                                     catch
                                     {
-
                                     }
                                     lock (queLock)
                                     {
@@ -130,7 +132,6 @@
                                         lock (queLock)
                                         {
                                             completedLambdaCount++;
-
                                             if (nextLambdaIndex == totalLambdaCount)
                                             {
                                                 break;
@@ -172,7 +173,6 @@
                                 }
                                 catch
                                 {
-
                                 }
                                 lock (queLock)
                                 {
@@ -251,7 +251,6 @@
                         }
                         catch
                         {
-
                         }
                         lock (queLock)
                         {
@@ -319,7 +318,6 @@
                     }
                     catch
                     {
-
                     }
                     lock (queLock)
                     {
@@ -382,7 +380,6 @@
             {
                 while (completedLambdaCount != totalLambdaCount)
                 {
-
                 }
             }
             else
@@ -395,9 +392,6 @@
         }
         #endregion
         #region Param Lambdas
-        public delegate void ParamLambda<T>(T parameter);
-        public delegate void ParamLambdaCompletedEvent<T>(T parameter, int completedParameterCount, int totalParameterCount);
-        public delegate void ParamLambdaFailedEvent<T>(T parameter, System.Exception exception, int completedParameterCount, int totalParameterCount);
         //Note: The thread is already started before returning.
         public static System.Threading.Thread RunParamLambda<T>(ParamLambda<T> paramLambda, T parameter)
         {
@@ -477,7 +471,6 @@
                                     }
                                     catch
                                     {
-
                                     }
                                     lock (queLock)
                                     {
@@ -504,7 +497,6 @@
                                         lock (queLock)
                                         {
                                             completedParameterCount++;
-
                                             if (nextParameterIndex == totalParameterCount)
                                             {
                                                 break;
@@ -546,7 +538,6 @@
                                 }
                                 catch
                                 {
-
                                 }
                                 lock (queLock)
                                 {
@@ -625,7 +616,6 @@
                         }
                         catch
                         {
-
                         }
                         lock (queLock)
                         {
@@ -652,7 +642,6 @@
                             lock (queLock)
                             {
                                 completedParameterCount++;
-
                                 if (nextParameterIndex == totalParameterCount)
                                 {
                                     break;
@@ -694,7 +683,6 @@
                     }
                     catch
                     {
-
                     }
                     lock (queLock)
                     {
@@ -757,7 +745,6 @@
             {
                 while (completedParameterCount != totalParameterCount)
                 {
-
                 }
             }
             else

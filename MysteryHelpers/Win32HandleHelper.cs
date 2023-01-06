@@ -1,69 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class Win32HandleHelper
     {
-        public static IntPtr GetChildWindowByTitle(IntPtr windowHandle, string targetTitle)
+        public static System.IntPtr GetChildWindowByTitle(System.IntPtr windowHandle, string targetTitle)
         {
-            IntPtr[] handles = GetChildWindowHandles(windowHandle);
-            foreach (IntPtr handle in handles)
+            System.IntPtr[] handles = GetChildWindowHandles(windowHandle);
+            foreach (System.IntPtr handle in handles)
             {
                 if(GetWindowTitle(handle) == targetTitle)
                 {
                     return handle;
                 }
             }
-            throw new Exception("Child window with specified title does not exist.");
+            throw new System.Exception("Child window with specified title does not exist.");
         }
-        public static IntPtr GetChildWindowByClass(IntPtr windowHandle, string targetClass)
+        public static System.IntPtr GetChildWindowByClass(System.IntPtr windowHandle, string targetClass)
         {
-            IntPtr[] handles = GetChildWindowHandles(windowHandle);
-            foreach (IntPtr handle in handles)
+            System.IntPtr[] handles = GetChildWindowHandles(windowHandle);
+            foreach (System.IntPtr handle in handles)
             {
                 if (GetWindowClass(handle) == targetClass)
                 {
                     return handle;
                 }
             }
-            throw new Exception("Child window with specified class does not exist.");
+            throw new System.Exception("Child window with specified class does not exist.");
         }
-
-        public static string GetWindowTitle(IntPtr windowHandle)
+        public static string GetWindowTitle(System.IntPtr windowHandle)
         {
             var outputLength = GetWindowTextLength(windowHandle) + 1;
-            var outputStringBuilder = new StringBuilder(outputLength);
+            var outputStringBuilder = new System.Text.StringBuilder(outputLength);
             GetWindowText(windowHandle, outputStringBuilder, outputLength);
             return outputStringBuilder.ToString();
         }
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern int GetWindowTextLength(IntPtr hWnd);
-
-        public static string GetWindowClass(IntPtr windowHandle)
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowText(System.IntPtr hWnd, System.Text.StringBuilder lpString, int nMaxCount);
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        private static extern int GetWindowTextLength(System.IntPtr hWnd);
+        public static string GetWindowClass(System.IntPtr windowHandle)
         {
             var outputLength = 256;
-            var outputStringBuilder = new StringBuilder(outputLength);
+            var outputStringBuilder = new System.Text.StringBuilder(outputLength);
             GetClassName(windowHandle, outputStringBuilder, outputLength);
             return outputStringBuilder.ToString();
         }
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int GetClassName(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
-        private delegate bool EnumWindowProc(IntPtr hwnd, IntPtr lParam);
-        [DllImport("user32")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool EnumChildWindows(IntPtr window, EnumWindowProc callback, IntPtr lParam);
-        public static IntPtr[] GetChildWindowHandles(IntPtr windowHandle)
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto, SetLastError = true)]
+        private static extern int GetClassName(System.IntPtr hWnd, System.Text.StringBuilder lpString, int nMaxCount);
+        private delegate bool EnumWindowProc(System.IntPtr hwnd, System.IntPtr lParam);
+        [System.Runtime.InteropServices.DllImport("user32")]
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        private static extern bool EnumChildWindows(System.IntPtr window, EnumWindowProc callback, System.IntPtr lParam);
+        public static System.IntPtr[] GetChildWindowHandles(System.IntPtr windowHandle)
         {
-            List<IntPtr> childHandles = new List<IntPtr>();
-
-            GCHandle gcChildhandlesList = GCHandle.Alloc(childHandles);
-            IntPtr pointerChildHandlesList = GCHandle.ToIntPtr(gcChildhandlesList);
-
+            System.Collections.Generic.List<System.IntPtr> childHandles = new System.Collections.Generic.List<System.IntPtr>();
+            System.Runtime.InteropServices.GCHandle gcChildhandlesList = System.Runtime.InteropServices.GCHandle.Alloc(childHandles);
+            System.IntPtr pointerChildHandlesList = System.Runtime.InteropServices.GCHandle.ToIntPtr(gcChildhandlesList);
             try
             {
                 EnumWindowProc childProc = new EnumWindowProc(EnumWindow);
@@ -73,21 +64,17 @@ namespace MysteryMemeware
             {
                 gcChildhandlesList.Free();
             }
-
             return childHandles.ToArray();
         }
-        private static bool EnumWindow(IntPtr hWnd, IntPtr lParam)
+        private static bool EnumWindow(System.IntPtr hWnd, System.IntPtr lParam)
         {
-            GCHandle gcChildhandlesList = GCHandle.FromIntPtr(lParam);
-
+            System.Runtime.InteropServices.GCHandle gcChildhandlesList = System.Runtime.InteropServices.GCHandle.FromIntPtr(lParam);
             if (gcChildhandlesList == null || gcChildhandlesList.Target == null)
             {
                 return false;
             }
-
-            List<IntPtr> childHandles = gcChildhandlesList.Target as List<IntPtr>;
+            System.Collections.Generic.List<System.IntPtr> childHandles = gcChildhandlesList.Target as System.Collections.Generic.List<System.IntPtr>;
             childHandles.Add(hWnd);
-
             return true;
         }
     }

@@ -1,9 +1,15 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
+    public struct Point
+    {
+        public int X;
+        public int Y;
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
     public static class Win32InputHelper
     {
         #region Keyboard Constants
@@ -40,23 +46,6 @@ namespace MysteryMemeware
         //Set if the second X button was pressed or released.
         public const int XBUTTON2 = 0x0002;
         #endregion
-        public static void IfYouGiveAMouseCocaine()
-        {
-            Random RNG = new Random((int)DateTime.Now.Ticks);
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            long lastPushTicks = 0;
-            long delay = RNG.Next(100, 1000);
-            while (true)
-            {
-                if (stopwatch.ElapsedTicks - lastPushTicks > delay)
-                {
-                    mouse_event(MOUSEEVENTF_MOVE, RNG.Next(-1, 2), RNG.Next(-1, 2), 0, 0);
-                    delay = RNG.Next(1000, 10000);
-                    lastPushTicks = stopwatch.ElapsedTicks;
-                }
-
-            }
-        }
         public static void PressKey(int virtualKeyCode)
         {
         }
@@ -65,47 +54,41 @@ namespace MysteryMemeware
         }
         public static void KeyUp(int virtualKeyCode)
         {
-
         }
-
         public static void SetMousePosition(int mousePositionX, int mousePositionY)
         {
-            SetCursorPos(0, 0);
+            SetCursorPos(mousePositionX, mousePositionY);
         }
-        public static void GetMousePosition(out int mousePositionX, out int mousePositionY)
+        public static Point GetMousePosition()
         {
-            GetCursorPos(out System.Drawing.Point mousePosition);
-            mousePositionX = mousePosition.X;
-            mousePositionY = mousePosition.Y;
+            GetCursorPos(out Point mousePosition);
+            return mousePosition;
         }
         public static void Click()
         {
-            GetCursorPos(out System.Drawing.Point mousePosition);
+            GetCursorPos(out Point mousePosition);
             mouse_event(MOUSEEVENTF_LEFTDOWN, mousePosition.X, mousePosition.Y, 0, 0);
             mouse_event(MOUSEEVENTF_LEFTUP, mousePosition.X, mousePosition.Y, 0, 0);
         }
         public static void ClickDown()
         {
-            GetCursorPos(out System.Drawing.Point mousePosition);
+            GetCursorPos(out Point mousePosition);
             mouse_event(MOUSEEVENTF_LEFTDOWN, mousePosition.X, mousePosition.Y, 0, 0);
         }
         public static void ClickUp()
         {
-            GetCursorPos(out System.Drawing.Point mousePosition);
+            GetCursorPos(out Point mousePosition);
             mouse_event(MOUSEEVENTF_LEFTUP, mousePosition.X, mousePosition.Y, 0, 0);
         }
-
-        [DllImport("user32.dll", SetLastError = true)]
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
-        
-        
-        [DllImport("user32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
         private static extern bool SetCursorPos(int x, int y);
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetCursorPos(out System.Drawing.Point point);
-        [DllImport("user32.dll", SetLastError = true)]
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        private static extern bool GetCursorPos(out Point point);
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         private static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, int dwExtraInfo);
     }
 }

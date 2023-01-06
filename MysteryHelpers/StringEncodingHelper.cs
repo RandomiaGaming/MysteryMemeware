@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class StringEncodingHelper
     {
@@ -14,35 +12,35 @@ namespace MysteryMemeware
         }
         public static byte[] StringToBytesUnicode(string source)
         {
-            return Encoding.Unicode.GetBytes(source);
+            return System.Text.Encoding.Unicode.GetBytes(source);
         }
         public static string BytesToStringUnicode(byte[] source)
         {
-            return Encoding.Unicode.GetString(source);
+            return System.Text.Encoding.Unicode.GetString(source);
         }
         public static byte[] StringToBytesASCII(string source)
         {
-            return Encoding.ASCII.GetBytes(source);
+            return System.Text.Encoding.ASCII.GetBytes(source);
         }
         public static string BytesToStringASCII(byte[] source)
         {
-            return Encoding.ASCII.GetString(source);
+            return System.Text.Encoding.ASCII.GetString(source);
         }
         public static byte[] StringToBytesUTF8(string source)
         {
-            return Encoding.UTF8.GetBytes(source);
+            return System.Text.Encoding.UTF8.GetBytes(source);
         }
         public static string BytesToStringUTF8(byte[] source)
         {
-            return Encoding.UTF8.GetString(source);
+            return System.Text.Encoding.UTF8.GetString(source);
         }
         public static byte[] StringToBytesUTF32(string source)
         {
-            return Encoding.UTF32.GetBytes(source);
+            return System.Text.Encoding.UTF32.GetBytes(source);
         }
         public static string BytesToStringUTF32(byte[] source)
         {
-            return Encoding.UTF32.GetString(source);
+            return System.Text.Encoding.UTF32.GetString(source);
         }
     }
 }

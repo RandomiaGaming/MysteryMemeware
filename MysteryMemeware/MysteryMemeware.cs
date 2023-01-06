@@ -4,14 +4,12 @@ using System.Threading;
 using System.Windows.Forms;
 using System;
 using System.Runtime.InteropServices;
-
 namespace MysteryMemeware
 {
     public static class MysteryMemeware
     {
         public static void Main()
         {
-
         }
         public sealed class InterpolatedPictureBox : PictureBox
         {
@@ -70,7 +68,6 @@ namespace MysteryMemeware
             }
             public readonly Image CoverImage = null;
             public readonly Screen TargetScreen = null;
-
             private InterpolatedPictureBox _customPictureBox = null;
             private Image _coverImageClone = null;
             private System.Windows.Forms.Timer _setPropertiesTimer = null;
@@ -82,23 +79,17 @@ namespace MysteryMemeware
                     throw new Exception("targetScreen cannot be null.");
                 }
                 TargetScreen = targetScreen;
-
                 if (coverImage is null)
                 {
                     throw new Exception("coverImage cannot be null.");
                 }
                 CoverImage = coverImage;
-
                 _coverImageClone = (Image)CoverImage.Clone();
-
                 _customPictureBox = new InterpolatedPictureBox(interpolationMode);
                 _customPictureBox.Image = _coverImageClone;
                 _customPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-
                 Controls.Add(_customPictureBox);
-
                 FormClosing += OnFormClosing;
-
                 _setPropertiesTimer = new System.Windows.Forms.Timer();
                 _setPropertiesTimer.Interval = 100;
                 _setPropertiesTimer.Tag = null;
@@ -108,7 +99,6 @@ namespace MysteryMemeware
                 };
                 _setPropertiesTimer.Enabled = true;
                 _setPropertiesTimer.Start();
-
                 SetProperties();
             }
             [DllImport("user32.dll", SetLastError = true)]
@@ -202,20 +192,17 @@ namespace MysteryMemeware
             public ScreenCoverForm(Screen screen, Image screenCoverImage, bool allowAltF4)
             {
                 AllowAltF4 = allowAltF4;
-
                 if (screen is null)
                 {
                     throw new Exception("screen cannot be null.");
                 }
                 Screen = screen;
-
                 if (screenCoverImage is null)
                 {
                     throw new Exception("screenCoverImage cannot be null.");
                 }
                 ScreenCoverImage = screenCoverImage;
                 _screenCoverImageClone = (Image)ScreenCoverImage.Clone();
-
                 this.ShowInTaskbar = false;
                 this.TopMost = true;
                 this.FormBorderStyle = FormBorderStyle.None;
@@ -224,7 +211,6 @@ namespace MysteryMemeware
                 this.Width = Screen.Bounds.Width;
                 this.Height = Screen.Bounds.Height;
                 this.WindowState = FormWindowState.Maximized;
-
                 _screenCoverPictureBox = new ScreenCoverPictureBox();
                 _screenCoverPictureBox.Image = _screenCoverImageClone;
                 _screenCoverPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -232,13 +218,11 @@ namespace MysteryMemeware
                 _screenCoverPictureBox.Width = this.Width;
                 _screenCoverPictureBox.Height = this.Height;
                 Controls.Add(_screenCoverPictureBox);
-
                 _screenCoverTimer = new System.Windows.Forms.Timer();
                 _screenCoverTimer.Interval = 500;
                 _screenCoverTimer.Tick += OnScreenCoverTimerTick;
                 _screenCoverTimer.Start();
                 _screenCoverTimer.Enabled = true;
-
                 FormClosing += OnFormClosing;
             }
             #endregion
@@ -284,7 +268,6 @@ namespace MysteryMemeware
                     }
                     catch
                     {
-
                     }
                 }
             });

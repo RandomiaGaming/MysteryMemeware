@@ -1,26 +1,22 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
-
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class SHA256Helper
     {
-        public static byte[] HashStream(Stream source)
+        public static byte[] HashStream(System.IO.Stream source)
         {
             if (source is null)
             {
-                throw new Exception("Could not hash stream because source is null.");
+                throw new System.Exception("Could not hash stream because source is null.");
             }
             else if (!source.CanRead)
             {
-                throw new Exception("Could not hash stream because source is not readable.");
+                throw new System.Exception("Could not hash stream because source is not readable.");
             }
             else if (!source.CanSeek)
             {
-                throw new Exception("Could not hash stream because source does not support seeking.");
+                throw new System.Exception("Could not hash stream because source does not support seeking.");
             }
-            SHA256 hash = SHA256.Create();
+            System.Security.Cryptography.SHA256 hash = System.Security.Cryptography.SHA256.Create();
             source.Position = 0;
             byte[] output = hash.ComputeHash(source);
             hash.Dispose();
@@ -30,45 +26,12 @@ namespace MysteryMemeware
         {
             if (source is null)
             {
-                throw new Exception("Could not hash bytes because source is null.");
+                throw new System.Exception("Could not hash bytes because source is null.");
             }
-            MemoryStream sourceStream = new MemoryStream(source);
-            byte[] output = HashStream(sourceStream);
-            sourceStream.Dispose();
+            System.IO.MemoryStream memoryStream = new System.IO.MemoryStream(source);
+            byte[] output = HashStream(memoryStream);
+            memoryStream.Dispose();
             return output;
-        }
-        public static byte[] HashFile(string filePath)
-        {
-            if (filePath is null || filePath == "")
-            {
-                throw new Exception("Could not hash file beacuse file path is null or empty.");
-            }
-            if (!File.Exists(filePath))
-            {
-                throw new Exception($"Could not hash file because file path does not exist.");
-            }
-            FileStream fileStream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite);
-            byte[] output = HashStream(fileStream);
-            fileStream.Dispose();
-            return output;
-        }
-        public static byte[] HashDirectory(string directoryPath)
-        {
-            if (directoryPath is null || directoryPath == "")
-            {
-                throw new Exception("Could not hash directory beacuse directory path is null or empty.");
-            }
-            else if (!Directory.Exists(directoryPath))
-            {
-                throw new Exception($"Could not hash directory because directory path does not exist.");
-            }
-            string[] subFiles = Directory.GetFiles(directoryPath, "*", SearchOption.AllDirectories);
-            byte[] fileHashes = new byte[0];
-            foreach (string subFile in subFiles)
-            {
-                fileHashes = ArrayHelper.MergeArrays(fileHashes, HashFile(subFile));
-            }
-            return HashBytes(fileHashes);
         }
     }
 }

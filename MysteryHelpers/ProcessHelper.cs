@@ -1,56 +1,53 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
+    public enum WindowMode { Default, Hidden, Minimized, Maximized }
     public static class ProcessHelper
     {
-        public static readonly Process CurrentProcess = Process.GetCurrentProcess();
-
-        public static Process StartAs(string fileName, string arguments, string username, string domain, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
+        public static readonly System.Diagnostics.Process CurrentProcess = System.Diagnostics.Process.GetCurrentProcess();
+        public static System.Diagnostics.Process StartAs(string fileName, string arguments, string username, string domain, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
             return StartAs(new TerminalCommand(fileName, arguments), new UsernameDomainPair(username, domain), password, windowMode, workingDirectory);
         }
-        public static Process StartAs(string command, string username, string domain, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
+        public static System.Diagnostics.Process StartAs(string command, string username, string domain, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
             return StartAs(new TerminalCommand(command), new UsernameDomainPair(username, domain), password, windowMode, workingDirectory);
         }
-        public static Process StartAs(TerminalCommand command, string username, string domain, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
+        public static System.Diagnostics.Process StartAs(TerminalCommand command, string username, string domain, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
             return StartAs(command, new UsernameDomainPair(username, domain), password, windowMode, workingDirectory);
         }
-        public static Process StartAs(string command, string username, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
+        public static System.Diagnostics.Process StartAs(string command, string username, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
             return StartAs(new TerminalCommand(command), new UsernameDomainPair(username), password, windowMode, workingDirectory);
         }
-        public static Process StartAs(TerminalCommand command, string username, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
+        public static System.Diagnostics.Process StartAs(TerminalCommand command, string username, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
             return StartAs(command, new UsernameDomainPair(username), password, windowMode, workingDirectory);
         }
-        public static Process StartAs(string fileName, string arguments, UsernameDomainPair user, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
+        public static System.Diagnostics.Process StartAs(string fileName, string arguments, UsernameDomainPair user, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
             return StartAs(new TerminalCommand(fileName, arguments), user, password, windowMode, workingDirectory);
         }
-        public static Process StartAs(string command, UsernameDomainPair user, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
+        public static System.Diagnostics.Process StartAs(string command, UsernameDomainPair user, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
             return StartAs(new TerminalCommand(command), user, password, windowMode, workingDirectory);
         }
-        public static Process StartAs(TerminalCommand command, UsernameDomainPair user, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
+        public static System.Diagnostics.Process StartAs(TerminalCommand command, UsernameDomainPair user, string password, WindowMode windowMode = WindowMode.Default, string workingDirectory = null)
         {
             if (command is null)
             {
-                throw new Exception("command cannot be null.");
+                throw new System.Exception("command cannot be null.");
             }
             if (user is null)
             {
-                throw new Exception("user cannot be null.");
+                throw new System.Exception("user cannot be null.");
             }
-            ProcessStartInfo processStartInfo = new ProcessStartInfo()
+            System.Diagnostics.ProcessStartInfo processStartInfo = new System.Diagnostics.ProcessStartInfo()
             {
                 Arguments = command.Arguments,
                 CreateNoWindow = windowMode is WindowMode.Hidden,
                 ErrorDialog = false,
-                ErrorDialogParentHandle = IntPtr.Zero,
+                ErrorDialogParentHandle = System.IntPtr.Zero,
                 FileName = command.FileName,
                 LoadUserProfile = true,
                 Password = null,
@@ -81,19 +78,19 @@ namespace MysteryMemeware
             processStartInfo.UserName = user.Name;
             if (windowMode is WindowMode.Hidden)
             {
-                processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             }
             else if (windowMode is WindowMode.Maximized)
             {
-                processStartInfo.WindowStyle = ProcessWindowStyle.Maximized;
+                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
             }
             else if (windowMode is WindowMode.Minimized)
             {
-                processStartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
             }
             else
             {
-                processStartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
             }
             if (workingDirectory is "")
             {
@@ -103,30 +100,29 @@ namespace MysteryMemeware
             {
                 processStartInfo.WorkingDirectory = workingDirectory;
             }
-            return Process.Start(processStartInfo);
+            return System.Diagnostics.Process.Start(processStartInfo);
         }
-
-        public static Process Start(string fileName, string arguments, WindowMode windowMode = WindowMode.Default, bool elevate = false, string workingDirectory = null)
+        public static System.Diagnostics.Process Start(string fileName, string arguments, WindowMode windowMode = WindowMode.Default, bool elevate = false, string workingDirectory = null)
         {
             return Start(new TerminalCommand(fileName, arguments), windowMode, elevate, workingDirectory);
         }
-        public static Process Start(string command, WindowMode windowMode = WindowMode.Default, bool elevate = false, string workingDirectory = null)
+        public static System.Diagnostics.Process Start(string command, WindowMode windowMode = WindowMode.Default, bool elevate = false, string workingDirectory = null)
         {
             return Start(new TerminalCommand(command), windowMode, elevate, workingDirectory);
         }
-        public static Process Start(TerminalCommand command, WindowMode windowMode = WindowMode.Default, bool elevate = false, string workingDirectory = null)
+        public static System.Diagnostics.Process Start(TerminalCommand command, WindowMode windowMode = WindowMode.Default, bool elevate = false, string workingDirectory = null)
         {
             if (command is null)
             {
-                throw new Exception("command cannot be null.");
+                throw new System.Exception("command cannot be null.");
             }
-            ProcessStartInfo processStartInfo = new ProcessStartInfo()
+            System.Diagnostics.ProcessStartInfo processStartInfo = new System.Diagnostics.ProcessStartInfo()
             {
                 Arguments = command.Arguments,
                 CreateNoWindow = windowMode is WindowMode.Hidden,
                 Domain = null,
                 ErrorDialog = false,
-                ErrorDialogParentHandle = IntPtr.Zero,
+                ErrorDialogParentHandle = System.IntPtr.Zero,
                 FileName = command.FileName,
                 LoadUserProfile = false,
                 Password = null,
@@ -149,19 +145,19 @@ namespace MysteryMemeware
             }
             if (windowMode is WindowMode.Hidden)
             {
-                processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             }
             else if (windowMode is WindowMode.Maximized)
             {
-                processStartInfo.WindowStyle = ProcessWindowStyle.Maximized;
+                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
             }
             else if (windowMode is WindowMode.Minimized)
             {
-                processStartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
             }
             else
             {
-                processStartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
             }
             if (workingDirectory is "")
             {
@@ -173,9 +169,9 @@ namespace MysteryMemeware
             }
             try
             {
-                return Process.Start(processStartInfo);
+                return System.Diagnostics.Process.Start(processStartInfo);
             }
-            catch (Win32Exception win32Exception)
+            catch (System.ComponentModel.Win32Exception win32Exception)
             {
                 if (elevate && win32Exception.NativeErrorCode is 123456789)
                 {
@@ -187,8 +183,7 @@ namespace MysteryMemeware
                 }
             }
         }
-
-        public static bool AwaitSuccess(Process process, bool throwOnNonzeroExitCode = false)
+        public static bool AwaitSuccess(System.Diagnostics.Process process, bool throwOnNonzeroExitCode = false)
         {
             while (!process.HasExited)
             {
@@ -197,7 +192,7 @@ namespace MysteryMemeware
             {
                 if (throwOnNonzeroExitCode)
                 {
-                    throw new Exception($"Process has terminated with a exit code of {process.ExitCode}.");
+                    throw new System.Exception($"Process has terminated with a exit code of {process.ExitCode}.");
                 }
                 else
                 {
@@ -209,17 +204,17 @@ namespace MysteryMemeware
                 return true;
             }
         }
-        public static bool AwaitSuccess(Process process, TimeSpan timeout, TimeoutAction timeoutAction = TimeoutAction.Return, bool throwOnNonzeroExitCode = false)
+        public static bool AwaitSuccess(System.Diagnostics.Process process, System.TimeSpan timeout, TimeoutAction timeoutAction = TimeoutAction.Return, bool throwOnNonzeroExitCode = false)
         {
             if (timeout.Ticks < 0)
             {
-                throw new Exception("timeout.Ticks must be greater than or equal to 0.");
+                throw new System.Exception("timeout.Ticks must be greater than or equal to 0.");
             }
             if (timeout.Ticks == 0)
             {
                 return AwaitSuccess(process, throwOnNonzeroExitCode);
             }
-            Stopwatch timeoutStopwatch = new Stopwatch();
+            System.Diagnostics.Stopwatch timeoutStopwatch = new System.Diagnostics.Stopwatch();
             timeoutStopwatch.Start();
             while (!process.HasExited)
             {
@@ -262,7 +257,7 @@ namespace MysteryMemeware
             {
                 if (throwOnNonzeroExitCode)
                 {
-                    throw new Exception($"Process has terminated with a exit code of {process.ExitCode}.");
+                    throw new System.Exception($"Process has terminated with a exit code of {process.ExitCode}.");
                 }
                 else
                 {
@@ -275,15 +270,15 @@ namespace MysteryMemeware
             }
         }
     }
-    public sealed class UnexpectedExitCodeException : Exception
+    public sealed class UnexpectedExitCodeException : System.Exception
     {
-        public readonly Process targetProcess;
+        public readonly System.Diagnostics.Process targetProcess;
         public readonly int exitCode;
-        public UnexpectedExitCodeException(Process targetProcess) : base("Process timed out.", null)
+        public UnexpectedExitCodeException(System.Diagnostics.Process targetProcess) : base("Process timed out.", null)
         {
             if (targetProcess is null)
             {
-                throw new Exception("targetProcess cannot be null.");
+                throw new System.Exception("targetProcess cannot be null.");
             }
             this.targetProcess = targetProcess;
             exitCode = targetProcess.ExitCode;
@@ -292,14 +287,14 @@ namespace MysteryMemeware
             Source = "System.Process.Start while attempting to invoke ShellExecuteExA within shellapi.h. For more info on ShellExecuteExA see https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexa.";
         }
     }
-    public sealed class ProcessTimedOutException : Exception
+    public sealed class ProcessTimedOutException : System.Exception
     {
-        public readonly Process targetProcess;
-        public ProcessTimedOutException(Process targetProcess) : base("Process timed out.", null)
+        public readonly System.Diagnostics.Process targetProcess;
+        public ProcessTimedOutException(System.Diagnostics.Process targetProcess) : base("Process timed out.", null)
         {
             if (targetProcess is null)
             {
-                throw new Exception("targetProcess cannot be null.");
+                throw new System.Exception("targetProcess cannot be null.");
             }
             this.targetProcess = targetProcess;
             HelpLink = "";
@@ -307,18 +302,18 @@ namespace MysteryMemeware
             Source = "System.Process.Start while attempting to invoke ShellExecuteExA within shellapi.h. For more info on ShellExecuteExA see https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexa.";
         }
     }
-    public sealed class UserDeclinedUACException : Exception
+    public sealed class UserDeclinedUACException : System.Exception
     {
-        public readonly Win32Exception baseWin32Exception;
-        public UserDeclinedUACException(Win32Exception baseWin32Exception) : base("Could not start process because user declined administrator access prompt (UAC).", baseWin32Exception)
+        public readonly System.ComponentModel.Win32Exception baseWin32Exception;
+        public UserDeclinedUACException(System.ComponentModel.Win32Exception baseWin32Exception) : base("Could not start System.Diagnostics.Process because user declined administrator access prompt (UAC).", baseWin32Exception)
         {
             if (baseWin32Exception is null)
             {
-                throw new Exception("baseWin32Exception cannot be null.");
+                throw new System.Exception("baseWin32Exception cannot be null.");
             }
             if (!(baseWin32Exception.NativeErrorCode is 123456789))
             {
-                throw new Exception("baseWin32Exception must have native error code 123456789.");
+                throw new System.Exception("baseWin32Exception must have native error code 123456789.");
             }
             this.baseWin32Exception = baseWin32Exception;
             HelpLink = "https://docs.microsoft.com/en-us/windows/security/identity-protection/user-account-control/how-user-account-control-works";
@@ -370,7 +365,7 @@ namespace MysteryMemeware
                         splitIndex++;
                     }
                 }
-                throw new Exception("Invalid command due to unbalanced quotes.");
+                throw new System.Exception("Invalid command due to unbalanced quotes.");
             }
             else
             {
@@ -378,7 +373,7 @@ namespace MysteryMemeware
                 {
                     if (command[splitIndex] == '"')
                     {
-                        throw new Exception("Invalid command due to unexpected quote.");
+                        throw new System.Exception("Invalid command due to unexpected quote.");
                     }
                     else if (command[splitIndex] == ' ')
                     {

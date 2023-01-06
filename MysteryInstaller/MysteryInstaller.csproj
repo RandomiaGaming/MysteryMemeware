@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <StartupObject>MysteryMemeware.Program</StartupObject>
@@ -9,9 +8,7 @@
     <Nullable>annotations</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\MysteryHelpers\MysteryHelpers.csproj" />
+    <ProjectReference Include="..\MysteryHelpers\MysteryHelper.csproj" />
   </ItemGroup>
-
 </Project>

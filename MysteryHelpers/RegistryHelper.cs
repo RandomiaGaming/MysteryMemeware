@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.Win32;
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class RegistryHelper
     {
@@ -10,24 +8,19 @@ namespace MysteryMemeware
         #region Public Constants
         public const char SeparatorChar = '\\';
         public const string SeparatorString = "\\";
-
         public const char AltSeparatorChar = '/';
         public const string AltSeparatorString = "/";
-
         public const string ComputerName = "COMPUTER";
         public const string Computer32Name = "COMPUTER_32";
         public const string Computer64Name = "COMPUTER_64";
-
         public static readonly string[] ComputerNames = new string[] { "COMPUTER", "REGISTRY", "REG" };
         public static readonly string[] Computer32Names = new string[] { "COMPUTER_32", "REGISTRY_32", "REG_32", "COMPUTER32", "REGISTRY32", "REG32" };
         public static readonly string[] Computer64Names = new string[] { "COMPUTER_64", "REGISTRY_64", "REG_64", "COMPUTER64", "REGISTRY64", "REG64" };
-
         public const string HKEYClassesRootName = "HKEY_CLASSES_ROOT";
         public const string HKEYCurrentUserName = "HKEY_CURRENT_USER";
         public const string HKEYLocalMachineName = "HKEY_LOCAL_MACHINE";
         public const string HKEYUsersName = "HKEY_USERS";
         public const string HKEYCurrentConfigName = "HKEY_CURRENT_CONFIG";
-
         public static readonly string[] HKEYClassesRootNames = new string[] { "HKEY_CLASSES_ROOT", "CLASSES_ROOT", "HKEYCLASSESROOT", "CLASSESROOT", "HKCR" };
         public static readonly string[] HKEYCurrentUserNames = new string[] { "HKEY_CURRENT_USER", "CLASSES_ROOT", "HKEYCURRENTUSER", "CURRENTUSER", "HKCU" };
         public static readonly string[] HKEYLocalMachineNames = new string[] { "HKEY_LOCAL_MACHINE", "LOCAL_MACHINE", "HKEYLOCALMACHINE", "LOCALMACHINE", "HKLM" };
@@ -55,7 +48,6 @@ namespace MysteryMemeware
                 return false;
             }
         }
-
         public static void DeleteValue(string registryPath)
         {
             DeleteValue(new RegistryValuePath(registryPath));
@@ -66,7 +58,7 @@ namespace MysteryMemeware
         }
         public static void DeleteValue(RegistryValuePath registryValuePath)
         {
-            RegistryKey registryKey = OpenKeyWrite(registryValuePath);
+            Microsoft.Win32.RegistryKey registryKey = OpenKeyWrite(registryValuePath);
             try
             {
                 registryKey.DeleteValue(registryValuePath.ValueName);
@@ -76,7 +68,6 @@ namespace MysteryMemeware
                 SafelyReleaseKey(registryKey);
             }
         }
-
         public static object GetValue(string registryPath)
         {
             return GetValue(new RegistryValuePath(registryPath));
@@ -87,14 +78,14 @@ namespace MysteryMemeware
         }
         public static object GetValue(RegistryValuePath registryValuePath)
         {
-            RegistryKey registryKey = OpenKeyRead(registryValuePath);
+            Microsoft.Win32.RegistryKey registryKey = OpenKeyRead(registryValuePath);
             object output;
             try
             {
                 output = registryKey.GetValue(registryValuePath.ValueName);
                 if (output is null)
                 {
-                    throw new Exception("Registry value does not exist.");
+                    throw new System.Exception("Registry value does not exist.");
                 }
             }
             finally
@@ -103,7 +94,6 @@ namespace MysteryMemeware
             }
             return output;
         }
-
         public static void CreateAndSetValue(string registryPath, object value)
         {
             CreateAndSetValue(registryPath, value, GetRegistryType(value));
@@ -128,43 +118,43 @@ namespace MysteryMemeware
         {
             if (value is null)
             {
-                throw new Exception("value cannot be null.");
+                throw new System.Exception("value cannot be null.");
             }
-            RegistryKey registryKey = OpenOrCreateKeyWrite(registryValuePath);
+            Microsoft.Win32.RegistryKey registryKey = OpenOrCreateKeyWrite(registryValuePath);
             try
             {
-                RegistryValueKind registryValueKind;
+                Microsoft.Win32.RegistryValueKind registryValueKind;
                 if (valueType is RegistryType.BINARY)
                 {
-                    registryValueKind = RegistryValueKind.Binary;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.Binary;
                 }
                 else if (valueType is RegistryType.DWORD)
                 {
-                    registryValueKind = RegistryValueKind.DWord;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.DWord;
                 }
                 else if (valueType is RegistryType.EXPAND_SZ)
                 {
-                    registryValueKind = RegistryValueKind.ExpandString;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.ExpandString;
                 }
                 else if (valueType is RegistryType.MULTI_SZ)
                 {
-                    registryValueKind = RegistryValueKind.MultiString;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.MultiString;
                 }
                 else if (valueType is RegistryType.QWORD)
                 {
-                    registryValueKind = RegistryValueKind.QWord;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.QWord;
                 }
                 else if (valueType is RegistryType.SZ)
                 {
-                    registryValueKind = RegistryValueKind.String;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.String;
                 }
                 else if (valueType is RegistryType.NONE)
                 {
-                    registryValueKind = RegistryValueKind.None;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.None;
                 }
                 else
                 {
-                    registryValueKind = RegistryValueKind.Unknown;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.Unknown;
                 }
                 registryKey.SetValue(registryValuePath.ValueName, value, registryValueKind);
             }
@@ -173,7 +163,6 @@ namespace MysteryMemeware
                 SafelyReleaseKey(registryKey);
             }
         }
-
         public static void SetValue(string registryPath, object value)
         {
             SetValue(registryPath, value, GetRegistryType(value));
@@ -198,43 +187,43 @@ namespace MysteryMemeware
         {
             if (value is null)
             {
-                throw new Exception("value cannot be null.");
+                throw new System.Exception("value cannot be null.");
             }
-            RegistryKey registryKey = OpenKeyWrite(registryValuePath);
+            Microsoft.Win32.RegistryKey registryKey = OpenKeyWrite(registryValuePath);
             try
             {
-                RegistryValueKind registryValueKind;
+                Microsoft.Win32.RegistryValueKind registryValueKind;
                 if (valueType is RegistryType.BINARY)
                 {
-                    registryValueKind = RegistryValueKind.Binary;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.Binary;
                 }
                 else if (valueType is RegistryType.DWORD)
                 {
-                    registryValueKind = RegistryValueKind.DWord;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.DWord;
                 }
                 else if (valueType is RegistryType.EXPAND_SZ)
                 {
-                    registryValueKind = RegistryValueKind.ExpandString;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.ExpandString;
                 }
                 else if (valueType is RegistryType.MULTI_SZ)
                 {
-                    registryValueKind = RegistryValueKind.MultiString;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.MultiString;
                 }
                 else if (valueType is RegistryType.QWORD)
                 {
-                    registryValueKind = RegistryValueKind.QWord;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.QWord;
                 }
                 else if (valueType is RegistryType.SZ)
                 {
-                    registryValueKind = RegistryValueKind.String;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.String;
                 }
                 else if (valueType is RegistryType.NONE)
                 {
-                    registryValueKind = RegistryValueKind.None;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.None;
                 }
                 else
                 {
-                    registryValueKind = RegistryValueKind.Unknown;
+                    registryValueKind = Microsoft.Win32.RegistryValueKind.Unknown;
                 }
                 registryKey.SetValue(registryValuePath.ValueName, value, registryValueKind);
             }
@@ -245,46 +234,43 @@ namespace MysteryMemeware
         }
         #endregion
         #region Registry Keys
-        public static RegistryKey ReplaceKeyWrite(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey ReplaceKeyWrite(RegistryValuePath registryValuePath)
         {
             return ReplaceKeyWrite(new RegistryKeyPath(registryValuePath));
         }
-        public static RegistryKey ReplaceKeyWrite(string registryPath)
+        public static Microsoft.Win32.RegistryKey ReplaceKeyWrite(string registryPath)
         {
             return ReplaceKeyWrite(new RegistryKeyPath(registryPath));
         }
-        public static RegistryKey ReplaceKeyWrite(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey ReplaceKeyWrite(RegistryKeyPath registryKeyPath)
         {
             return ReplaceKey(registryKeyPath, true);
         }
-
-        public static RegistryKey ReplaceKeyRead(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey ReplaceKeyRead(RegistryValuePath registryValuePath)
         {
             return ReplaceKeyRead(new RegistryKeyPath(registryValuePath));
         }
-        public static RegistryKey ReplaceKeyRead(string registryPath)
+        public static Microsoft.Win32.RegistryKey ReplaceKeyRead(string registryPath)
         {
             return ReplaceKeyRead(new RegistryKeyPath(registryPath));
         }
-        public static RegistryKey ReplaceKeyRead(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey ReplaceKeyRead(RegistryKeyPath registryKeyPath)
         {
             return ReplaceKey(registryKeyPath, false);
         }
-
-        public static RegistryKey ReplaceKey(RegistryValuePath registryValuePath, bool writeable)
+        public static Microsoft.Win32.RegistryKey ReplaceKey(RegistryValuePath registryValuePath, bool writeable)
         {
             return ReplaceKey(new RegistryKeyPath(registryValuePath), writeable);
         }
-        public static RegistryKey ReplaceKey(string registryPath, bool writeable)
+        public static Microsoft.Win32.RegistryKey ReplaceKey(string registryPath, bool writeable)
         {
             return ReplaceKey(new RegistryKeyPath(registryPath), writeable);
         }
-        public static RegistryKey ReplaceKey(RegistryKeyPath registryKeyPath, bool writable)
+        public static Microsoft.Win32.RegistryKey ReplaceKey(RegistryKeyPath registryKeyPath, bool writable)
         {
             DeleteKey(registryKeyPath);
             return CreateKey(registryKeyPath, writable);
         }
-
         public static void DeleteKey(RegistryValuePath registryValuePath)
         {
             DeleteKey(new RegistryKeyPath(registryValuePath));
@@ -295,7 +281,7 @@ namespace MysteryMemeware
         }
         public static void DeleteKey(RegistryKeyPath registryKeyPath)
         {
-            RegistryKey baseKey = OpenBase(registryKeyPath);
+            Microsoft.Win32.RegistryKey baseKey = OpenBase(registryKeyPath);
             try
             {
                 baseKey.DeleteSubKeyTree(registryKeyPath.SubKeyPath, false);
@@ -305,55 +291,52 @@ namespace MysteryMemeware
                 SafelyReleaseKey(baseKey);
             }
         }
-
-        public static RegistryKey OpenOrCreateKeyWrite(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKeyWrite(RegistryValuePath registryValuePath)
         {
             return OpenOrCreateKeyWrite(new RegistryKeyPath(registryValuePath));
         }
-        public static RegistryKey OpenOrCreateKeyWrite(string registryPath)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKeyWrite(string registryPath)
         {
             return OpenOrCreateKeyWrite(new RegistryKeyPath(registryPath));
         }
-        public static RegistryKey OpenOrCreateKeyWrite(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKeyWrite(RegistryKeyPath registryKeyPath)
         {
             return OpenOrCreateKey(registryKeyPath, true);
         }
-
-        public static RegistryKey OpenOrCreateKeyRead(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKeyRead(RegistryValuePath registryValuePath)
         {
             return OpenOrCreateKeyRead(new RegistryKeyPath(registryValuePath));
         }
-        public static RegistryKey OpenOrCreateKeyRead(string registryPath)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKeyRead(string registryPath)
         {
             return OpenOrCreateKeyRead(new RegistryKeyPath(registryPath));
         }
-        public static RegistryKey OpenOrCreateKeyRead(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKeyRead(RegistryKeyPath registryKeyPath)
         {
             return OpenOrCreateKey(registryKeyPath, false);
         }
-
-        public static RegistryKey OpenOrCreateKey(RegistryValuePath registryValuePath, bool writeable)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKey(RegistryValuePath registryValuePath, bool writeable)
         {
             return OpenOrCreateKey(new RegistryKeyPath(registryValuePath), writeable);
         }
-        public static RegistryKey OpenOrCreateKey(string registryPath, bool writeable)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKey(string registryPath, bool writeable)
         {
             return OpenOrCreateKey(new RegistryKeyPath(registryPath), writeable);
         }
-        public static RegistryKey OpenOrCreateKey(RegistryKeyPath registryKeyPath, bool writable)
+        public static Microsoft.Win32.RegistryKey OpenOrCreateKey(RegistryKeyPath registryKeyPath, bool writable)
         {
             if (registryKeyPath is null)
             {
-                throw new Exception("registryKeyPath cannot be null.");
+                throw new System.Exception("registryKeyPath cannot be null.");
             }
-            RegistryKey output;
-            RegistryKey baseKey = OpenBase(registryKeyPath);
+            Microsoft.Win32.RegistryKey output;
+            Microsoft.Win32.RegistryKey baseKey = OpenBase(registryKeyPath);
             try
             {
                 output = baseKey.CreateSubKey(registryKeyPath.SubKeyPath, writable);
                 if (output is null)
                 {
-                    throw new Exception("Registry key could not be opened or created.");
+                    throw new System.Exception("Registry key could not be opened or created.");
                 }
             }
             finally
@@ -362,59 +345,56 @@ namespace MysteryMemeware
             }
             return output;
         }
-
-        public static RegistryKey CreateKeyWrite(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey CreateKeyWrite(RegistryValuePath registryValuePath)
         {
             return CreateKeyWrite(new RegistryKeyPath(registryValuePath));
         }
-        public static RegistryKey CreateKeyWrite(string registryPath)
+        public static Microsoft.Win32.RegistryKey CreateKeyWrite(string registryPath)
         {
             return CreateKeyWrite(new RegistryKeyPath(registryPath));
         }
-        public static RegistryKey CreateKeyWrite(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey CreateKeyWrite(RegistryKeyPath registryKeyPath)
         {
             return CreateKey(registryKeyPath, true);
         }
-
-        public static RegistryKey CreateKeyRead(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey CreateKeyRead(RegistryValuePath registryValuePath)
         {
             return CreateKeyRead(new RegistryKeyPath(registryValuePath));
         }
-        public static RegistryKey CreateKeyRead(string registryPath)
+        public static Microsoft.Win32.RegistryKey CreateKeyRead(string registryPath)
         {
             return CreateKeyRead(new RegistryKeyPath(registryPath));
         }
-        public static RegistryKey CreateKeyRead(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey CreateKeyRead(RegistryKeyPath registryKeyPath)
         {
             return CreateKey(registryKeyPath, false);
         }
-
-        public static RegistryKey CreateKey(RegistryValuePath registryValuePath, bool writeable)
+        public static Microsoft.Win32.RegistryKey CreateKey(RegistryValuePath registryValuePath, bool writeable)
         {
             return CreateKey(new RegistryKeyPath(registryValuePath), writeable);
         }
-        public static RegistryKey CreateKey(string registryPath, bool writeable)
+        public static Microsoft.Win32.RegistryKey CreateKey(string registryPath, bool writeable)
         {
             return CreateKey(new RegistryKeyPath(registryPath), writeable);
         }
-        public static RegistryKey CreateKey(RegistryKeyPath registryKeyPath, bool writable)
+        public static Microsoft.Win32.RegistryKey CreateKey(RegistryKeyPath registryKeyPath, bool writable)
         {
             if (registryKeyPath is null)
             {
-                throw new Exception("registryKeyPath cannot be null.");
+                throw new System.Exception("registryKeyPath cannot be null.");
             }
             if (KeyExists(registryKeyPath))
             {
-                throw new Exception("Registry key already exists at registryKeyPath.");
+                throw new System.Exception("Registry key already exists at registryKeyPath.");
             }
-            RegistryKey output;
-            RegistryKey baseKey = OpenBase(registryKeyPath);
+            Microsoft.Win32.RegistryKey output;
+            Microsoft.Win32.RegistryKey baseKey = OpenBase(registryKeyPath);
             try
             {
                 output = baseKey.CreateSubKey(registryKeyPath.SubKeyPath, writable);
                 if (output is null)
                 {
-                    throw new Exception("Registry key could not be created.");
+                    throw new System.Exception("Registry key could not be created.");
                 }
             }
             finally
@@ -423,7 +403,6 @@ namespace MysteryMemeware
             }
             return output;
         }
-
         public static bool KeyExists(RegistryValuePath registryValuePath)
         {
             return KeyExists(new RegistryKeyPath(registryValuePath));
@@ -444,55 +423,52 @@ namespace MysteryMemeware
                 return false;
             }
         }
-
-        public static RegistryKey OpenKeyWrite(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey OpenKeyWrite(RegistryValuePath registryValuePath)
         {
             return OpenKeyWrite(new RegistryKeyPath(registryValuePath));
         }
-        public static RegistryKey OpenKeyWrite(string registryPath)
+        public static Microsoft.Win32.RegistryKey OpenKeyWrite(string registryPath)
         {
             return OpenKeyWrite(new RegistryKeyPath(registryPath));
         }
-        public static RegistryKey OpenKeyWrite(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey OpenKeyWrite(RegistryKeyPath registryKeyPath)
         {
             return OpenKey(registryKeyPath, true);
         }
-
-        public static RegistryKey OpenKeyRead(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey OpenKeyRead(RegistryValuePath registryValuePath)
         {
             return OpenKeyRead(new RegistryKeyPath(registryValuePath));
         }
-        public static RegistryKey OpenKeyRead(string registryPath)
+        public static Microsoft.Win32.RegistryKey OpenKeyRead(string registryPath)
         {
             return OpenKeyRead(new RegistryKeyPath(registryPath));
         }
-        public static RegistryKey OpenKeyRead(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey OpenKeyRead(RegistryKeyPath registryKeyPath)
         {
             return OpenKey(registryKeyPath, false);
         }
-
-        public static RegistryKey OpenKey(RegistryValuePath registryValuePath, bool writeable)
+        public static Microsoft.Win32.RegistryKey OpenKey(RegistryValuePath registryValuePath, bool writeable)
         {
             return OpenKey(new RegistryKeyPath(registryValuePath), writeable);
         }
-        public static RegistryKey OpenKey(string registryPath, bool writeable)
+        public static Microsoft.Win32.RegistryKey OpenKey(string registryPath, bool writeable)
         {
             return OpenKey(new RegistryKeyPath(registryPath), writeable);
         }
-        public static RegistryKey OpenKey(RegistryKeyPath registryKeyPath, bool writable)
+        public static Microsoft.Win32.RegistryKey OpenKey(RegistryKeyPath registryKeyPath, bool writable)
         {
             if (registryKeyPath is null)
             {
-                throw new Exception("registryKeyPath cannot be null.");
+                throw new System.Exception("registryKeyPath cannot be null.");
             }
-            RegistryKey baseKey = OpenBase(registryKeyPath);
-            RegistryKey output;
+            Microsoft.Win32.RegistryKey baseKey = OpenBase(registryKeyPath);
+            Microsoft.Win32.RegistryKey output;
             try
             {
                 output = baseKey.OpenSubKey(registryKeyPath.SubKeyPath, writable);
                 if (output is null)
                 {
-                    throw new Exception("Registry key does not exist.");
+                    throw new System.Exception("Registry key does not exist.");
                 }
             }
             finally
@@ -503,67 +479,65 @@ namespace MysteryMemeware
         }
         #endregion
         #region Registry Bases
-        public static RegistryKey OpenBase(RegistryValuePath registryValuePath)
+        public static Microsoft.Win32.RegistryKey OpenBase(RegistryValuePath registryValuePath)
         {
             if (registryValuePath is null)
             {
-                throw new Exception("registryValuePath cannot be null.");
+                throw new System.Exception("registryValuePath cannot be null.");
             }
             return OpenBase(registryValuePath.RegistryRoot, registryValuePath.RegistryBase);
         }
-        public static RegistryKey OpenBase(RegistryKeyPath registryKeyPath)
+        public static Microsoft.Win32.RegistryKey OpenBase(RegistryKeyPath registryKeyPath)
         {
             if (registryKeyPath is null)
             {
-                throw new Exception("registryKeyPath cannot be null.");
+                throw new System.Exception("registryKeyPath cannot be null.");
             }
             return OpenBase(registryKeyPath.RegistryRoot, registryKeyPath.RegistryBase);
         }
-        public static RegistryKey OpenBase(RegistryBase registryBase)
+        public static Microsoft.Win32.RegistryKey OpenBase(RegistryBase registryBase)
         {
             return OpenBase(RegistryRoot.COMPUTER, registryBase);
         }
-        public static RegistryKey OpenBase(RegistryRoot registryRoot, RegistryBase registryBase)
+        public static Microsoft.Win32.RegistryKey OpenBase(RegistryRoot registryRoot, RegistryBase registryBase)
         {
-            RegistryView registryView;
-
+            Microsoft.Win32.RegistryView registryView;
             if (registryRoot is RegistryRoot.COMPUTER_32)
             {
-                registryView = RegistryView.Registry32;
+                registryView = Microsoft.Win32.RegistryView.Registry32;
             }
             else if (registryRoot is RegistryRoot.COMPUTER_64)
             {
-                registryView = RegistryView.Registry64;
+                registryView = Microsoft.Win32.RegistryView.Registry64;
             }
             else
             {
-                registryView = RegistryView.Default;
+                registryView = Microsoft.Win32.RegistryView.Default;
             }
-
             if (registryBase is RegistryBase.HKEY_CLASSES_ROOT)
             {
-                return RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, registryView);
+                return Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.ClassesRoot, registryView);
             }
             else if (registryBase is RegistryBase.HKEY_CURRENT_CONFIG)
             {
-                return RegistryKey.OpenBaseKey(RegistryHive.CurrentConfig, registryView);
+                return Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentConfig, registryView);
             }
             else if (registryBase is RegistryBase.HKEY_CURRENT_USER)
             {
-                return RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, registryView);
+                return Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.CurrentUser, registryView);
             }
             else if (registryBase is RegistryBase.HKEY_USERS)
             {
-                return RegistryKey.OpenBaseKey(RegistryHive.Users, registryView);
+                return Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.Users, registryView);
             }
             else
             {
-                return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView);
+                return Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, registryView);
             }
         }
         #endregion
         #region Registry Helpers
-        public static void SafelyReleaseKey(RegistryKey registryKey)
+        public static void SafelyReleaseKey(Microsoft.Win32.RegistryKey registryKey)
         {
             try
             {
@@ -571,7 +545,6 @@ namespace MysteryMemeware
             }
             catch
             {
-
             }
             try
             {
@@ -579,7 +552,6 @@ namespace MysteryMemeware
             }
             catch
             {
-
             }
             try
             {
@@ -587,7 +559,6 @@ namespace MysteryMemeware
             }
             catch
             {
-
             }
         }
         #endregion
@@ -603,16 +574,13 @@ namespace MysteryMemeware
                 return false;
             }
         }
-
         public static RegistryType GetRegistryType(object value)
         {
             if (value is null)
             {
-                throw new Exception("value cannot be null.");
+                throw new System.Exception("value cannot be null.");
             }
-
-            Type dataType = value.GetType();
-
+            System.Type dataType = value.GetType();
             if (dataType == typeof(byte[]))
             {
                 return RegistryType.BINARY;
@@ -664,48 +632,38 @@ namespace MysteryMemeware
         {
             if (registryKeyPath is null)
             {
-                throw new Exception("registryKeyPath cannot be null.");
+                throw new System.Exception("registryKeyPath cannot be null.");
             }
-
             if (valueName is null)
             {
-                throw new Exception("valueName cannot be null.");
+                throw new System.Exception("valueName cannot be null.");
             }
-
             if (valueName is "")
             {
-                throw new Exception("valueName cannot be empty.");
+                throw new System.Exception("valueName cannot be empty.");
             }
-
             if (RegistryHelper.AllowAltSeparator)
             {
                 valueName = valueName.Replace(RegistryHelper.AltSeparatorChar, RegistryHelper.SeparatorChar);
             }
-
             if (StringHelper.StringContainsChar(valueName, RegistryHelper.SeparatorChar))
             {
-                throw new Exception("valueName cannot contain seporator characters.");
+                throw new System.Exception("valueName cannot contain seporator characters.");
             }
-
             RegistryPath = registryKeyPath.RegistryPath + RegistryHelper.SeparatorString + valueName;
-
             Identifiers = new string[registryKeyPath.Identifiers.Length + 1];
-            Array.Copy(registryKeyPath.Identifiers, 0, Identifiers, 0, registryKeyPath.Identifiers.Length);
+            System.Array.Copy(registryKeyPath.Identifiers, 0, Identifiers, 0, registryKeyPath.Identifiers.Length);
             Identifiers[Identifiers.Length - 1] = valueName;
-
             RegistryRoot = registryKeyPath.RegistryRoot;
-
             RegistryBase = registryKeyPath.RegistryBase;
-
             SubKeyNames = registryKeyPath.SubKeyNames;
-
             SubKeyPath = registryKeyPath.SubKeyPath;
         }
         public RegistryValuePath(string registryPath)
         {
             if (registryPath is null)
             {
-                throw new Exception("registryPath cannot be null.");
+                throw new System.Exception("registryPath cannot be null.");
             }
             if (RegistryHelper.AllowAltSeparator)
             {
@@ -720,20 +678,14 @@ namespace MysteryMemeware
                 registryPath = registryPath.Substring(0, registryPath.Length - 1);
             }
             RegistryPath = registryPath;
-
-
-
             Identifiers = registryPath.Split(RegistryHelper.SeparatorChar);
             foreach (string identifier in Identifiers)
             {
                 if (identifier is "")
                 {
-                    throw new Exception("registryPath cannot contain empty identifiers.");
+                    throw new System.Exception("registryPath cannot contain empty identifiers.");
                 }
             }
-
-
-
             if (Identifiers.Length is 0)
             {
                 RegistryRoot = RegistryRoot.COMPUTER;
@@ -758,17 +710,14 @@ namespace MysteryMemeware
                 {
                     RegistryRoot = RegistryRoot.COMPUTER;
                     string[] newIdentifiers = new string[Identifiers.Length + 1];
-                    Array.Copy(Identifiers, 0, newIdentifiers, 1, Identifiers.Length);
+                    System.Array.Copy(Identifiers, 0, newIdentifiers, 1, Identifiers.Length);
                     newIdentifiers[0] = RegistryHelper.ComputerName;
                     Identifiers = newIdentifiers;
                 }
             }
-
-
-
             if (Identifiers.Length < 2)
             {
-                throw new Exception("registryPath must specify a base name.");
+                throw new System.Exception("registryPath must specify a base name.");
             }
             string registryBaseToUpper = Identifiers[1].ToUpper();
             if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYClassesRootNames))
@@ -793,24 +742,18 @@ namespace MysteryMemeware
             }
             else
             {
-                throw new Exception("registryPath specifies a base key name which does not exist.");
+                throw new System.Exception("registryPath specifies a base key name which does not exist.");
             }
-
-
-
             if (Identifiers.Length < 3)
             {
-                throw new Exception("registryPath must specify a value name.");
+                throw new System.Exception("registryPath must specify a value name.");
             }
             else if (Identifiers.Length is 3)
             {
-                throw new Exception("registryPath must specify at least one sub key name.");
+                throw new System.Exception("registryPath must specify at least one sub key name.");
             }
             SubKeyNames = new string[Identifiers.Length - 3];
-            Array.Copy(Identifiers, 2, SubKeyNames, 0, SubKeyNames.Length);
-
-
-
+            System.Array.Copy(Identifiers, 2, SubKeyNames, 0, SubKeyNames.Length);
             SubKeyPath = "";
             for (int i = 0; i < SubKeyNames.Length; i++)
             {
@@ -823,9 +766,6 @@ namespace MysteryMemeware
                     SubKeyPath += RegistryHelper.SeparatorString + SubKeyNames[i];
                 }
             }
-
-
-
             ValueName = Identifiers[Identifiers.Length - 1];
         }
         #endregion
@@ -845,27 +785,21 @@ namespace MysteryMemeware
         {
             if (registryValuePath is null)
             {
-                throw new Exception("registryValuePath cannot be null.");
+                throw new System.Exception("registryValuePath cannot be null.");
             }
-
             RegistryPath = registryValuePath.RegistryPath.Substring(0, registryValuePath.RegistryPath.Length - (registryValuePath.ValueName.Length + 1));
-
             Identifiers = new string[registryValuePath.Identifiers.Length - 1];
-            Array.Copy(registryValuePath.Identifiers, 0, Identifiers, 0, Identifiers.Length);
-
+            System.Array.Copy(registryValuePath.Identifiers, 0, Identifiers, 0, Identifiers.Length);
             RegistryRoot = registryValuePath.RegistryRoot;
-
             RegistryBase = registryValuePath.RegistryBase;
-
             SubKeyNames = registryValuePath.SubKeyNames;
-
             SubKeyPath = registryValuePath.SubKeyPath;
         }
         public RegistryKeyPath(string registryPath)
         {
             if (registryPath is null)
             {
-                throw new Exception("registryPath cannot be null.");
+                throw new System.Exception("registryPath cannot be null.");
             }
             if (RegistryHelper.AllowAltSeparator)
             {
@@ -880,20 +814,14 @@ namespace MysteryMemeware
                 registryPath = registryPath.Substring(0, registryPath.Length - 1);
             }
             RegistryPath = registryPath;
-
-
-
             Identifiers = registryPath.Split(RegistryHelper.SeparatorChar);
             foreach (string identifier in Identifiers)
             {
                 if (identifier is "")
                 {
-                    throw new Exception("registryPath cannot contain empty identifiers.");
+                    throw new System.Exception("registryPath cannot contain empty identifiers.");
                 }
             }
-
-
-
             if (Identifiers.Length is 0)
             {
                 RegistryRoot = RegistryRoot.COMPUTER;
@@ -918,17 +846,14 @@ namespace MysteryMemeware
                 {
                     RegistryRoot = RegistryRoot.COMPUTER;
                     string[] newIdentifiers = new string[Identifiers.Length + 1];
-                    Array.Copy(Identifiers, 0, newIdentifiers, 1, Identifiers.Length);
+                    System.Array.Copy(Identifiers, 0, newIdentifiers, 1, Identifiers.Length);
                     newIdentifiers[0] = RegistryHelper.ComputerName;
                     Identifiers = newIdentifiers;
                 }
             }
-
-
-
             if (Identifiers.Length < 2)
             {
-                throw new Exception("registryPath must specify a base name.");
+                throw new System.Exception("registryPath must specify a base name.");
             }
             string registryBaseToUpper = Identifiers[1].ToUpper();
             if (StringHelper.MatchesArray(registryBaseToUpper, RegistryHelper.HKEYClassesRootNames))
@@ -953,20 +878,14 @@ namespace MysteryMemeware
             }
             else
             {
-                throw new Exception("registryPath specifies a base key name which does not exist.");
+                throw new System.Exception("registryPath specifies a base key name which does not exist.");
             }
-
-
-
             if (Identifiers.Length < 3)
             {
-                throw new Exception("registryPath must specify at least one sub key name.");
+                throw new System.Exception("registryPath must specify at least one sub key name.");
             }
             SubKeyNames = new string[Identifiers.Length - 2];
-            Array.Copy(Identifiers, 2, SubKeyNames, 0, SubKeyNames.Length);
-
-
-
+            System.Array.Copy(Identifiers, 2, SubKeyNames, 0, SubKeyNames.Length);
             SubKeyPath = "";
             for (int i = 0; i < SubKeyNames.Length; i++)
             {

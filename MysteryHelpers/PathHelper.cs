@@ -1,15 +1,11 @@
-﻿using System;
-using System.IO;
-namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class PathHelper
     {
-        #region Public Constants
-        public static readonly string CurrentExePath = typeof(Program).Assembly.Location;
-        public static readonly string CurrentExeDirectory = Path.GetDirectoryName(CurrentExePath);
-        public static readonly string System32Folder = StringHelper.ReplaceCaseless(Environment.GetFolderPath(Environment.SpecialFolder.System), "System32", "Sysnative");
-        public static readonly string System64Folder = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86);
-        public static readonly string SystemFolder = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
-        #endregion
+        public static readonly string CurrentExePath = System.Reflection.Assembly.GetEntryAssembly().Location;
+        public static readonly string CurrentExeDirectory = System.IO.Path.GetDirectoryName(CurrentExePath);
+        public static readonly string System32Folder = StringHelper.ReplaceCaseless(System.Environment.GetFolderPath(System.Environment.SpecialFolder.System), "System32", "Sysnative");
+        public static readonly string System64Folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.SystemX86);
+        public static readonly string SystemFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Windows);
     }
 }

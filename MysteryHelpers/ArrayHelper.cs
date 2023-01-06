@@ -1,4 +1,4 @@
-﻿namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class ArrayHelper
     {
@@ -47,7 +47,7 @@
             System.Array.Copy(source, startIndex, output, 0, length);
             return output;
         }
-        public static bool ArraysEqual<T>(T[] arrayA, T[] arrayB) where T : class
+        public static bool ArraysEqual<T>(T[] arrayA, T[] arrayB)
         {
             if (arrayA is null && arrayB is null)
             {

@@ -1,4 +1,4 @@
-﻿namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class UACHelper
     {
@@ -22,7 +22,6 @@
                     }
                     catch
                     {
-
                     }
                 }
             }
@@ -59,7 +58,6 @@
                     }
                     catch
                     {
-
                     }
                 }
             }

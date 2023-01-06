@@ -1,4 +1,4 @@
-﻿namespace MysteryMemeware
+﻿namespace MysteryHelper
 {
     public static class CPUHelper
     {
@@ -7,26 +7,20 @@
         private static System.IntPtr GetAffinityAll()
         {
             System.Collections.BitArray affinityBits = new System.Collections.BitArray(System.IntPtr.Size * 8);
-
             for (int i = 0; i < LogicalProcessorCount; i++)
             {
                 affinityBits[i] = true;
             }
-
             byte[] affinityBytes = new byte[System.IntPtr.Size];
-
             affinityBits.CopyTo(affinityBytes, 0);
-
             if (System.Environment.Is64BitProcess)
             {
                 long affinityLong = System.BitConverter.ToInt64(affinityBytes, 0);
-
                 return (System.IntPtr)affinityLong;
             }
             else
             {
                 int affinityInt = System.BitConverter.ToInt32(affinityBytes, 0);
-
                 return (System.IntPtr)affinityInt;
             }
         }
