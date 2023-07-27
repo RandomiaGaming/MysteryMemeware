@@ -7,7 +7,7 @@
             System.IntPtr[] handles = GetChildWindowHandles(windowHandle);
             foreach (System.IntPtr handle in handles)
             {
-                if(GetWindowTitle(handle) == targetTitle)
+                if (GetWindowTitle(handle) == targetTitle)
                 {
                     return handle;
                 }
@@ -69,13 +69,28 @@
         private static bool EnumWindow(System.IntPtr hWnd, System.IntPtr lParam)
         {
             System.Runtime.InteropServices.GCHandle gcChildhandlesList = System.Runtime.InteropServices.GCHandle.FromIntPtr(lParam);
-            if (gcChildhandlesList == null || gcChildhandlesList.Target == null)
+            if (gcChildhandlesList.Target == null)
             {
                 return false;
             }
             System.Collections.Generic.List<System.IntPtr> childHandles = gcChildhandlesList.Target as System.Collections.Generic.List<System.IntPtr>;
             childHandles.Add(hWnd);
             return true;
+        }
+        [System.Runtime.InteropServices.DllImport("Kernel32.dll")]
+        private static extern bool QueryFullProcessImageName(System.IntPtr hProcess, uint dwFlags, System.Text.StringBuilder lpExeName, ref uint lpdwSize);
+        public static string GetMainModuleFileName(System.IntPtr processHandle, int maxPathLength = 1024)
+        {
+            var fileNameBuilder = new System.Text.StringBuilder(maxPathLength);
+            uint bufferLength = (uint)fileNameBuilder.Capacity + 1;
+            if (QueryFullProcessImageName(processHandle, 0, fileNameBuilder, ref bufferLength))
+            {
+                return fileNameBuilder.ToString();
+            }
+            else
+            {
+                throw new System.Exception($"Unable to get main module file path for process with handle \"{processHandle}\".");
+            }
         }
     }
 }

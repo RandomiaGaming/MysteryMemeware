@@ -1,13 +1,64 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <StartupObject>MysteryMemeware.Program</StartupObject>
+    <StartupObject>MysteryInstaller.Program</StartupObject>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net7.0-windows10.0.22621.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>annotations</Nullable>
+    <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <AssemblyName>MysteryInstaller</AssemblyName>
+    <RootNamespace>MysteryInstaller</RootNamespace>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <ErrorReport>none</ErrorReport>
+    <PackageId>MysteryInstaller</PackageId>
+    <Title>MysteryInstaller</Title>
+    <Version>1.0.0.0</Version>
+    <Authors>RandomiaGaming</Authors>
+    <Company>RandomiaGaming</Company>
+    <Product>MysteryInstaller</Product>
+    <Description>An installer for MysteryMemeware. Depends upon MysteryHelper. Reqires administrator to execute.</Description>
+    <Copyright>Copyright © RandomiaGaming 2022</Copyright>
+    <PackageProjectUrl>https://github.com/RandomiaGaming/MysteryMemeware</PackageProjectUrl>
+    <PackageIcon>Icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/RandomiaGaming/MysteryMemeware</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>virus,malware,memeware</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <BaseOutputPath>D:\Pentesting Portal</BaseOutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants />
+    <DebugType>full</DebugType>
+    <NoWarn />
+    <WarningsAsErrors />
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants />
+    <DebugType>full</DebugType>
+    <NoWarn />
+    <WarningsAsErrors />
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\MysteryHelpers\Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MysteryHelpers\MysteryHelper.csproj" />
   </ItemGroup>

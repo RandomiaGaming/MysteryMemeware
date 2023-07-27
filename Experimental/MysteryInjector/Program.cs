@@ -1,4 +1,5 @@
-﻿namespace MysteryInjector
+﻿using Registry;
+namespace MysteryInjector
 {
     public static class Program
     {
@@ -6,6 +7,8 @@
         [System.STAThreadAttribute()]
         public static void Main()
         {
+			Registry.RegistryHive registryHive = new RegistryHive("D:\\Utilities\\SAM Registry Hacks\\SAM From CMD");
+
             //Class: #32770 Caption: Tasks
             string explorerPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Windows) + "\\explorer.exe";
             System.Diagnostics.Process explorer = System.Diagnostics.Process.Start(explorerPath, System.Environment.GetFolderPath(System.Environment.SpecialFolder.System) + "\\Tasks");

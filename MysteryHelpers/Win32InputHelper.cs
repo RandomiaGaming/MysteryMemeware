@@ -1,15 +1,5 @@
 ﻿namespace MysteryHelper
 {
-    public struct Point
-    {
-        public int X;
-        public int Y;
-        public Point(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-    }
     public static class Win32InputHelper
     {
         #region Keyboard Constants
@@ -46,38 +36,42 @@
         //Set if the second X button was pressed or released.
         public const int XBUTTON2 = 0x0002;
         #endregion
-        public static void PressKey(int virtualKeyCode)
+        public static void PressKey(byte virtualKeyCode)
         {
+            keybd_event(virtualKeyCode, 0, 0, 0);
+            keybd_event(virtualKeyCode, 0, 2, 0);
         }
-        public static void KeyDown(int virtualKeyCode)
+        public static void KeyDown(byte virtualKeyCode)
         {
+            keybd_event(virtualKeyCode, 0, 0, 0);
         }
-        public static void KeyUp(int virtualKeyCode)
+        public static void KeyUp(byte virtualKeyCode)
         {
+            keybd_event(virtualKeyCode, 0, 2, 0);
         }
         public static void SetMousePosition(int mousePositionX, int mousePositionY)
         {
             SetCursorPos(mousePositionX, mousePositionY);
         }
-        public static Point GetMousePosition()
+        public static System.Drawing.Point GetMousePosition()
         {
-            GetCursorPos(out Point mousePosition);
+            GetCursorPos(out System.Drawing.Point mousePosition);
             return mousePosition;
         }
         public static void Click()
         {
-            GetCursorPos(out Point mousePosition);
+            GetCursorPos(out System.Drawing.Point mousePosition);
             mouse_event(MOUSEEVENTF_LEFTDOWN, mousePosition.X, mousePosition.Y, 0, 0);
             mouse_event(MOUSEEVENTF_LEFTUP, mousePosition.X, mousePosition.Y, 0, 0);
         }
         public static void ClickDown()
         {
-            GetCursorPos(out Point mousePosition);
+            GetCursorPos(out System.Drawing.Point mousePosition);
             mouse_event(MOUSEEVENTF_LEFTDOWN, mousePosition.X, mousePosition.Y, 0, 0);
         }
         public static void ClickUp()
         {
-            GetCursorPos(out Point mousePosition);
+            GetCursorPos(out System.Drawing.Point mousePosition);
             mouse_event(MOUSEEVENTF_LEFTUP, mousePosition.X, mousePosition.Y, 0, 0);
         }
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
@@ -87,7 +81,7 @@
         private static extern bool SetCursorPos(int x, int y);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
-        private static extern bool GetCursorPos(out Point point);
+        private static extern bool GetCursorPos(out System.Drawing.Point point);
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         private static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, int dwExtraInfo);
     }

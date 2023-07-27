@@ -1,14 +1,63 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net7.0-windows10.0.22621.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>annotations</Nullable>
+    <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>MysteryHelper</AssemblyName>
+    <RootNamespace>MysteryHelper</RootNamespace>
+    <SignAssembly>False</SignAssembly>
+    <PackageId>MysteryHelper</PackageId>
+    <Title>MysteryHelper</Title>
+    <Version>1.0.0.0</Version>
+    <Authors>RandomiaGaming</Authors>
+    <Company>RandomiaGaming</Company>
+    <Product>MysteryHelper</Product>
+    <Description>A collection of useful helper methods. A dependency for MysteryMemeware, MysteryInstaller, and MysteryUninstaller.</Description>
+    <Copyright>Copyright © RandomiaGaming 2022</Copyright>
+    <PackageProjectUrl>https://github.com/RandomiaGaming/MysteryMemeware</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/RandomiaGaming/MysteryMemeware</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Virus,Malware,Memeware</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <IncludeSymbols>False</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <ErrorReport>none</ErrorReport>
+    <PackageIcon>Icon.png</PackageIcon>
+    <BaseOutputPath>D:\Pentesting Portal</BaseOutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants></DefineConstants>
+    <NoWarn />
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>full</DebugType>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants></DefineConstants>
+    <NoWarn />
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.DirectoryServices" Version="7.0.0" />
     <PackageReference Include="System.Management" Version="7.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   
 </Project>
