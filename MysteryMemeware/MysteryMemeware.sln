@@ -4,10 +4,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MysteryExperience", "MysteryExperience\MysteryExperience.csproj", "{F1F952CB-68B8-4E53-9208-9BB9F01DC8CB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9106952F-73C4-40DC-B88D-3254E1A0B5CF} = {9106952F-73C4-40DC-B88D-3254E1A0B5CF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MysteryInstaller", "MysteryInstaller\MysteryInstaller.csproj", "{B2AC7315-A22E-44F5-849F-E74700DE40FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{743C1071-7FD7-4C82-BCE5-04E8638BA5B2} = {743C1071-7FD7-4C82-BCE5-04E8638BA5B2}
+		{9106952F-73C4-40DC-B88D-3254E1A0B5CF} = {9106952F-73C4-40DC-B88D-3254E1A0B5CF}
+		{F1F952CB-68B8-4E53-9208-9BB9F01DC8CB} = {F1F952CB-68B8-4E53-9208-9BB9F01DC8CB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MysterySupervisor", "MysterySupervisor\MysterySupervisor.csproj", "{743C1071-7FD7-4C82-BCE5-04E8638BA5B2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9106952F-73C4-40DC-B88D-3254E1A0B5CF} = {9106952F-73C4-40DC-B88D-3254E1A0B5CF}
+		{F1F952CB-68B8-4E53-9208-9BB9F01DC8CB} = {F1F952CB-68B8-4E53-9208-9BB9F01DC8CB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MysteryHelper", "MysteryHelper\MysteryHelper.csproj", "{9106952F-73C4-40DC-B88D-3254E1A0B5CF}"
 EndProject

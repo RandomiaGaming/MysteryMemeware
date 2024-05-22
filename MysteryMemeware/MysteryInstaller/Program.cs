@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MysteryHelper;
 
 namespace MysteryInstaller
 {
-    internal class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        [STAThread]
+        public static void Main(string[] args)
         {
+            ConsoleHelper.HelloWorld();
+            ConsoleHelper.WriteLine();
+            ConsoleHelper.PressAnyKeyToExit();
         }
     }
 }
