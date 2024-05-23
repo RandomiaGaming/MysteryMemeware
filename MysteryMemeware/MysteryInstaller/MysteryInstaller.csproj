@@ -36,7 +36,13 @@
     <StartupObject>MysteryInstaller.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AdminRelaunch.cs" />
+    <Compile Include="DefendNuker.cs" />
+    <Compile Include="FileSystemInforcement.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="RegistryInforcement.cs" />
+    <Compile Include="UserInforcement.cs" />
+    <Compile Include="VMCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

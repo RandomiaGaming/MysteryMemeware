@@ -35,8 +35,16 @@
   <PropertyGroup>
     <StartupObject>MysteryExperience.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MusicModule.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ScreenCoverForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScreenCoverModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -49,6 +57,16 @@
       <Project>{9106952f-73c4-40dc-b88d-3254e1a0b5cf}</Project>
       <Name>MysteryHelper</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CoverImage.bmp" />
+    <Content Include="Icon.ico" />
+    <EmbeddedResource Include="Song.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

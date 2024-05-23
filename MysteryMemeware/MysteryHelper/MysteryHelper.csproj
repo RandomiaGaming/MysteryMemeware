@@ -42,7 +42,26 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AESHelper.cs" />
+    <Compile Include="ArrayHelper.cs" />
+    <Compile Include="BSODHelper.cs" />
     <Compile Include="ConsoleHelper.cs" />
+    <Compile Include="CPUHelper.cs" />
+    <Compile Include="PathHelper.cs" />
+    <Compile Include="ProcessHelper.cs" />
+    <Compile Include="RandomnessHelper.cs" />
+    <Compile Include="RegistryHelper.cs" />
+    <Compile Include="SHA256Helper.cs" />
+    <Compile Include="ShreddingHelper.cs" />
+    <Compile Include="StringEncodingHelper.cs" />
+    <Compile Include="StringHelper.cs" />
+    <Compile Include="ThreadingHelper.cs" />
+    <Compile Include="UACHelper.cs" />
+    <Compile Include="UserHelper.cs" />
+    <Compile Include="VolumeHelper.cs" />
+    <Compile Include="VolumeModule.cs" />
+    <Compile Include="Win32HandleHelper.cs" />
+    <Compile Include="Win32InputHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

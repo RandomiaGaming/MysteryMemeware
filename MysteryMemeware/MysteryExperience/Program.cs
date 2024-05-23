@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace MysteryExperience
+﻿namespace MysteryExperience
 {
     public static class Program
     {
-        [STAThread]
-        public static void Main(string[] args)
+        public static void Main()
         {
-            Console.WriteLine("Hello World");
+            MusicModule.Run();
+            ScreenCoverModule.Run();
         }
     }
 }
