@@ -8,10 +8,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>MysteryMemeware</RootNamespace>
     <AssemblyName>MysteryMemeware</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -41,6 +42,9 @@
     <ApplicationIcon>MysteryAssets\Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>MysteryAssets\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.DirectoryServices" />
@@ -91,7 +95,9 @@
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="app.config" />
+    <None Include="MysteryAssets\App.config" />
+    <None Include="MysteryAssets\app.manifest" />
     <None Include="MysterySupervisor\App.config" />
     <None Include="ReadMe.md" />
   </ItemGroup>
@@ -100,13 +106,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="MysteryAssets\CoverImage.bmp" />
-    <Content Include="MysteryAssets\Icon.ico" />
-    <Content Include="MysteryAssets\Icon.png" />
-    <Content Include="MysteryAssets\Song.wav" />
-    <Content Include="MysteryExperienceHost\CoverImage.bmp" />
-    <Content Include="MysteryExperienceHost\Icon.ico" />
-    <Content Include="MysteryExperienceHost\Song.wav" />
+    <EmbeddedResource Include="MysteryAssets\CoverImage.bmp" />
+    <EmbeddedResource Include="MysteryAssets\Icon.ico" />
+    <EmbeddedResource Include="MysteryAssets\Icon.png" />
+    <EmbeddedResource Include="MysteryAssets\Song.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

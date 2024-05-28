@@ -2,7 +2,7 @@
 {
     public static class MusicModule
     {
-        public const string SongResourceName = "MysteryExperience.Song.wav";
+        public const string SongResourceName = "MysteryMemeware.MysteryAssets.Song.wav";
         public static void Run()
         {
             try

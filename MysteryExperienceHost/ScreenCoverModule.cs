@@ -2,7 +2,7 @@
 {
     public static class ScreenCoverModule
     {
-        public const string CoverImageResourceName = "MysteryExperience.CoverImage.bmp";
+        public const string CoverImageResourceName = "MysteryMemeware.MysteryAssets.CoverImage.bmp";
         public static void Run()
         {
             try
